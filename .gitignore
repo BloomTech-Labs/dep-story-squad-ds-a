@@ -10,3 +10,4 @@ __pycache__
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 key.json
+downloaded_img.jpg
