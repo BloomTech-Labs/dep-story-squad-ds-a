@@ -1,6 +1,9 @@
+from ipdb import set_trace as st
 import io
 import os
+from autocorrect import Speller
 
+spell = Speller(lang='en')
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./key.json"
 
@@ -20,13 +23,25 @@ def set_endpoint(path):
     image = vision.types.Image(content=content)
 
     response = client.text_detection(image=image)
+    #st()
+    #text = response.text_annotations.text.replace("\n", " ")
+    #textreturn = response.full_text_annotation.text.replace("\n", " ")
+    #textcorrected = spell(textreturn)
 
+    #Here we can start tokenization on the text with Spacy, find words that were not in original document,
+    # append to a list, and keep track of length of list as part of the score
+       
     print(response.full_text_annotation.text.replace("\n", " "))
     if response.error.message:
         raise Exception(
             '{}\nFor more info on error messages, check: '
             'https://cloud.google.com/apis/design/errors'.format(
                 response.error.message))
+
+def spellcheck(path):
+    textcorrected = spell(path)
+
+    print(textcorrected)
 
 if __name__ == '__main__':
     set_endpoint('./weird_page_2.jpg')
