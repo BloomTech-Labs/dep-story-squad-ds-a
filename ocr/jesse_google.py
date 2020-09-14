@@ -1,6 +1,8 @@
-from ipdb import set_trace as st
 import io
+import os
 
+
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./key.json"
 
 def set_endpoint(path):
     """Change your endpoint"""
@@ -19,7 +21,6 @@ def set_endpoint(path):
 
     response = client.text_detection(image=image)
 
-    st()
     print(response.full_text_annotation.text.replace("\n", " "))
     if response.error.message:
         raise Exception(
