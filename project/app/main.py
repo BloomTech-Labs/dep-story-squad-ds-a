@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from app.api import predict, viz
+from app.api import predict, viz, s3
 
 app = FastAPI(
     title='YOUR-PRODUCT-TEAM-NAME DS API',
@@ -13,6 +13,7 @@ app = FastAPI(
 
 app.include_router(predict.router)
 app.include_router(viz.router)
+app.include_router(s3.router)
 
 app.add_middleware(
     CORSMiddleware,
