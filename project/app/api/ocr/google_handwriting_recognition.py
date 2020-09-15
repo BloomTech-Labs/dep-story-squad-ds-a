@@ -107,6 +107,14 @@ def diff_words(input_str1: str) -> int:
      
     return len(arr)
 
+def efficiency(input_str: str) -> int:
+    original = len(tokenize(input_str))
+    difference = diff_words(input_str)
+
+    percentage = difference / original
+    return percentage 
+
+
 if __name__ == '__main__':
     # set_endpoint('./weird_page_2.jpg')
     #random_image = "https://s.imgur.com/images/logo-1200-630.jpg?2"
@@ -128,4 +136,5 @@ if __name__ == '__main__':
     #print(len(x))
     #print(len(y))
     print(diff_words(x))
+    print(efficiency(x))
      
