@@ -94,8 +94,8 @@ def tokenize(input_str: str) -> str:
 
 def diff_words(input_str1: str) -> int:
     '''
-    Takes 2 strings, compares words in each, returns length of words in one that are not in the other,
-    representing spellcheck errors
+    Takes a string, runs spellcheck on string, compares different words after spellcheck to before,
+    returns number of words spellchecked
     '''
     arr = []
     words1 = tokenize(input_str1)
