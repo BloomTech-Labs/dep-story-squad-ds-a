@@ -15,6 +15,7 @@ bucket = s3.Bucket('training-images-team-a')
 @router.get('/s3/{OBJECT}')
 async def s3(object):
     f = io.BytesIO()
-    client.download_fileobj('training-images-team-a', "Stories Dataset/Transcribed Stories/31--/3101/Photo 3101.jpg", f)
+    bucket.download_fileobj("Stories Dataset/Transcribed Stories/31--/3101/Photo 3101.jpg", f)
     f.seek(0)
-    return StreamingResponse(f, media_type="image/jpg",headers={'Content-Disposition': 'inline; filename="%s.jpg"' %(object,)})
+    return StreamingResponse(f, media_type="image/jpg",
+    headers={'Content-Disposition': 'inline; filename="%s.jpg"' %(object,)})
