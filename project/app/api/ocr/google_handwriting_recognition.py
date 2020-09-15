@@ -92,14 +92,14 @@ def tokenize(input_str: str) -> str:
     
     return tokens
 
-def compare(input_str1: str, input_str2: str) -> int:
+def diff_words(input_str1: str) -> int:
     '''
     Takes 2 strings, compares words in each, returns length of words in one that are not in the other,
     representing spellcheck errors
     '''
     arr = []
     words1 = tokenize(input_str1)
-    words2 = tokenize(input_str2)
+    words2 = tokenize(spellcheck(input_str1))
        
     for word in words1:
         if word not in words2:
@@ -124,8 +124,8 @@ if __name__ == '__main__':
     #print("corrected:", corrected)
     string = "After a long toalk ith the was Summer seperated Then side April was over. Suddenly before them. He mad at April that they diffeent sidles. from the on. Summer came running strong muscular mon stood a genie. I three wishes. was. onto completely a huge fla sh a Said, am here to grant you am made 2 w "
     x = (string)
-    y = (spellcheck(string))
+    
     #print(len(x))
     #print(len(y))
-    print(compare(x, y))
+    print(diff_words(x))
      
