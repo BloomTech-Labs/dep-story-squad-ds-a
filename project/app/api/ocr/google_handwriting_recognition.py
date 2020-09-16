@@ -98,14 +98,14 @@ def tokenize(input_str: str) -> str:
     
     return arr
 
-def spellchecked_words(input_str1: str) -> int:
+def spellchecked_words(input_str: str) -> int:
     '''
     Takes a string, runs spellcheck on string, compares different words after spellcheck to before,
     returns number of words spellchecked
     '''
     arr = []
-    words1 = tokenize(input_str1)
-    words2 = tokenize(spellcheck(input_str1))
+    words1 = tokenize(input_str)
+    words2 = tokenize(spellcheck(input_str))
        
     for word in words1:
         if word not in words2:
