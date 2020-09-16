@@ -122,7 +122,17 @@ def unique_words(input_str: str) -> int:
         arr.append(word)
         arr2.add(word)
         x = len(arr2) / len(arr)
-    return x     
+    return x  
+
+def avg_len_words(input_str: str) -> int:
+    arr = []
+    words = tokenize(input_str)
+    for word in words:
+        x = len(word)
+        arr.append(x)
+        y = sum(arr) / len(arr)
+    return y     
+
 
 
 
@@ -150,4 +160,5 @@ if __name__ == '__main__':
     print(diff_words(x))
     print(efficiency(x))
     print(unique_words(x))
+    print(avg_len_words(x))
      
