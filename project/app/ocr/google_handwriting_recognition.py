@@ -171,7 +171,17 @@ def avg_len_words(input_str: str) -> int:
         x = len(word)
         arr.append(x)
         y = sum(arr) / len(arr)
-    return y     
+    return y   
+
+def evaluate(input_str: str) -> int:
+    # tokenize and spellcheck the input string, add words to set,
+    score = efficiency(input_str) * unique_words(input_str) * avg_len_words(input_str)
+
+    return score  
+
+    
+
+
 
 
 
@@ -203,4 +213,5 @@ if __name__ == '__main__':
     print(efficiency(x))
     print(unique_words(x))
     print(avg_len_words(x))
+    print(evaluate(x))
      
