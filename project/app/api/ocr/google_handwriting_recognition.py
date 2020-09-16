@@ -114,6 +114,18 @@ def efficiency(input_str: str) -> int:
     percentage = difference / original
     return percentage 
 
+def unique_words(input_str: str) -> int:
+    arr = []
+    arr2 = set()
+    words = tokenize(input_str)
+    for word in words:
+        arr.append(word)
+        arr2.add(word)
+        x = len(arr2) / len(arr)
+    return x     
+
+
+
 
 if __name__ == '__main__':
     # set_endpoint('./weird_page_2.jpg')
@@ -137,4 +149,5 @@ if __name__ == '__main__':
     #print(len(y))
     print(diff_words(x))
     print(efficiency(x))
+    print(unique_words(x))
      
