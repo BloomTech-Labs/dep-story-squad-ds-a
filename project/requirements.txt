@@ -8,3 +8,4 @@ autocorrect
 spacy
 nltk
 python-dotenv
+remote_pdb

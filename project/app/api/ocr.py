@@ -1,9 +1,14 @@
 from fastapi import APIRouter, HTTPException
 import pandas as pd
 import plotly.express as px
-from app.ocr.google_handwriting_recognition import google_handwriting_recognizer
+from app.ocr.google_handwriting_recognition import google_handwriting_recognizer, environment_vars_jsonify
+import dotenv
+
 
 router = APIRouter()
+dotenv.load_dotenv()
+environment_vars_jsonify()
+
 
 @router.post('/ocr')
 async def ocr(url: str):

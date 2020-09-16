@@ -1,4 +1,4 @@
-# from ipdb import set_trace as st
+from remote_pdb import set_trace as st
 import io
 import os
 from autocorrect import Speller
@@ -7,17 +7,35 @@ import re
 import spacy
 from spacy.tokenizer import Tokenizer
 from nltk.stem import PorterStemmer
-
+import json
 import dotenv
 
-nlp = spacy.load("en_core_web_lg")
+nlp = spacy.load("en_core_web_sm")
 
 
 # initializing object
 spell = Speller(lang='en')
 dotenv.load_dotenv()
 
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./app/ocr/key.json"
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./key.json"
+
+
+def environment_vars_jsonify():
+    json_dict = dict()
+    # st(host='0.0.0.0', port=4444)
+    json_dict["type"] = os.getenv("type")
+    json_dict["project_id"] = os.getenv("project_id")
+    json_dict["private_key_id"] = os.getenv("private_key_id")
+    json_dict["private_key"] = os.getenv("private_key")
+    json_dict["client_email"] = os.getenv("client_email")
+    json_dict["client_id"] = os.getenv("client_id")
+    json_dict["auth_uri"] = os.getenv("auth_uri")
+    json_dict["token_uri"] = os.getenv("token_uri")
+    json_dict["auth_provider_x509_cert_url"] = os.getenv("auth_provider_x509_cert_url")
+    json_dict["client_x509_cert_url"] = os.getenv("client_x509_cert_url")
+
+    with open("key.json", "w") as file_obj:
+        file_obj.write(json.dumps(json_dict, indent=4))
 
 
 def google_handwriting_recognizer(local_path=None, url=None) -> str:
@@ -174,6 +192,8 @@ if __name__ == '__main__':
     #print("normal:", normal)
     #print()
     #print("corrected:", corrected)
+    environment_vars_jsonify()
+
     string = "After a long toalk ith the was Summer seperated Then side April was over. Suddenly before them. He mad at April that they diffeent sidles. from the on. Summer came running strong muscular mon stood a genie. I three wishes. was. onto completely a huge fla sh a Said, am here to grant you am made 2 w "
     x = (string)
     
