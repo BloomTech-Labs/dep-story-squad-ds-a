@@ -7,6 +7,7 @@ import re
 import spacy
 from spacy.tokenizer import Tokenizer
 from nltk.stem import PorterStemmer
+nlp = spacy.load("en_core_web_lg")
 
 # initializing object
 spell = Speller(lang='en')
@@ -84,15 +85,20 @@ def spellcheck(input_str: str) -> str:
 
 def tokenize(input_str: str) -> str:
     '''
-    Will return all individual words in an array
+    Will return all individual words in an array, ignores NLP stop words
     '''
     tokens = re.sub('[^a-zA-Z 0-9]', '', input_str)
     tokens = tokens.lower().split()
+    STOP_WORDS = nlp.Defaults.stop_words
+    arr = []
+    for token in tokens:
+        if token not in STOP_WORDS:
+            arr.append(token)
 
     
-    return tokens
+    return arr
 
-def diff_words(input_str1: str) -> int:
+def spellchecked_words(input_str1: str) -> int:
     '''
     Takes a string, runs spellcheck on string, compares different words after spellcheck to before,
     returns number of words spellchecked
@@ -108,13 +114,20 @@ def diff_words(input_str1: str) -> int:
     return len(arr)
 
 def efficiency(input_str: str) -> int:
+    '''
+    finds length of original string after tokenization, divides # of spellchecked words
+    by that length to find efficiency rating
+    '''
     original = len(tokenize(input_str))
-    difference = diff_words(input_str)
+    difference = spellchecked_words(input_str)
 
     percentage = difference / original
     return percentage 
 
 def unique_words(input_str: str) -> int:
+    '''
+    finds percentage of total words in tokenized string that are unique words
+    '''
     arr = []
     arr2 = set()
     words = tokenize(input_str)
@@ -125,6 +138,9 @@ def unique_words(input_str: str) -> int:
     return x  
 
 def avg_len_words(input_str: str) -> int:
+    '''
+    finds the average length of words after tokenization in the text
+    '''
     arr = []
     words = tokenize(input_str)
     for word in words:
@@ -157,7 +173,7 @@ if __name__ == '__main__':
     
     #print(len(x))
     #print(len(y))
-    print(diff_words(x))
+    print(spellchecked_words(x))
     print(efficiency(x))
     print(unique_words(x))
     print(avg_len_words(x))
