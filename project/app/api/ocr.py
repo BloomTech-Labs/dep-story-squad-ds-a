@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException
 import pandas as pd
 import plotly.express as px
+from app.ocr.google_handwriting_recognition import google_handwriting_recognizer
 
 router = APIRouter()
-# from app.api.ocr.google_handwriting_recongition import google_handwriting_recognizer
 
 @router.post('/ocr')
 async def ocr(url: str):
@@ -23,7 +23,7 @@ async def ocr(url: str):
     Replace the placeholder docstring and fake predictions with your own model.
     """
 
-    ocr_text = google_handwriting_recognizer(url)
+    ocr_text = google_handwriting_recognizer(url=url)
     return {
         'ocr_text': ocr_text
     }

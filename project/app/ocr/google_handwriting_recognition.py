@@ -1,4 +1,4 @@
-from ipdb import set_trace as st
+# from ipdb import set_trace as st
 import io
 import os
 from autocorrect import Speller
@@ -7,10 +7,13 @@ import re
 import spacy
 from spacy.tokenizer import Tokenizer
 from nltk.stem import PorterStemmer
+import dotenv
 
 # initializing object
 spell = Speller(lang='en')
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./key.json"
+dotenv.load_dotenv()
+
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./app/ocr/key.json"
 
 
 def google_handwriting_recognizer(local_path=None, url=None) -> str:
