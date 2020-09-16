@@ -3,3 +3,5 @@ pandas==1.1.0
 plotly==4.9.0
 uvicorn==0.11.8
 google-cloud-vision
+boto3
+autocorrect

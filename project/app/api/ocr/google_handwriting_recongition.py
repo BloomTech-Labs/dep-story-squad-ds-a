@@ -1,10 +1,9 @@
-from ipdb import set_trace as st
 import io
 import os
 from autocorrect import Speller
 import requests
 
-# initializing object
+# initializing objects
 spell = Speller(lang='en')
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./key.json"
 
