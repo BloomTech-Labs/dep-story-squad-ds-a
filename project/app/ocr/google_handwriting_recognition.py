@@ -22,7 +22,6 @@ os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./key.json"
 
 def environment_vars_jsonify():
     json_dict = dict()
-    # st(host='0.0.0.0', port=4444)
     json_dict["type"] = os.getenv("type")
     json_dict["project_id"] = os.getenv("project_id")
     json_dict["private_key_id"] = os.getenv("private_key_id")
@@ -35,7 +34,7 @@ def environment_vars_jsonify():
     json_dict["client_x509_cert_url"] = os.getenv("client_x509_cert_url")
 
     with open("key.json", "w") as file_obj:
-        file_obj.write(json.dumps(json_dict, indent=4))
+        json.dump(json_dict, file_obj, indent=4)
 
 
 def google_handwriting_recognizer(local_path=None, url=None) -> str:
