@@ -9,7 +9,7 @@ import dotenv
 router = APIRouter()
 dotenv.load_dotenv()
 environment_vars_jsonify()
-st('0.0.0.0', 4444)
+# st('0.0.0.0', 4444)
 
 
 @router.post('/ocr')
