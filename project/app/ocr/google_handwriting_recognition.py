@@ -109,7 +109,7 @@ def tokenize(input_str: str) -> str:
     """
     Will return all individual words in an array, ignores NLP stop words
     """
-    tokens = re.sub('[^a-zA-Z 0-9]', '', input_str)
+    tokens = re.sub('[^a-zA-Z 0-9 \.]', '',  input_str)
     tokens = tokens.lower().split()
     STOP_WORDS = nlp.Defaults.stop_words
     arr = []
@@ -163,6 +163,23 @@ def unique_words(input_str: str) -> int:
 
     return x
 
+def avg_sentence_length(input_str: str) -> int:
+    '''
+    finds average sentence length after tokenization by taking total tokens / tokens containing .
+    '''
+    
+    arr = []
+    words = tokenize(input_str)
+    count = 0
+    for word in words:
+        if '.' in word:
+            count +=1
+    
+    for word in words:
+        arr.append(word)
+        x = len(arr)
+    
+    return x / count     
 
 def avg_len_words(input_str: str) -> int:
     """
@@ -180,7 +197,7 @@ def avg_len_words(input_str: str) -> int:
 
 def evaluate(input_str: str) -> int:
     # tokenize and spellcheck the input string, add words to set,
-    score = efficiency(input_str) * unique_words(input_str) * avg_len_words(input_str)
+    score =  (.2 * unique_words(input_str)) * (.3 * avg_len_words(input_str)) * (.3 * avg_sentence_length(input_str)) / (.2 * efficiency(input_str))
 
     return score
 
@@ -202,9 +219,10 @@ if __name__ == '__main__':
     # print("corrected:", corrected)
     environment_vars_jsonify()
 
-    string = "After a long toalk ith the was Summer seperated Then side April was over. Suddenly before them. He mad at April that they diffeent sidles. from the on. Summer came running strong muscular mon stood a genie. I three wishes. was. onto completely a huge fla sh a Said, am here to grant you am made 2 w "
+    string = "After a long toalk. ith the was Summer seperated Then side April was over. Suddenly before them. He mad at April that they diffeent sidles. from the on. Summer came running strong muscular mon stood a genie. I three wishes. was. onto completely a huge fla sh a Said. am here to grant you am made 2 w "
     x = (string)
-
+    print(tokenize(x))
+    print(avg_sentence_length(x))
     print(spellchecked_words(x))
     print(efficiency(x))
     print(unique_words(x))
