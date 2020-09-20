@@ -138,11 +138,11 @@ def spellchecked_words(input_str: str) -> int:
 
 def efficiency(input_str: str) -> int:
     """
-    finds length of original string after tokenization, divides # of spellchecked words
-    by that length to find efficiency rating
+    finds length of original string after tokenization, divides # of non-spellchecked words
+    by # of total words
     """
     original = len(tokenize(input_str))
-    difference = spellchecked_words(input_str)
+    difference = original - spellchecked_words(input_str)
 
     percentage = difference / original
 
