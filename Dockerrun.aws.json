@@ -1,7 +1,7 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "YOUR-DOCKER-HUB-ID/YOUR-IMAGE-NAME",
+    "Name": "hadmod/storysquad_teama_ds",
     "Update": "true"
   },
   "Ports": [

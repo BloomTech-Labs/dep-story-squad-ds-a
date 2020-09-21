@@ -8,3 +8,6 @@ services:
       - ./project:/usr/src/app
     ports:
       - 8000:8000
+
+      # for telnet and debugging using pdb_remote
+      - 4444:4444
