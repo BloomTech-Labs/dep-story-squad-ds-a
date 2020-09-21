@@ -29,17 +29,20 @@ def environment_vars_jsonify():
     json_dict["client_id"] = os.getenv("client_id")
     json_dict["auth_uri"] = os.getenv("auth_uri")
     json_dict["token_uri"] = os.getenv("token_uri")
-    json_dict["auth_provider_x509_cert_url"] = os.getenv("auth_provider_x509_cert_url")
+    json_dict["auth_provider_x509_cert_url"] = \
+        os.getenv("auth_provider_x509_cert_url")
     json_dict["client_x509_cert_url"] = os.getenv("client_x509_cert_url")
 
     with open("key.json", "w") as file_obj:
         json.dump(json_dict, file_obj, indent=4)
 
 
-def google_handwriting_recognizer(local_path=None, url=None) -> str:
+def google_handwriting_recognizer(
+        local_path: str = None, url: str = None) -> str:
     """
         Will return the text of a handwritten text.
-        Only one parameter should be set, otherwise the second one will be ignored.
+        Only one parameter should be set, otherwise
+        the second one will be ignored.
 
         Args:
             -local_path:
@@ -48,7 +51,7 @@ def google_handwriting_recognizer(local_path=None, url=None) -> str:
             -URL:
             .jpg file URL
     """
-    
+
     # [START vision_set_endpoint]
     from google.cloud import vision
     client_options = {'api_endpoint': 'eu-vision.googleapis.com'}
@@ -68,10 +71,9 @@ def google_handwriting_recognizer(local_path=None, url=None) -> str:
         response = requests.get(url)
         with open("downloaded_img.jpg", "wb") as file_obj:
             file_obj.write(response.content)
-        # import urllib.request
-        # urllib.request.urlretrieve(url, "downloaded_img.jpg")
 
-        # 2. passing it to the google's local file handrwiting recognition module
+        # 2. pass the image to the google's local file handrwiting
+        # recognition module
         with io.open("downloaded_img.jpg", 'rb') as image_file:
             content = image_file.read()
         image = vision.types.Image(content=content)
@@ -122,7 +124,8 @@ def tokenize(input_str: str) -> str:
 
 def spellchecked_words(input_str: str) -> int:
     '''
-    Takes a string, runs spellcheck on string, compares different words after spellcheck to before,
+    Takes a string, runs spellcheck on string, compares
+    different words after spellcheck to before,
     returns number of words spellchecked
     '''
     arr = []
@@ -138,7 +141,8 @@ def spellchecked_words(input_str: str) -> int:
 
 def efficiency(input_str: str) -> int:
     """
-    finds length of original string after tokenization, divides # of non-spellchecked words
+    finds length of original string after tokenization,
+    divides # of non-spellchecked words
     by # of total words
     """
     original = len(tokenize(input_str))
@@ -163,23 +167,26 @@ def unique_words(input_str: str) -> int:
 
     return x
 
+
 def avg_sentence_length(input_str: str) -> int:
-    '''
-    finds average sentence length after tokenization by taking total tokens / tokens containing .
-    '''
-    
+    """
+    finds average sentence length after tokenization
+    by taking total tokens / tokens containing .
+    """
+
     arr = []
     words = tokenize(input_str)
     count = 0
     for word in words:
         if '.' in word:
-            count +=1
-    
+            count += 1
+
     for word in words:
         arr.append(word)
         x = len(arr)
-    
+
     return x / count     
+
 
 def avg_len_words(input_str: str) -> int:
     """
@@ -197,7 +204,11 @@ def avg_len_words(input_str: str) -> int:
 
 def evaluate(input_str: str) -> int:
     # tokenize and spellcheck the input string, add words to set,
-    score =  (.1 * unique_words(input_str)) * (.2 * avg_len_words(input_str)) * (.2 * avg_sentence_length(input_str)) / (.1 * efficiency(input_str))
+    score = \
+        (.1 * unique_words(input_str)) *\
+        (.2 * avg_len_words(input_str)) *\
+        (.2 * avg_sentence_length(input_str)) /\
+        (.1 * efficiency(input_str))
 
     return score
 
@@ -228,4 +239,3 @@ if __name__ == '__main__':
     print(unique_words(x))
     print(avg_len_words(x))
     print(evaluate(x))
-     
