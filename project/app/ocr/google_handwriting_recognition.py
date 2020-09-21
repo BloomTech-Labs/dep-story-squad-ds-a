@@ -197,7 +197,7 @@ def avg_len_words(input_str: str) -> int:
 
 def evaluate(input_str: str) -> int:
     # tokenize and spellcheck the input string, add words to set,
-    score =  (.2 * unique_words(input_str)) * (.3 * avg_len_words(input_str)) * (.3 * avg_sentence_length(input_str)) / (.2 * efficiency(input_str))
+    score =  (.1 * unique_words(input_str)) * (.2 * avg_len_words(input_str)) * (.2 * avg_sentence_length(input_str)) / (.1 * efficiency(input_str))
 
     return score
 
