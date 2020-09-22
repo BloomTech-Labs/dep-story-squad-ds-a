@@ -11,6 +11,7 @@ from nltk.stem import PorterStemmer
 import json
 import dotenv
 from pdf2image import convert_from_path
+from typing import List
 
 
 nlp = spacy.load("en_core_web_sm")
@@ -128,7 +129,6 @@ def google_pdf_handwriting_recognizer(local_path: str = None, url: str = None) -
         # 1.2. convert pdf to a series of jpg files
         pdf_to_jpg("downloaded_pdf.pdf")
 
-
     if local_path is not None:
         # pdf is a local file on the drive
 
@@ -144,15 +144,16 @@ def google_pdf_handwriting_recognizer(local_path: str = None, url: str = None) -
         ocr_text_list.append(google_handwriting_recognizer(local_path=jpg_file))
         print(f"Done with {jpg_file} ocr")
 
-    # 4. delete all jpg files
-    delete_all_jpgs()
+    # 4. delete all jpgs and pdfs files
+    delete_all_file_types(file_types=["jpg", "pdf"])
+
     return ocr_text_list
 
 
 def pdf_to_jpg(pdf_local_file: str) -> None:
     """
     Will create a series of .jpg files named 1.jpg to n.jpg
-    (n=number of pages)
+    (n=number of pages).
     Args:
         pdf_local_file:
             pdf local file address
@@ -164,10 +165,21 @@ def pdf_to_jpg(pdf_local_file: str) -> None:
         page.save(f'{index+1}.jpg', 'JPEG')
 
 
-def delete_all_jpgs(dir: str = "./") -> None:
-    jpg_files = [file_name for file_name in os.listdir(dir) if file_name.endswith(".jpg")]
-    for file_name in jpg_files:
-        os.remove(file_name)
+def delete_all_file_types(file_types: List[str], dir: str = "./") -> None:
+    """
+    Will delete all file types disclosed in file_types.
+    Args:
+        file_types:
+            list of file types to be deleted without
+            the starting '.' .
+                -example:
+                ["pdf", "jpg"]
+        dir:
+            The directory to look to delete files
+    """
+    for file_name in os.listdir(dir):
+        if file_name.split(".")[-1] in file_types:
+            os.remove(file_name)
 
 
 def spellcheck(input_str: str) -> str:
@@ -302,8 +314,7 @@ if __name__ == '__main__':
     # print()
     # print("corrected:", corrected)
     environment_vars_jsonify()
-    # x = google_pdf_handwriting_recognizer(local_path="./test_pdfs/test_pdf_1.pdf")
-    x = google_pdf_handwriting_recognizer(url=r"https://uc8f895a052faef5329ab6e9680d.dl.dropboxusercontent.com/cd/0/get/A_24LTKYEiZ7S2YMQwnFaxHDcobq_PokFXJr8qblip00YPPbPxTrEBJvfwC5PkboQQ1FK9aUi6vqtS5XCKNBNju1LW_RdJIZ0k-RJrytHJCeY7uEQnrzCG8FAWJp68pOCUY/file?dl=1#")
+    x = google_pdf_handwriting_recognizer(local_path="./test_pdfs/test_pdf_1.pdf")
     x = " ".join(x)
     # string = "After a long toalk. ith the was Summer seperated Then side April was over. Suddenly before them. He mad at April that they diffeent sidles. from the on. Summer came running strong muscular mon stood a genie. I three wishes. was. onto completely a huge fla sh a Said. am here to grant you am made 2 w "
     # x = (string)
