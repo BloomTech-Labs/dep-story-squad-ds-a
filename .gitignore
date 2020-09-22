@@ -11,3 +11,5 @@ __pycache__
 !.elasticbeanstalk/*.global.yml
 key.json
 downloaded_img.jpg
+*.pdf
+!test_pdf_1.pdf

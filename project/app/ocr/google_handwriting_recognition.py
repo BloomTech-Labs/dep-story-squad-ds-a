@@ -1,4 +1,5 @@
-from remote_pdb import set_trace as st
+# from remote_pdb import set_trace as st
+from ipdb import set_trace as st
 import io
 import os
 from autocorrect import Speller
@@ -9,6 +10,8 @@ from spacy.tokenizer import Tokenizer
 from nltk.stem import PorterStemmer
 import json
 import dotenv
+from pdf2image import convert_from_path
+
 
 nlp = spacy.load("en_core_web_sm")
 
@@ -79,7 +82,7 @@ def google_handwriting_recognizer(
         image = vision.types.Image(content=content)
 
         # 3. delete the extra image file
-        # os.remove("downloaded_img.jpg")
+        os.remove("downloaded_img.jpg")
 
     else:
         return "No parameters were set!"
@@ -95,6 +98,76 @@ def google_handwriting_recognizer(
                 response.error.message))
 
     return return_str
+
+
+def google_pdf_handwriting_recognizer(local_path: str = None, url: str = None) -> str:
+    """
+        Will return the text of a handwritten pdf file.
+        Only one parameter should be set, otherwise
+        the second one will be ignored.
+
+        Args:
+            -local_path:
+            local .pdf file name
+
+            -URL:
+            .pdf file URL
+    """
+
+    ocr_text_list = []
+
+    # 1. see if pdf is local or online
+    if url is not None:
+        # pdf is stored online, and it should be downloaded first
+
+        # 1.1. downlaod the pdf
+        response = requests.get(url)
+        with open("downloaded_pdf.pdf", "wb") as file_obj:
+            file_obj.write(response.content)
+
+        # 1.2. convert pdf to a series of jpg files
+        pdf_to_jpg("downloaded_pdf.pdf")
+
+
+    if local_path is not None:
+        # pdf is a local file on the drive
+
+        # 2.2. convert pdf to a series of jpg files
+        pdf_to_jpg(local_path)
+
+    # 2. get the name of all .jpg files
+    jpg_file_names = \
+        [file_name for file_name in os.listdir() if file_name.endswith(".jpg")]
+
+    for jpg_file in jpg_file_names:
+        # 3. call google_handwriting_recognizer on each file
+        ocr_text_list.append(google_handwriting_recognizer(local_path=jpg_file))
+        print(f"Done with {jpg_file} ocr")
+
+    # 4. delete all jpg files
+    delete_all_jpgs()
+    return ocr_text_list
+
+
+def pdf_to_jpg(pdf_local_file: str) -> None:
+    """
+    Will create a series of .jpg files named 1.jpg to n.jpg
+    (n=number of pages)
+    Args:
+        pdf_local_file:
+            pdf local file address
+    """
+
+    pages = convert_from_path(pdf_local_file, 500)
+
+    for index, page in enumerate(pages):
+        page.save(f'{index+1}.jpg', 'JPEG')
+
+
+def delete_all_jpgs(dir: str = "./") -> None:
+    jpg_files = [file_name for file_name in os.listdir(dir) if file_name.endswith(".jpg")]
+    for file_name in jpg_files:
+        os.remove(file_name)
 
 
 def spellcheck(input_str: str) -> str:
@@ -229,9 +302,11 @@ if __name__ == '__main__':
     # print()
     # print("corrected:", corrected)
     environment_vars_jsonify()
-
-    string = "After a long toalk. ith the was Summer seperated Then side April was over. Suddenly before them. He mad at April that they diffeent sidles. from the on. Summer came running strong muscular mon stood a genie. I three wishes. was. onto completely a huge fla sh a Said. am here to grant you am made 2 w "
-    x = (string)
+    # x = google_pdf_handwriting_recognizer(local_path="./test_pdfs/test_pdf_1.pdf")
+    x = google_pdf_handwriting_recognizer(url=r"https://uc8f895a052faef5329ab6e9680d.dl.dropboxusercontent.com/cd/0/get/A_24LTKYEiZ7S2YMQwnFaxHDcobq_PokFXJr8qblip00YPPbPxTrEBJvfwC5PkboQQ1FK9aUi6vqtS5XCKNBNju1LW_RdJIZ0k-RJrytHJCeY7uEQnrzCG8FAWJp68pOCUY/file?dl=1#")
+    x = " ".join(x)
+    # string = "After a long toalk. ith the was Summer seperated Then side April was over. Suddenly before them. He mad at April that they diffeent sidles. from the on. Summer came running strong muscular mon stood a genie. I three wishes. was. onto completely a huge fla sh a Said. am here to grant you am made 2 w "
+    # x = (string)
     print(tokenize(x))
     print(avg_sentence_length(x))
     print(spellchecked_words(x))
