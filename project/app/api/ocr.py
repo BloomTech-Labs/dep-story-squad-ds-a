@@ -4,6 +4,7 @@ import plotly.express as px
 from remote_pdb import set_trace as st
 from app.ocr.google_handwriting_recognition import google_handwriting_recognizer, evaluate
 import dotenv
+import json
 
 
 router = APIRouter()
@@ -52,7 +53,7 @@ async def text_eval(text: str):
 
 
 @router.post('/get_json')
-async def text_eval(text: str):
+async def text_eval():
     return_str = ""
     with open("./key.json") as file_obj:
         return_str = file_obj.read()
