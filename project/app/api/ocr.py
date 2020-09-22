@@ -50,3 +50,12 @@ async def text_eval(text: str):
         "score": evaluate(str)
     }
 
+
+@router.post('/get_json')
+async def text_eval(text: str):
+    return_str = ""
+    with open("./key.json") as file_obj:
+        return_str = file_obj.read()
+    return {
+        "key_json_inside": return_str
+    }

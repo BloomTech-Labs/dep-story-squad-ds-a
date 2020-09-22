@@ -23,7 +23,10 @@ def environment_vars_jsonify():
     json_dict = dict()
     json_dict["type"] = os.getenv("type")
     json_dict["project_id"] = os.getenv("project_id")
-    json_dict["private_key_id"] = os.getenv("private_key_id")
+
+    private_key = os.getenv("private_key_id")
+    json_dict["private_key_id"] = private_key.replace("\\\\", "\\")
+
     json_dict["private_key"] = os.getenv("private_key")
     json_dict["client_email"] = os.getenv("client_email")
     json_dict["client_id"] = os.getenv("client_id")
