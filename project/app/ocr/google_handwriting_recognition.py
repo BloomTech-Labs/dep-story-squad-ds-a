@@ -1,5 +1,5 @@
 # from remote_pdb import set_trace as st
-# from ipdb import set_trace as st
+# from pdb import set_trace as st
 import io
 import os
 from autocorrect import Speller
@@ -14,13 +14,9 @@ from typing import List
 import boto3
 
 
-
-nlp = spacy.load("en_core_web_sm")
-
-
 # initializing object
+nlp = spacy.load("en_core_web_sm")
 spell = Speller(lang='en')
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./key.json"
 
 
 def environment_vars_jsonify():
@@ -128,7 +124,7 @@ def google_pdf_handwriting_recognizer(local_path: str = None, url: str = None) -
     """
 
     ocr_text_list = []
-
+    
     # 1. see if pdf is local or online
     if url is not None:
         # pdf is stored online, and it should be downloaded first
