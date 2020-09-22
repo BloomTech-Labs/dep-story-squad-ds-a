@@ -14,19 +14,18 @@ dotenv.load_dotenv()
 @router.post('/ocr')
 async def ocr(url: str = None, s3_obj: str = None):
     """
-    Make random baseline predictions for classification problem 🔮
+    Handwriting recognizer with google's vision API
 
     ### Request Body
-    - `x1`: positive float
-    - `x2`: integer
-    - `x3`: string
+    #### Only 1 parameter needs to be set
+    - `url`: string
+
+    - `s3_obj`: string
+        - example:
+        "Stories Dataset/Transcribed Stories/31--/3101/Photo 3101.jpg"
 
     ### Response
-    - `prediction`: boolean, at random
-    - `predict_proba`: float between 0.5 and 1.0, 
-    representing the predicted class's probability
-
-    Replace the placeholder docstring and fake predictions with your own model.
+    - `ocr_text`: string, representing the recognized text
     """
 
     if url is not None:
