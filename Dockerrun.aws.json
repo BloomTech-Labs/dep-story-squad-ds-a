@@ -1,7 +1,7 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "hadmod/storysquad_teama_ds",
+    "Name": "hadmod/labs26_storysquad_team_a_ds",
     "Update": "true"
   },
   "Ports": [
