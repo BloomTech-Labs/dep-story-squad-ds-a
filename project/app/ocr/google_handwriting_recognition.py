@@ -1,5 +1,5 @@
 # from remote_pdb import set_trace as st
-from ipdb import set_trace as st
+# from ipdb import set_trace as st
 import io
 import os
 from autocorrect import Speller
@@ -9,9 +9,10 @@ import spacy
 from spacy.tokenizer import Tokenizer
 from nltk.stem import PorterStemmer
 import json
-import dotenv
 from pdf2image import convert_from_path
 from typing import List
+import boto3
+
 
 
 nlp = spacy.load("en_core_web_sm")
@@ -19,7 +20,6 @@ nlp = spacy.load("en_core_web_sm")
 
 # initializing object
 spell = Speller(lang='en')
-dotenv.load_dotenv()
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "./key.json"
 
 
@@ -42,7 +42,7 @@ def environment_vars_jsonify():
 
 
 def google_handwriting_recognizer(
-        local_path: str = None, url: str = None) -> str:
+        local_path: str = None, url: str = None, s3_obj: str = None) -> str:
     """
         Will return the text of a handwritten text.
         Only one parameter should be set, otherwise
@@ -84,6 +84,18 @@ def google_handwriting_recognizer(
 
         # 3. delete the extra image file
         os.remove("downloaded_img.jpg")
+
+    elif s3_obj is not None:
+        s3 = boto3.resource('s3')
+        bucket = s3.Bucket('training-images-team-a')
+
+        output_file_name = s3_obj.split("/")[-1]
+        bucket.download_file(s3_obj, output_file_name)
+        with io.open(output_file_name, 'rb') as image_file:
+            content = image_file.read()
+        image = vision.types.Image(content=content)
+
+        os.remove(output_file_name)
 
     else:
         return "No parameters were set!"
@@ -178,7 +190,7 @@ def delete_all_file_types(file_types: List[str], dir: str = "./") -> None:
             The directory to look to delete files
     """
     for file_name in os.listdir(dir):
-        if file_name.split(".")[-1] in file_types:
+        if file_name.split(".")[-1].lower() in file_types:
             os.remove(file_name)
 
 

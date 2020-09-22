@@ -1,8 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-
+import dotenv
 from app.api import predict, viz, ocr, s3
+from app.ocr.google_handwriting_recognition import environment_vars_jsonify
+
+dotenv.load_dotenv()
+environment_vars_jsonify()
 
 app = FastAPI(
     title='STORY-SQUAD DS API',
