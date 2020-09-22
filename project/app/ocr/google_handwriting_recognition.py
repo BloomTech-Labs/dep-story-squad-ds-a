@@ -276,7 +276,7 @@ def avg_sentence_length(input_str: str) -> int:
 
     for word in words:
         arr.append(word)
-        x = len(arr)
+        x = (len(arr) / 10)
 
     return x / count     
 
@@ -290,7 +290,7 @@ def avg_len_words(input_str: str) -> int:
     for word in words:
         x = len(word)
         arr.append(x)
-        y = sum(arr) / len(arr)
+        y = (sum(arr) / len(arr)) /10  
 
     return y
 
@@ -298,10 +298,10 @@ def avg_len_words(input_str: str) -> int:
 def evaluate(input_str: str) -> int:
     # tokenize and spellcheck the input string, add words to set,
     score = \
-        (.1 * unique_words(input_str)) *\
-        (.2 * avg_len_words(input_str)) *\
-        (.2 * avg_sentence_length(input_str)) /\
-        (.1 * efficiency(input_str))
+        (.2 * unique_words(input_str)) +\
+        (.3 * avg_len_words(input_str)) +\
+        (.3 * avg_sentence_length(input_str)) +\
+        (.2 * efficiency(input_str))
 
     return score
 
@@ -322,10 +322,10 @@ if __name__ == '__main__':
     # print()
     # print("corrected:", corrected)
     environment_vars_jsonify()
-    x = google_pdf_handwriting_recognizer(local_path="./test_pdfs/test_pdf_1.pdf")
-    x = " ".join(x)
-    # string = "After a long toalk. ith the was Summer seperated Then side April was over. Suddenly before them. He mad at April that they diffeent sidles. from the on. Summer came running strong muscular mon stood a genie. I three wishes. was. onto completely a huge fla sh a Said. am here to grant you am made 2 w "
-    # x = (string)
+    #x = google_pdf_handwriting_recognizer(local_path="./test_pdfs/test_pdf_1.pdf")
+    #x = " ".join(x)
+    string = "After a long toalk. ith the was Summer seperated Then side April was over. Suddenly before them. He mad at April that they diffeent sidles. from the on. Summer came running strong muscular mon stood a genie. I three wishes. was. onto completely a huge fla sh a Said. am here to grant you am made 2 w "
+    x = (string)
     print(tokenize(x))
     print(avg_sentence_length(x))
     print(spellchecked_words(x))
