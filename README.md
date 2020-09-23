@@ -1,12 +1,15 @@
-Project Overview:
+## Project Overview:
 
-Story Squad is a game that allows children to create stories and illustrations.
-Once their stories are analyzed, they will be divided up into teams where they will compete against each other.
+Story Squad is an interactive game where children create stories and illustrations, and compete with other children based on their individual scores.
 
-
-Data Sources
+## Data Sources
 
 Due to COPPA compliance, all data scources are private. Contact the project stakeholder for access.
 
 
+PDF files containing images of stories and illustrations are analyzed using the Google Vision API, which returns a text string. 
+
+The string is analyzed using a variety of metrics, and a score is returned. 
+
+Player's scores are matched up to their nearest neighbors, and teams of 3 or 4 are created . 
 
