@@ -1,5 +1,5 @@
 # from remote_pdb import set_trace as st
-# from pdb import set_trace as st
+from pdb import set_trace as st
 import io
 import os
 from autocorrect import Speller
@@ -20,11 +20,26 @@ spell = Speller(lang='en')
 
 
 def environment_vars_jsonify():
+
     json_dict = dict()
     json_dict["type"] = os.getenv("type")
     json_dict["project_id"] = os.getenv("project_id")
     json_dict["private_key_id"] = os.getenv("private_key_id")
-    json_dict["private_key"] = os.getenv("private_key")
+
+
+
+    private_key = os.getenv("private_key")
+    # print("##############################")
+    # print(private_key)
+    
+    private_key = private_key.replace("\\\\", "\\")
+
+    # print(private_key)
+    # print("##############################")
+    json_dict["private_key"] = private_key
+
+    
+
     json_dict["client_email"] = os.getenv("client_email")
     json_dict["client_id"] = os.getenv("client_id")
     json_dict["auth_uri"] = os.getenv("auth_uri")

@@ -9,8 +9,8 @@ dotenv.load_dotenv()
 environment_vars_jsonify()
 
 app = FastAPI(
-    title='STORY-SQUAD DS API',
-    description='Replace this placeholder text',
+    title='LABS 26 TEAM A STORY-SQUAD DS API',
+    description='Endpoints for doing handwritten-text recognition and text compexity',
     version='0.1',
     docs_url='/',
 )
