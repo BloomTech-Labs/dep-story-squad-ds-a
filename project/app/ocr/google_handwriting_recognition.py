@@ -19,37 +19,37 @@ nlp = spacy.load("en_core_web_sm")
 spell = Speller(lang='en')
 
 
-def environment_vars_jsonify():
+# def environment_vars_jsonify():
 
-    json_dict = dict()
-    json_dict["type"] = os.getenv("type")
-    json_dict["project_id"] = os.getenv("project_id")
-    json_dict["private_key_id"] = os.getenv("private_key_id")
+#     json_dict = dict()
+#     json_dict["type"] = os.getenv("type")
+#     json_dict["project_id"] = os.getenv("project_id")
+#     json_dict["private_key_id"] = os.getenv("private_key_id")
 
 
 
-    private_key = os.getenv("private_key")
-    # print("##############################")
-    # print(private_key)
+#     private_key = os.getenv("private_key")
+#     # print("##############################")
+#     print(private_key)
     
-    private_key = private_key.replace("\\\\", "\\")
+#     private_key = private_key.replace("\\\\", "\\")
 
-    # print(private_key)
-    # print("##############################")
-    json_dict["private_key"] = private_key
+#     # print(private_key)
+#     # print("##############################")
+#     json_dict["private_key"] = private_key
 
     
 
-    json_dict["client_email"] = os.getenv("client_email")
-    json_dict["client_id"] = os.getenv("client_id")
-    json_dict["auth_uri"] = os.getenv("auth_uri")
-    json_dict["token_uri"] = os.getenv("token_uri")
-    json_dict["auth_provider_x509_cert_url"] = \
-        os.getenv("auth_provider_x509_cert_url")
-    json_dict["client_x509_cert_url"] = os.getenv("client_x509_cert_url")
+#     json_dict["client_email"] = os.getenv("client_email")
+#     json_dict["client_id"] = os.getenv("client_id")
+#     json_dict["auth_uri"] = os.getenv("auth_uri")
+#     json_dict["token_uri"] = os.getenv("token_uri")
+#     json_dict["auth_provider_x509_cert_url"] = \
+#         os.getenv("auth_provider_x509_cert_url")
+#     json_dict["client_x509_cert_url"] = os.getenv("client_x509_cert_url")
 
-    with open("key.json", "w") as file_obj:
-        json.dump(json_dict, file_obj, indent=4)
+#     with open("key.json", "w") as file_obj:
+#         json.dump(json_dict, file_obj, indent=4)
 
 
 def google_handwriting_recognizer(
@@ -69,8 +69,18 @@ def google_handwriting_recognizer(
 
     # [START vision_set_endpoint]
     from google.cloud import vision
+
+    from google.oauth2 import service_account
+
+    json_acct_info = json.loads(os.getenv("GOOGLE_CREDENTIALS_DICT"))
+    credentials = service_account.Credentials.from_service_account_info(
+        json_acct_info)
+
     client_options = {'api_endpoint': 'eu-vision.googleapis.com'}
-    client = vision.ImageAnnotatorClient(client_options=client_options)
+    client = vision.ImageAnnotatorClient(
+        client_options=client_options,
+        credentials=credentials
+    )
     # [END vision_set_endpoint]
 
     if local_path is not None:
