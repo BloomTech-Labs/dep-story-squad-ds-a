@@ -3,10 +3,11 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import dotenv
 from app.api import predict, viz, ocr, s3
-from app.ocr.google_handwriting_recognition import environment_vars_jsonify
+# from app.ocr.google_handwriting_recognition import environment_vars_jsonify
+
 
 dotenv.load_dotenv()
-environment_vars_jsonify()
+# environment_vars_jsonify()
 
 app = FastAPI(
     title='LABS 26 TEAM A STORY-SQUAD DS API',
