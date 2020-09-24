@@ -36,10 +36,15 @@ def tokenize(input_str: str) -> str:
 
 
 def descriptiveness(input_str: str) -> str:
+    '''
+    Spellchecks and tokenizes an input string in order to find part of speech of each word,
+    compares verbs, adj, adv ratio to proper noun and noun ratio to describe how descriptive 
+    the text is
+    '''
+    
     input_str2 = spellcheck(input_str)
     doc = nlp(input_str2)
-    # Token texts
-    # x = [token.text for token in doc]
+    
     x = [token.pos_ for token in doc]
     count = 0
     count2 = 0 
