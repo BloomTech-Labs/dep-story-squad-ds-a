@@ -1,5 +1,5 @@
 # from remote_pdb import set_trace as st
-from pdb import set_trace as st
+# from pdb import set_trace as st
 import io
 import os
 from autocorrect import Speller
@@ -12,44 +12,13 @@ import json
 from pdf2image import convert_from_path
 from typing import List
 import boto3
+from google.cloud import vision
+from google.oauth2 import service_account
 
 
 # initializing object
 nlp = spacy.load("en_core_web_sm")
 spell = Speller(lang='en')
-
-
-# def environment_vars_jsonify():
-
-#     json_dict = dict()
-#     json_dict["type"] = os.getenv("type")
-#     json_dict["project_id"] = os.getenv("project_id")
-#     json_dict["private_key_id"] = os.getenv("private_key_id")
-
-
-
-#     private_key = os.getenv("private_key")
-#     # print("##############################")
-#     print(private_key)
-    
-#     private_key = private_key.replace("\\\\", "\\")
-
-#     # print(private_key)
-#     # print("##############################")
-#     json_dict["private_key"] = private_key
-
-    
-
-#     json_dict["client_email"] = os.getenv("client_email")
-#     json_dict["client_id"] = os.getenv("client_id")
-#     json_dict["auth_uri"] = os.getenv("auth_uri")
-#     json_dict["token_uri"] = os.getenv("token_uri")
-#     json_dict["auth_provider_x509_cert_url"] = \
-#         os.getenv("auth_provider_x509_cert_url")
-#     json_dict["client_x509_cert_url"] = os.getenv("client_x509_cert_url")
-
-#     with open("key.json", "w") as file_obj:
-#         json.dump(json_dict, file_obj, indent=4)
 
 
 def google_handwriting_recognizer(
@@ -68,11 +37,13 @@ def google_handwriting_recognizer(
     """
 
     # [START vision_set_endpoint]
-    from google.cloud import vision
 
-    from google.oauth2 import service_account
+    # removing '$' from first character of the environment variable
+    google_credentiaol_dict = os.getenv("GOOGLE_CREDENTIALS_DICT")
+    google_credentiaol_dict = google_credentiaol_dict[1:]
 
-    json_acct_info = json.loads(os.getenv("GOOGLE_CREDENTIALS_DICT"))
+    # reading google credential
+    json_acct_info = json.loads(google_credentiaol_dict)
     credentials = service_account.Credentials.from_service_account_info(
         json_acct_info)
 
@@ -134,7 +105,9 @@ def google_handwriting_recognizer(
     return return_str
 
 
-def google_pdf_handwriting_recognizer(local_path: str = None, url: str = None) -> str:
+def google_pdf_handwriting_recognizer(
+        local_path: str = None, url: str = None
+        ) -> str:
     """
         Will return the text of a handwritten pdf file.
         Only one parameter should be set, otherwise
@@ -174,7 +147,9 @@ def google_pdf_handwriting_recognizer(local_path: str = None, url: str = None) -
 
     for jpg_file in jpg_file_names:
         # 3. call google_handwriting_recognizer on each file
-        ocr_text_list.append(google_handwriting_recognizer(local_path=jpg_file))
+        ocr_text_list.append(
+            google_handwriting_recognizer(local_path=jpg_file)
+            )
         print(f"Done with {jpg_file} ocr")
 
     # 4. delete all jpgs and pdfs files
@@ -303,7 +278,7 @@ def avg_sentence_length(input_str: str) -> int:
         arr.append(word)
         x = (len(arr) / 10)
 
-    return x / count     
+    return x / count
 
 
 def avg_len_words(input_str: str) -> int:
@@ -332,21 +307,10 @@ def evaluate(input_str: str) -> int:
 
 
 if __name__ == '__main__':
-    # set_endpoint('./weird_page_2.jpg')
-    # random_image = "https://s.imgur.com/images/logo-1200-630.jpg?2"
-    # url = r'https://training-images-team-a.s3.us-east-1.amazonaws.com/Stories%20Dataset/Transcribed%20Stories/51--/5101/Photo%205101.jpg?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEL3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMSJIMEYCIQC6YjAXwYe04FDe2uDN4oYS604ldor5G3BOxWROCzYgvAIhAKIwEvEfXdk17xFZ4RPqYddNNdhmDyDAZM1PoXnRBvQRKuQCCMb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQARoMMTgyNTk3MzM5ODk5Igxe25VTGEWW%2BoPCaLsquAJl9zk2VZ6rJiK%2FQ11omMOqI5eT5JOATYKFng%2FNTmiCh73QyN0tUEN%2BaEy9cT%2F3BtXVM8Bwy9NE7jmGsQKX3SyE5lJNkaVPEcwPsw8axzxCG82fj9zzcHLwOx%2FjuohATf0wuuGSZkBrFhWG07OSphaAVOvEeu1HqTrVJ7a8znWEuWpsfqldimgizxUPnhBbrMQGiHgLaOHsZ45IVxTJgAJ5T3LmaBjyFsGkKWfjNLKqOFjVP6X7QbyzERpfslUWt8nNSQzfnO5XmPVBbh7P9ArDS5CsZjXMmwomX3UoQOyDmzgqqKEyx4GEBbP60snlpmDd9%2FxvK0RLTEgZcQvS90Z%2BJrFWHuFQmCa2uEUQQKgF7Qpq8qqSjeq6IAGBYIDe9p6dZUelO3WUeBs3LIYhJiAqWC5QHch%2FiHkwh6T%2F%2BgU6rwJOXHMXojdMoiOi7c5oERGxk7kd4eURK1CO6f90YeuVLKrvAkG9a9vlBO4wA7kGgF%2B4viMEBObGfSM1MXG2cNO%2FdH1LMh%2Bq7VMSZ%2B2PVwvPDxrDie4SHO4gsTyK0U1XgP8R9z95ti7SwTWuzBqE%2FzWG2azVnpt8wLcdF3HsqlK9MLzLnyw2j%2FY5oh6LLEgEECRpIpYX05d8zraQUCc%2FdY%2BJZcAq6Ec741Ath%2Bgdvq%2BHcd8ZhkMmJZAFKtysT15ZFuHCU%2BS2vw4sFE%2Fae4L8Ku4uIuQ8qb%2BiX5IQ8Ybpab26SBhlWB7jpVAY9IT2r2ZF0ViBx5LaNo1n6IJhMP1fNMCn64WRxsT6O9Exq6ZRUhMut9UPQUyysAMBlzG9UOOvgh1OniHK2%2BEuOU1xd2jXR1I%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200914T203428Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIASVA5GJL5UWWGGEGM%2F20200914%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=b258d09c203bd63162062a410de93592f567c025888905336be23ff5a6e2ad43'
-    # url = r'https://training-images-team-a.s3.us-east-1.amazonaws.com/Stories%20Dataset/Transcribed%20Stories/31--/3104/Photo%203104%20pg1.jpg?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEL3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMSJIMEYCIQC6YjAXwYe04FDe2uDN4oYS604ldor5G3BOxWROCzYgvAIhAKIwEvEfXdk17xFZ4RPqYddNNdhmDyDAZM1PoXnRBvQRKuQCCMb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQARoMMTgyNTk3MzM5ODk5Igxe25VTGEWW%2BoPCaLsquAJl9zk2VZ6rJiK%2FQ11omMOqI5eT5JOATYKFng%2FNTmiCh73QyN0tUEN%2BaEy9cT%2F3BtXVM8Bwy9NE7jmGsQKX3SyE5lJNkaVPEcwPsw8axzxCG82fj9zzcHLwOx%2FjuohATf0wuuGSZkBrFhWG07OSphaAVOvEeu1HqTrVJ7a8znWEuWpsfqldimgizxUPnhBbrMQGiHgLaOHsZ45IVxTJgAJ5T3LmaBjyFsGkKWfjNLKqOFjVP6X7QbyzERpfslUWt8nNSQzfnO5XmPVBbh7P9ArDS5CsZjXMmwomX3UoQOyDmzgqqKEyx4GEBbP60snlpmDd9%2FxvK0RLTEgZcQvS90Z%2BJrFWHuFQmCa2uEUQQKgF7Qpq8qqSjeq6IAGBYIDe9p6dZUelO3WUeBs3LIYhJiAqWC5QHch%2FiHkwh6T%2F%2BgU6rwJOXHMXojdMoiOi7c5oERGxk7kd4eURK1CO6f90YeuVLKrvAkG9a9vlBO4wA7kGgF%2B4viMEBObGfSM1MXG2cNO%2FdH1LMh%2Bq7VMSZ%2B2PVwvPDxrDie4SHO4gsTyK0U1XgP8R9z95ti7SwTWuzBqE%2FzWG2azVnpt8wLcdF3HsqlK9MLzLnyw2j%2FY5oh6LLEgEECRpIpYX05d8zraQUCc%2FdY%2BJZcAq6Ec741Ath%2Bgdvq%2BHcd8ZhkMmJZAFKtysT15ZFuHCU%2BS2vw4sFE%2Fae4L8Ku4uIuQ8qb%2BiX5IQ8Ybpab26SBhlWB7jpVAY9IT2r2ZF0ViBx5LaNo1n6IJhMP1fNMCn64WRxsT6O9Exq6ZRUhMut9UPQUyysAMBlzG9UOOvgh1OniHK2%2BEuOU1xd2jXR1I%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200914T213100Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIASVA5GJL5UWWGGEGM%2F20200914%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=cdddb0b711c13f3bd5f32842bd6548a3ff9ddbb01fa8d415c6c28d26eeb858c6'
-    # url = r'https://training-images-team-a.s3.us-east-1.amazonaws.com/Stories%20Dataset/Transcribed%20Stories/51--/5102/Photo%205102%20pg1.jpg?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEL3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMSJIMEYCIQC6YjAXwYe04FDe2uDN4oYS604ldor5G3BOxWROCzYgvAIhAKIwEvEfXdk17xFZ4RPqYddNNdhmDyDAZM1PoXnRBvQRKuQCCMb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQARoMMTgyNTk3MzM5ODk5Igxe25VTGEWW%2BoPCaLsquAJl9zk2VZ6rJiK%2FQ11omMOqI5eT5JOATYKFng%2FNTmiCh73QyN0tUEN%2BaEy9cT%2F3BtXVM8Bwy9NE7jmGsQKX3SyE5lJNkaVPEcwPsw8axzxCG82fj9zzcHLwOx%2FjuohATf0wuuGSZkBrFhWG07OSphaAVOvEeu1HqTrVJ7a8znWEuWpsfqldimgizxUPnhBbrMQGiHgLaOHsZ45IVxTJgAJ5T3LmaBjyFsGkKWfjNLKqOFjVP6X7QbyzERpfslUWt8nNSQzfnO5XmPVBbh7P9ArDS5CsZjXMmwomX3UoQOyDmzgqqKEyx4GEBbP60snlpmDd9%2FxvK0RLTEgZcQvS90Z%2BJrFWHuFQmCa2uEUQQKgF7Qpq8qqSjeq6IAGBYIDe9p6dZUelO3WUeBs3LIYhJiAqWC5QHch%2FiHkwh6T%2F%2BgU6rwJOXHMXojdMoiOi7c5oERGxk7kd4eURK1CO6f90YeuVLKrvAkG9a9vlBO4wA7kGgF%2B4viMEBObGfSM1MXG2cNO%2FdH1LMh%2Bq7VMSZ%2B2PVwvPDxrDie4SHO4gsTyK0U1XgP8R9z95ti7SwTWuzBqE%2FzWG2azVnpt8wLcdF3HsqlK9MLzLnyw2j%2FY5oh6LLEgEECRpIpYX05d8zraQUCc%2FdY%2BJZcAq6Ec741Ath%2Bgdvq%2BHcd8ZhkMmJZAFKtysT15ZFuHCU%2BS2vw4sFE%2Fae4L8Ku4uIuQ8qb%2BiX5IQ8Ybpab26SBhlWB7jpVAY9IT2r2ZF0ViBx5LaNo1n6IJhMP1fNMCn64WRxsT6O9Exq6ZRUhMut9UPQUyysAMBlzG9UOOvgh1OniHK2%2BEuOU1xd2jXR1I%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200914T211040Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIASVA5GJL5UWWGGEGM%2F20200914%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=d53969b05bfabab49dae6cbc79b833338a68e1fb42fe86c4979d481c3d185891'
-
-    # print(
-    #     set_endpoint(local_path="./weird_page_2.jpg")
-    # )
-    # normal = google_handwriting_recognizer(url=url)
     # corrected = spellcheck(normal)
     # print("normal:", normal)
     # print()
     # print("corrected:", corrected)
-    environment_vars_jsonify()
     #x = google_pdf_handwriting_recognizer(local_path="./test_pdfs/test_pdf_1.pdf")
     #x = " ".join(x)
     string = "After a long toalk. ith the was Summer seperated Then side April was over. Suddenly before them. He mad at April that they diffeent sidles. from the on. Summer came running strong muscular mon stood a genie. I three wishes. was. onto completely a huge fla sh a Said. am here to grant you am made 2 w "
