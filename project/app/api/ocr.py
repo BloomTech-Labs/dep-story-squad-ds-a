@@ -2,7 +2,8 @@ from fastapi import APIRouter, HTTPException
 import pandas as pd
 import plotly.express as px
 from remote_pdb import set_trace as st
-from app.ocr.google_handwriting_recognition import google_handwriting_recognizer, evaluate
+from app.ocr.google_handwriting_recognition import google_handwriting_recognizer
+from app.ocr.text_complexity import evaluate
 import dotenv
 import json
 
