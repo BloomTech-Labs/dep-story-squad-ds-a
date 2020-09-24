@@ -35,10 +35,15 @@ def tokenize(input_str: str) -> str:
 
 
 def descriptiveness(input_str: str) -> str:
+    '''
+    Spellchecks and tokenizes an input string in order to find part of speech of each word,
+    compares verbs, adj, adv ratio to proper noun and noun ratio to describe how descriptive 
+    the text is
+    '''
+    
     input_str2 = spellcheck(input_str)
     doc = nlp(input_str2)
-    # Token texts
-    # x = [token.text for token in doc]
+    
     x = [token.pos_ for token in doc]
     count = 0
     count2 = 0 
@@ -132,8 +137,10 @@ def avg_len_words(input_str: str) -> int:
 
 
 def evaluate(input_str: str) -> int:
-    # tokenize and spellcheck the input string, add words to set,
-
+    '''
+    Evaluates text using unique words, avg len of words, avg sentence length, spelling efficiency,
+    and descriptiveness to produce an overall score for the user
+    '''
     score = (
             (.2 * unique_words(input_str)) +
             (.2 * avg_len_words(input_str)) +
