@@ -4,7 +4,6 @@ import spacy
 from spacy.tokenizer import Tokenizer
 from nltk.stem import PorterStemmer
 
-
 # initializing object
 nlp = spacy.load("en_core_web_sm")
 spell = Speller(lang='en')
@@ -134,6 +133,7 @@ def avg_len_words(input_str: str) -> int:
 
 def evaluate(input_str: str) -> int:
     # tokenize and spellcheck the input string, add words to set,
+
     score = (
             (.2 * unique_words(input_str)) +
             (.2 * avg_len_words(input_str)) +

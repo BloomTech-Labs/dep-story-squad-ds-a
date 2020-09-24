@@ -16,9 +16,6 @@ from google.cloud import vision
 from google.oauth2 import service_account
 
 
-
-
-
 def google_handwriting_recognizer(
         local_path: str = None, url: str = None, s3_obj: str = None) -> str:
     """

@@ -48,16 +48,7 @@ async def ocr(url: str = None, s3_obj: str = None):
 
 @router.post('/text_eval')
 async def text_eval(text: str):
-    return {
-        "score": evaluate(str)
-    }
 
-
-@router.post('/get_json')
-async def text_eval():
-    return_str = ""
-    with open("./key.json") as file_obj:
-        return_str = file_obj.read()
     return {
-        "key_json_inside": return_str
+        "score": evaluate(text)
     }
