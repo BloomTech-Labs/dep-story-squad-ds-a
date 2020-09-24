@@ -239,6 +239,20 @@ def tokenize(input_str: str) -> str:
 
     return arr
 
+def descriptiveness(input_str: str) -> str:
+    doc = nlp(input_str)
+    # Token texts
+    #x = [token.text for token in doc]
+    x = [token.pos_ for token in doc]
+    count = 0
+    count2 = 0 
+    for part_of_speech in x:
+        if part_of_speech == "PROPN" or part_of_speech == "NOUN" :
+            count +=1
+        elif part_of_speech == "VERB" or part_of_speech == "ADJ" or part_of_speech == "ADV" :
+            count2 +=1
+        
+    return count2 / count   
 
 def spellchecked_words(input_str: str) -> int:
     '''
@@ -324,9 +338,10 @@ def evaluate(input_str: str) -> int:
     # tokenize and spellcheck the input string, add words to set,
     score = \
         (.2 * unique_words(input_str)) +\
-        (.3 * avg_len_words(input_str)) +\
-        (.3 * avg_sentence_length(input_str)) +\
-        (.2 * efficiency(input_str))
+        (.2 * avg_len_words(input_str)) +\
+        (.2 * avg_sentence_length(input_str)) +\
+        (.2 * efficiency(input_str))+\
+            (.2 * descriptiveness(input_str))
 
     return score
 
@@ -346,7 +361,7 @@ if __name__ == '__main__':
     # print("normal:", normal)
     # print()
     # print("corrected:", corrected)
-    environment_vars_jsonify()
+    #environment_vars_jsonify()
     #x = google_pdf_handwriting_recognizer(local_path="./test_pdfs/test_pdf_1.pdf")
     #x = " ".join(x)
     string = "After a long toalk. ith the was Summer seperated Then side April was over. Suddenly before them. He mad at April that they diffeent sidles. from the on. Summer came running strong muscular mon stood a genie. I three wishes. was. onto completely a huge fla sh a Said. am here to grant you am made 2 w "
@@ -358,3 +373,4 @@ if __name__ == '__main__':
     print(unique_words(x))
     print(avg_len_words(x))
     print(evaluate(x))
+    print(descriptiveness(x))
