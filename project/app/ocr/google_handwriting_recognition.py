@@ -240,7 +240,8 @@ def tokenize(input_str: str) -> str:
     return arr
 
 def descriptiveness(input_str: str) -> str:
-    doc = nlp(input_str)
+    input_str2 = spellcheck(input_str)
+    doc = nlp(input_str2)
     # Token texts
     #x = [token.text for token in doc]
     x = [token.pos_ for token in doc]
@@ -337,11 +338,11 @@ def avg_len_words(input_str: str) -> int:
 def evaluate(input_str: str) -> int:
     # tokenize and spellcheck the input string, add words to set,
     score = \
-        (.2 * unique_words(input_str)) +\
+        ((.2 * unique_words(input_str)) +\
         (.2 * avg_len_words(input_str)) +\
         (.2 * avg_sentence_length(input_str)) +\
-        (.2 * efficiency(input_str))+\
-            (.2 * descriptiveness(input_str))
+        (.2 * efficiency(input_str))) +\
+            ( .2 * descriptiveness(input_str))
 
     return score
 
