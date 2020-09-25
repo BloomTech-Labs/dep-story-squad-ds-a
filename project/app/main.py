@@ -2,22 +2,26 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import dotenv
-from app.api import ocr, s3
+from app.api import image_ocr_url, image_ocr_s3_obj, pdf_ocr_url, pdf_ocr_s3_obj, s3
 
 dotenv.load_dotenv()
 
 app = FastAPI(
     title='LABS 26 TEAM A STORY-SQUAD DS API',
-    description='Endpoints for doing handwritten-text recognition and text compexity',
+    description='Endpoints for doing handwritten-text recognition and text complexity',
     version='0.1',
     docs_url='/',
 )
 
 # app.include_router(viz.router)
 # app.include_router(predict.router)
-app.include_router(ocr.router)
-app.include_router(s3.router)
+app.include_router(pdf_ocr_url.router)
+app.include_router(pdf_ocr_s3_obj.router)
 
+app.include_router(image_ocr_url.router)
+app.include_router(image_ocr_s3_obj.router)
+
+app.include_router(s3.router)
 
 app.add_middleware(
     CORSMiddleware,
