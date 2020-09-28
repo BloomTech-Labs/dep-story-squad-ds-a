@@ -4,7 +4,6 @@ import spacy
 from spacy.tokenizer import Tokenizer
 from nltk.stem import PorterStemmer
 
-
 # initializing object
 nlp = spacy.load("en_core_web_sm")
 spell = Speller(lang='en')

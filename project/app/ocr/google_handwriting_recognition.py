@@ -2,21 +2,13 @@
 # from pdb import set_trace as st
 import io
 import os
-from autocorrect import Speller
 import requests
-import re
-import spacy
-from spacy.tokenizer import Tokenizer
-from nltk.stem import PorterStemmer
 import json
 from pdf2image import convert_from_path
 from typing import List
 import boto3
 from google.cloud import vision
 from google.oauth2 import service_account
-
-
-
 
 
 def google_handwriting_recognizer(
@@ -76,6 +68,8 @@ def google_handwriting_recognizer(
         os.remove("downloaded_img.jpg")
 
     elif s3_obj is not None:
+        # image is stored in an S3 bucket
+
         s3 = boto3.resource('s3')
         bucket = s3.Bucket('training-images-team-a')
 
@@ -104,7 +98,7 @@ def google_handwriting_recognizer(
 
 
 def google_pdf_handwriting_recognizer(
-        local_path: str = None, url: str = None
+        local_path: str = None, url: str = None, s3_obj: str = None
         ) -> str:
     """
         Will return the text of a handwritten pdf file.
@@ -133,11 +127,25 @@ def google_pdf_handwriting_recognizer(
         # 1.2. convert pdf to a series of jpg files
         pdf_to_jpg("downloaded_pdf.pdf")
 
-    if local_path is not None:
+    elif local_path is not None:
         # pdf is a local file on the drive
 
         # 2.2. convert pdf to a series of jpg files
         pdf_to_jpg(local_path)
+
+    elif s3_obj is not None:
+        # pdf is stored in an S3 bucket
+
+        s3 = boto3.resource('s3')
+        bucket = s3.Bucket('training-images-team-a')
+
+        output_file_name = s3_obj.split("/")[-1]
+        bucket.download_file(s3_obj, output_file_name)
+
+        pdf_to_jpg(output_file_name)
+
+    else:
+        return "No parameters were set!"
 
     # 2. get the name of all .jpg files
     jpg_file_names = \
