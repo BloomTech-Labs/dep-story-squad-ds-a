@@ -3,18 +3,17 @@ from fastapi import APIRouter, HTTPException
 from app.ocr.google_handwriting_recognition import google_pdf_handwriting_recognizer
 from app.ocr.text_complexity import evaluate
 from pydantic import BaseModel
-from typing import Optional
 
 router = APIRouter()
 
 
-class ImageOcrURL(BaseModel):
+class PdfOcrURL(BaseModel):
     url: str
-    get_complexity_score: Optional[int] = None
+    get_complexity_score: int = 0
 
 
 @router.post('/pdf_ocr_url')
-async def ocr(params: ImageOcrURL):
+async def ocr(params: PdfOcrURL):
     """
     Handwriting recognizer with google's vision API for PDFs
 
@@ -27,14 +26,14 @@ async def ocr(params: ImageOcrURL):
 
     ### Response
     - `ocr_text`: string, representing the recognized text
-    - `complexity_score` (Optional): float
+    - `complexity_score` float: -1 if 'get_text_complexity' is 0, else 0.0 < < 1.0
     """
 
     if params.url is not None:
         ocr_text = google_pdf_handwriting_recognizer(url=params.url)
         return {
             "ocr_text": ocr_text,
-            "complexity_score": evaluate(" ".join(ocr_text))
+            "complexity_score": -1 if not params.get_complexcity_score else evaluate(" ".join(ocr_text))
         }
 
     else:
