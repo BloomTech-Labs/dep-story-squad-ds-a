@@ -53,8 +53,10 @@ def descriptiveness(input_str: str) -> str:
             count += 1
         elif part_of_speech == "VERB" or part_of_speech == "ADJ" or part_of_speech == "ADV" :
             count2 += 1
-
-    return count2 / count
+    if count == 0:
+        return 0
+    else:
+        return count2 / count
 
 
 def spellchecked_words(input_str: str) -> int:
@@ -82,9 +84,11 @@ def efficiency(input_str: str) -> int:
     """
     original = len(tokenize(input_str))
     difference = original - spellchecked_words(input_str)
-
-    percentage = difference / original
-
+    if original == 0:
+        return 0 
+    else:
+        percentage = difference / original
+    
     return percentage
 
 
@@ -98,7 +102,10 @@ def unique_words(input_str: str) -> int:
     for word in words:
         arr.append(word)
         arr2.add(word)
-        x = len(arr2) / len(arr)
+        if len(arr) == 0:
+            return 0
+        else:
+            x = len(arr2) / len(arr)
 
     return x
 
@@ -118,9 +125,12 @@ def avg_sentence_length(input_str: str) -> int:
 
     for word in words:
         arr.append(word)
-        x = (len(arr) / 10)
-
-    return x / count
+        x = len(arr) 
+        y = (x / 10)
+    if count == 0:
+        return 0 
+    else:
+        return y / count
 
 
 def avg_len_words(input_str: str) -> int:
@@ -132,10 +142,15 @@ def avg_len_words(input_str: str) -> int:
     for word in words:
         x = len(word)
         arr.append(x)
-        y = (sum(arr) / len(arr)) / 10
+        x = sum(arr) / len(arr)
+        y = (x / 10)
 
-    return y
+        if len(arr) == 0:
+            return 0
+        else:
+            return y    
 
+    
 def vocab_score(input_str: str) -> int:
     '''
     Returns average word size of tokenized and unique words
@@ -149,8 +164,11 @@ def vocab_score(input_str: str) -> int:
             x = len(word)
             arr2.append(x)
             y = (sum(arr2) / len(arr2)) / 10
-
-    return y  
+            if y == 0:
+                return 0
+            else:
+                return y     
+  
     
 
 def evaluate(input_str: str) -> int:
@@ -195,13 +213,13 @@ if __name__ == '__main__':
     # x = " ".join(x)
     string = "After a long toalk. ith the was Summer seperated Then side April was over. Suddenly before them. He mad at April that they diffeent sidles. from the on. Summer came running strong muscular mon stood a genie. I three wishes. was. onto completely a huge fla sh a Said. am here to grant you am made 2 w "
     x = (string)
-    #print(tokenize(x))
+    print(tokenize(x))
     #print(avg_sentence_length(x))
     #print(spellchecked_words(x))
-    #print(efficiency(x))
+    print(efficiency(x))
     #print(unique_words(x))
-    #print(avg_len_words(x))
-    #print(evaluate(x))
-    #print(descriptiveness(x))
-    #print(vocab_score(x))
+    print(avg_len_words(x))
+    print(evaluate(x))
+    print(descriptiveness(x))
+    print(vocab_score(x))
     print(store(x))
