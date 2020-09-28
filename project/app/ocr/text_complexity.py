@@ -128,7 +128,7 @@ def avg_sentence_length(input_str: str) -> int:
         x = len(arr) 
         y = (x / 10)
     if count == 0:
-        return 0 
+        return y 
     else:
         return y / count
 
