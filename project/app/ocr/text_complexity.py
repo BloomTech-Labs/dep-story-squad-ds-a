@@ -3,6 +3,7 @@ import re
 import spacy
 from spacy.tokenizer import Tokenizer
 from nltk.stem import PorterStemmer
+import json
 
 # initializing object
 nlp = spacy.load("en_core_web_sm")
@@ -158,15 +159,32 @@ def evaluate(input_str: str) -> int:
     and descriptiveness to produce an overall score for the user
     '''
     score = (
-            (.25 * vocab_score(input_str)) +
+            (.1 * vocab_score(input_str)) +
             
-            (.25 * avg_sentence_length(input_str)) +
-            (.25 * efficiency(input_str)) +
-            (.25 * descriptiveness(input_str))
+            (.1 * avg_sentence_length(input_str)) +
+            (.1 * efficiency(input_str)) +
+            (.1 * descriptiveness(input_str))
         )
 
     return score
 
+def store(input_str: str) -> str:
+    str1 = vocab_score(input_str)
+    str2 = avg_sentence_length(input_str)
+    str3 = efficiency(input_str)
+    str4 = descriptiveness(input_str)
+    str5 = evaluate(input_str)
+
+    jsonStr = json.dumps(str1)
+    jsonStr2 = json.dumps(str2)
+    jsonStr3 = json.dumps(str3)
+    jsonStr4 = json.dumps(str4)
+    jsonStr5 = json.dumps(str5)
+    storage = [ f"vocab score: {(jsonStr)} ",  f"avg_sentence_length score: {(jsonStr2)}",  \
+        f"efficiency score: {(jsonStr3)}" , f"descriptiveness score: {(jsonStr)} ",\
+            f"evaluate score: {(jsonStr5)}"]
+    
+    return storage
 
 if __name__ == '__main__':
     # corrected = spellcheck(normal)
@@ -177,12 +195,13 @@ if __name__ == '__main__':
     # x = " ".join(x)
     string = "After a long toalk. ith the was Summer seperated Then side April was over. Suddenly before them. He mad at April that they diffeent sidles. from the on. Summer came running strong muscular mon stood a genie. I three wishes. was. onto completely a huge fla sh a Said. am here to grant you am made 2 w "
     x = (string)
-    print(tokenize(x))
-    print(avg_sentence_length(x))
-    print(spellchecked_words(x))
-    print(efficiency(x))
-    print(unique_words(x))
-    print(avg_len_words(x))
-    print(evaluate(x))
-    print(descriptiveness(x))
-    print(vocab_score(x))
+    #print(tokenize(x))
+    #print(avg_sentence_length(x))
+    #print(spellchecked_words(x))
+    #print(efficiency(x))
+    #print(unique_words(x))
+    #print(avg_len_words(x))
+    #print(evaluate(x))
+    #print(descriptiveness(x))
+    #print(vocab_score(x))
+    print(store(x))
