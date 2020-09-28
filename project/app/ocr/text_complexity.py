@@ -136,18 +136,31 @@ def avg_len_words(input_str: str) -> int:
 
     return y
 
+def vocab_score(input_str: str) -> int:
+    arr = set()
+    arr2 = []
+    words = tokenize(input_str)
+    for word in words:
+        arr.add(word)
+        for word in arr:
+            x = len(word)
+            arr2.append(x)
+            y = (sum(arr2) / len(arr2)) / 10
+
+    return y  
+    
 
 def evaluate(input_str: str) -> int:
     '''
-    Evaluates text using unique words, avg len of words, avg sentence length, spelling efficiency,
+    Evaluates text using vocab score, avg sentence length, spelling efficiency,
     and descriptiveness to produce an overall score for the user
     '''
     score = (
-            (.2 * unique_words(input_str)) +
-            (.2 * avg_len_words(input_str)) +
-            (.2 * avg_sentence_length(input_str)) +
-            (.2 * efficiency(input_str)) +
-            (.2 * descriptiveness(input_str))
+            (.25 * vocab_score(input_str)) +
+            
+            (.25 * avg_sentence_length(input_str)) +
+            (.25 * efficiency(input_str)) +
+            (.25 * descriptiveness(input_str))
         )
 
     return score
@@ -170,3 +183,4 @@ if __name__ == '__main__':
     print(avg_len_words(x))
     print(evaluate(x))
     print(descriptiveness(x))
+    print(vocab_score(x))
