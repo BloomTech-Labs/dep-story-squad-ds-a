@@ -12,11 +12,3 @@ s3 = boto3.resource(
     aws_access_key_id=aws_access_key_id,
     aws_secret_access_key=aws_secret_access_key
 )
-
-# for bucket in s3.buckets.all():
-#     print(bucket.name)
-BUCKET_NAME = "training-images-team-a"
-OBJECT_NAME = 
-FILE_NAME
-
-s3.download_file(BUCKET_NAME, 'OBJECT_NAME', 'FILE_NAME')
