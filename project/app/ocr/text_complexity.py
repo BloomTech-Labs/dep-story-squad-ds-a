@@ -4,6 +4,8 @@ import spacy
 from spacy.tokenizer import Tokenizer
 from nltk.stem import PorterStemmer
 import json
+from wordcount import wordlist
+
 
 # initializing object
 nlp = spacy.load("en_core_web_sm")
@@ -53,8 +55,10 @@ def descriptiveness(input_str: str) -> str:
             count += 1
         elif part_of_speech == "VERB" or part_of_speech == "ADJ" or part_of_speech == "ADV" :
             count2 += 1
-
-    return count2 / count
+    if count == 0:
+        return 0
+    else:
+        return count2 / count
 
 
 def spellchecked_words(input_str: str) -> int:
@@ -82,9 +86,11 @@ def efficiency(input_str: str) -> int:
     """
     original = len(tokenize(input_str))
     difference = original - spellchecked_words(input_str)
-
-    percentage = difference / original
-
+    if original == 0:
+        return 0 
+    else:
+        percentage = difference / original
+    
     return percentage
 
 
@@ -98,7 +104,10 @@ def unique_words(input_str: str) -> int:
     for word in words:
         arr.append(word)
         arr2.add(word)
-        x = len(arr2) / len(arr)
+        if len(arr) == 0:
+            return 0
+        else:
+            x = len(arr2) / len(arr)
 
     return x
 
@@ -118,9 +127,12 @@ def avg_sentence_length(input_str: str) -> int:
 
     for word in words:
         arr.append(word)
-        x = (len(arr) / 10)
-
-    return x / count
+        x = len(arr) 
+        y = (x / 10)
+    if count == 0:
+        return y 
+    else:
+        return y / count
 
 
 def avg_len_words(input_str: str) -> int:
@@ -132,12 +144,16 @@ def avg_len_words(input_str: str) -> int:
     for word in words:
         x = len(word)
         arr.append(x)
-        y = (sum(arr) / len(arr)) / 10
+        x = sum(arr) / len(arr)
+        y = (x / 10)
 
-    return y
+        if len(arr) == 0:
+            return 0
+        else:
+            return y    
 
-
-def vocab_score(input_str: str) -> int:
+    
+def vocab_length(input_str: str) -> int:
     '''
     Returns average word size of tokenized and unique words
     '''
@@ -150,9 +166,21 @@ def vocab_score(input_str: str) -> int:
             x = len(word)
             arr2.append(x)
             y = (sum(arr2) / len(arr2)) / 10
-
-    return y  
-    
+            if y == 0:
+                return 0
+            else:
+                return y     
+  
+def good_vocab(input_str: str) -> int:
+    arr = []
+    arr2 = []
+    words = tokenize(input_str)
+    for word in words:
+        arr2.append(word)
+        if word in wordlist:
+            arr.append(word)
+            good_vocab = len(arr) / len(arr2)
+    return good_vocab                       
 
 def evaluate(input_str: str) -> int:
     '''
@@ -160,7 +188,8 @@ def evaluate(input_str: str) -> int:
     and descriptiveness to produce an overall score for the user
     '''
     score = (
-            (.1 * vocab_score(input_str)) +
+            (.1 * vocab_length(input_str)) +
+            (.2 * good_vocab(input_str)) +
             
             (.1 * avg_sentence_length(input_str)) +
             (.1 * efficiency(input_str)) +
@@ -170,20 +199,22 @@ def evaluate(input_str: str) -> int:
     return score
 
 def store(input_str: str) -> str:
-    str1 = vocab_score(input_str)
+    str1 = vocab_length(input_str)
     str2 = avg_sentence_length(input_str)
     str3 = efficiency(input_str)
     str4 = descriptiveness(input_str)
-    str5 = evaluate(input_str)
+    str5 = good_vocab(input_str)
+    str6 = evaluate(input_str)
 
     jsonStr = json.dumps(str1)
     jsonStr2 = json.dumps(str2)
     jsonStr3 = json.dumps(str3)
     jsonStr4 = json.dumps(str4)
     jsonStr5 = json.dumps(str5)
-    storage = [ f"vocab score: {(jsonStr)} ",  f"avg_sentence_length score: {(jsonStr2)}",  \
+    jsonStr6 = json.dumps(str6)
+    storage = [ f"vocab_length: {(jsonStr)} ",  f"avg_sentence_length score: {(jsonStr2)}",  \
         f"efficiency score: {(jsonStr3)}" , f"descriptiveness score: {(jsonStr)} ",\
-            f"evaluate score: {(jsonStr5)}"]
+            f"good_vocab: {(jsonStr5)}", f"evaluate: {(jsonStr6)}"]
     
     return storage
 
@@ -194,15 +225,16 @@ if __name__ == '__main__':
     # print("corrected:", corrected)
     # x = google_pdf_handwriting_recognizer(local_path="./test_pdfs/test_pdf_1.pdf")
     # x = " ".join(x)
-    string = "After a long toalk. ith the was Summer seperated Then side April was over. Suddenly before them. He mad at April that they diffeent sidles. from the on. Summer came running strong muscular mon stood a genie. I three wishes. was. onto completely a huge fla sh a Said. am here to grant you am made 2 w "
+    string = "After a long toalk. comprehension insider ith the was Summer seperated Then side April was over. Suddenly before them. He mad at April that they diffeent sidles. from the on. Summer came running strong muscular mon stood a genie. I three wishes. was. onto completely a huge fla sh a Said. am here to grant you am made 2 w "
     x = (string)
-    #print(tokenize(x))
-    #print(avg_sentence_length(x))
+    print(tokenize(x))
     #print(spellchecked_words(x))
-    #print(efficiency(x))
     #print(unique_words(x))
-    #print(avg_len_words(x))
-    #print(evaluate(x))
-    #print(descriptiveness(x))
-    #print(vocab_score(x))
+    print(vocab_length(x))
+    print(avg_sentence_length(x))
+    print(efficiency(x))
+    print(descriptiveness(x))
+    print(good_vocab(x))
+    print(evaluate(x))
     print(store(x))
+    #print(wordlist)
