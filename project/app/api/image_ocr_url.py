@@ -20,7 +20,6 @@ async def ocr(params: ImageOcrURL):
     ### Request Body
 
     - `url`: string
-
     - `get_text_complexity`: int
         #### A number that is only 0 or 1, to specify whether to get the text complexity score or no
 

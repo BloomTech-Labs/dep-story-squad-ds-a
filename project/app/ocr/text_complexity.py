@@ -136,6 +136,7 @@ def avg_len_words(input_str: str) -> int:
 
     return y
 
+
 def vocab_score(input_str: str) -> int:
     '''
     Returns average word size of tokenized and unique words

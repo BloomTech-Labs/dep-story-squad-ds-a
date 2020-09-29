@@ -1,4 +1,4 @@
-# from remote_pdb import set_trace as st
+from remote_pdb import set_trace as st
 # from pdb import set_trace as st
 import io
 import os
@@ -95,6 +95,42 @@ def google_handwriting_recognizer(
                 response.error.message))
 
     return return_str
+
+
+ 
+############
+
+
+def google_handwriting_recognizer_dir(s3_dir: str = None) -> str:
+    """
+        Will return the text of a handwritten text.
+
+        Args:
+            -s3_dir:
+            The s3 directory that has images for a single story,
+            Could be having 1 or more .jpg files
+    """
+
+    if s3_obj is not None:
+        # image is stored in an S3 bucket
+        # need to pass all of the images to google_handwriting_recognizer
+
+        s3 = boto3.resource('s3')
+        bucket = s3.Bucket('training-images-team-a')
+        st()
+        output_file_name = s3_obj.split("/")[-1]
+        bucket.download_file(s3_obj, output_file_name)
+        ocr_text_list = [] 
+        for image_file in image_objs:
+            ocr_text_list.append(google_handwriting_recognizer(s3_obj=image_file))
+
+        return ocr_text_list
+
+    else:
+        return "No parameters were set!"
+
+##################
+
 
 
 def google_pdf_handwriting_recognizer(
