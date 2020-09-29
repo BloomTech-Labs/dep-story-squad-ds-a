@@ -14,6 +14,9 @@ app = FastAPI(
 )
 
 
+app.include_router(ocr.router)
+app.include_router(s3.router)
+
 app.include_router(pdf_ocr_url.router)
 app.include_router(pdf_ocr_s3_obj.router)
 
