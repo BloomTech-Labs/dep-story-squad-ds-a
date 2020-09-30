@@ -6,7 +6,6 @@ from nltk.stem import PorterStemmer
 import json
 from wordcount import wordlist
 
-
 # initializing object
 nlp = spacy.load("en_core_web_sm")
 spell = Speller(lang='en')
@@ -50,6 +49,7 @@ def descriptiveness(input_str: str) -> str:
     x = [token.pos_ for token in doc]
     count = 0
     count2 = 0 
+    
     for part_of_speech in x:
         if part_of_speech == "PROPN" or part_of_speech == "NOUN" :
             count += 1
@@ -57,6 +57,9 @@ def descriptiveness(input_str: str) -> str:
             count2 += 1
     if count == 0:
         return 0
+    elif count2 / count > 1:
+        return 1
+
     else:
         return count2 / count
 
@@ -82,7 +85,7 @@ def efficiency(input_str: str) -> int:
     """
     finds length of original string after tokenization,
     divides # of non-spellchecked words
-    by # of total words
+    by # of total words, returns value between 0 and 1
     """
     original = len(tokenize(input_str))
     difference = original - spellchecked_words(input_str)
@@ -116,6 +119,7 @@ def avg_sentence_length(input_str: str) -> int:
     """
     finds average sentence length after tokenization
     by taking total tokens / tokens containing .
+    returns value between 0 and 1
     """
 
     arr = []
@@ -131,6 +135,8 @@ def avg_sentence_length(input_str: str) -> int:
         y = (x / 10)
     if count == 0:
         return y 
+    elif y > 1:
+        return 1    
     else:
         return y / count
 
@@ -138,6 +144,7 @@ def avg_sentence_length(input_str: str) -> int:
 def avg_len_words(input_str: str) -> int:
     """
     finds the average length of words after tokenization in the text
+    returns value between 0 and 1
     """
     arr = []
     words = tokenize(input_str)
@@ -149,6 +156,8 @@ def avg_len_words(input_str: str) -> int:
 
         if len(arr) == 0:
             return 0
+        elif y > 1:
+            return 1    
         else:
             return y    
 
@@ -156,6 +165,7 @@ def avg_len_words(input_str: str) -> int:
 def vocab_length(input_str: str) -> int:
     '''
     Returns average word size of tokenized and unique words
+    returns value between 0 and 1
     '''
     arr = set()
     arr2 = []
@@ -172,6 +182,11 @@ def vocab_length(input_str: str) -> int:
                 return y     
   
 def good_vocab(input_str: str) -> int:
+    '''
+   Scrolls through input and matches up words against word list of large words,
+   and returns percentage of words in input string that are in the word list,
+   returns value between 0 and 1 
+   '''
     arr = []
     arr2 = []
     words = tokenize(input_str)
@@ -197,6 +212,61 @@ def evaluate(input_str: str) -> int:
         )
 
     return score
+def good_vocab_stars(input_str: str) -> int:
+    '''
+    returns between 0 and 5 stars, rounded to the nearest half star, based on usage of 
+    good vocabulary
+    '''
+    x = good_vocab(input_str) / .12
+    y = round(x*2)/2
+    if y >= 5:
+        return 5
+    else: 
+        return y
+def efficiency_stars(input_str: str) -> int:
+    '''
+    returns between 0 and 5 stars, rounded to the nearest half star, based on usage of 
+    spellcheck efficiency
+    '''
+    x = efficiency(input_str) / .15
+    y = round(x*2) / 2
+    if y >= 5:
+        return 5
+    else: 
+        return y
+def word_length_stars(input_str: str) -> int:
+    '''
+    returns between 0 and 5 stars, rounded to the nearest half star, based on usage of 
+    average word length
+    '''
+    x = vocab_length(input_str) / .15 
+    y = round(x*2) / 2
+    if y>=5:
+        return 5
+    else:
+        return y  
+def sentence_length_stars(input_str: str) -> int:
+    '''
+    returns between 0 and 5 stars, rounded to the nearest half star, based on usage of 
+    avg sentence length
+    '''
+    x = avg_sentence_length(input_str) / .12
+    y = round(x*2) / 2
+    if y >= 5:
+        return 5
+    else:
+        return y  
+def descriptiveness_stars(input_str: str) -> int:
+    '''
+    returns between 0 and 5 stars, rounded to the nearest half star, based on usage of 
+    descriptiveness
+    '''
+    x = descriptiveness(input_str) / .15
+    y = round(x*2) / 2
+    if y >=5:
+        return 5
+    else:
+        return y                                
 
 def store(input_str: str) -> str:
     str1 = vocab_length(input_str)
@@ -225,7 +295,8 @@ if __name__ == '__main__':
     # print("corrected:", corrected)
     # x = google_pdf_handwriting_recognizer(local_path="./test_pdfs/test_pdf_1.pdf")
     # x = " ".join(x)
-    string = "After a long toalk. comprehension insider ith the was Summer seperated Then side April was over. Suddenly before them. He mad at April that they diffeent sidles. from the on. Summer came running strong muscular mon stood a genie. I three wishes. was. onto completely a huge fla sh a Said. am here to grant you am made 2 w "
+    string = "Great success. My name is Borat. I have come to America, to find Pamela Anderson, and \
+        make her my wife. Very nice!"
     x = (string)
     print(tokenize(x))
     #print(spellchecked_words(x))
@@ -238,3 +309,8 @@ if __name__ == '__main__':
     print(evaluate(x))
     print(store(x))
     #print(wordlist)
+    print(good_vocab_stars(x))
+    print(efficiency_stars(x))
+    print(word_length_stars(x))
+    print(sentence_length_stars(x))
+    print(descriptiveness_stars(x))
