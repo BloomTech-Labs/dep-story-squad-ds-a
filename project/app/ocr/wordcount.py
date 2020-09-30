@@ -1,8 +1,10 @@
 import nltk
-#nltk.download()
+# nltk.download()
 from nltk.book import *
 import spacy
 import re
+
+
 nlp = spacy.load("en_core_web_sm")
 
 fdist1 = FreqDist(text1)
@@ -44,6 +46,21 @@ a9 = text9
 
 wordlist = []
 j = a|b|c|d|e|f|g|h|i
+
+########
+jesse_words = j
+
+print("starting to read hadi's file")
+with open("./words.txt") as file_obj:
+    hadi_words = file_obj.readlines()
+
+hadi_content = []
+for x in hadi_words:
+    if (len(x) > 5 and x.strip().isalpha()):
+        hadi_content.append(x.strip().lower())
+
+print("ending hadi's file reading")
+
 for word in j :
     if len(word) > 5 and word.islower() and word.isalpha():
 
