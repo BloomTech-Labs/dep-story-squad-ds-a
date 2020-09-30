@@ -1,8 +1,10 @@
 from fastapi import APIRouter, HTTPException
 # from remote_pdb import set_trace as st
 from app.ocr.google_handwriting_recognition import google_handwriting_recognizer
-from app.ocr.text_complexity import evaluate
+from app.ocr.text_complexity import evaluate, good_vocab_stars, efficiency_stars, descriptiveness_stars, \
+        sentence_length_stars, word_length_stars
 from pydantic import BaseModel
+
 
 router = APIRouter()
 
@@ -32,7 +34,13 @@ async def ocr(params: ImageOcrURL):
         ocr_text = google_handwriting_recognizer(url=params.url)
         return {
             "ocr_text": ocr_text,
-            "complexity_score": -1 if not params.get_complexity_score else evaluate(" ".join(ocr_text))
+            "vocab_score" : good_vocab_stars(ocr_text),
+            "efficiency_score" : efficiency_stars(ocr_text),
+            "descriptiveness_score" : descriptiveness_stars(ocr_text),
+            "sentence_length_score" : sentence_length_stars(ocr_text),
+            "word_length_score" : word_length_stars(ocr_text),
+            "complexity_score": evaluate(ocr_text)
+            
         }
 
     else:
