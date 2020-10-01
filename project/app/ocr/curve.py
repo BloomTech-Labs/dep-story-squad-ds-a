@@ -65,7 +65,7 @@ dictlist.append(c)
 #            if method == "evaluate":
 #                print(f"{name}, {method}:",score)
         
-def compile(listofdicts, function)-> []: 
+def compiler(listofdicts, function)-> []: 
     '''
     takes in list of dictionaries, and function name, returns array of scores for that
     particular function
@@ -78,7 +78,7 @@ def compile(listofdicts, function)-> []:
                     scorelist.append(score)
     return(scorelist)
 
-print(compile(dictlist, "evaluate")) 
+print(compiler(dictlist, "evaluate")) 
 print("----------------")
 
 def bigcompile(listofdicts):
@@ -96,7 +96,7 @@ def bigcompile(listofdicts):
     #for each method in the methodlist, compile, and append the lists to 
     #bigscorelist array
     for method in methodlist:
-        x = compile(dictlist, method)
+        x = compiler(dictlist, method)
         bigscorelist.append(x)            
     #return a list of lists, each list representing a particular method                
     giantdictionary = dict(zip(methodlist, bigscorelist))
@@ -129,19 +129,21 @@ print("-----------------------------")
 # arrays, using the maxscorelist value, and return original dictionary values, altered based on the maxscore list
 
 # so curve is 100 * score / maxscore
+def finalscore(dictlist, user, string):
+    y = maxscorelist(dictlist)
+    z = store(string, "user" )
 
-y = maxscorelist(dictlist)
+    individ_scorelist = []
+    for userid, scores in z.items():
+        for method, score in scores.items():
+            individ_scorelist.append(score)
 
-individ_scorelist = []
-for user, scores in a.items():
-    for method, score in scores.items():
-        individ_scorelist.append(score)
+    finalscore = [i / j for i, j in zip(individ_scorelist, y)] 
 
-print(individ_scorelist)
+    return(finalscore)
 
-print("------------------------------")
-
-
+print(finalscore(dictlist, "bill", string))
+#now we want to update individual scores based on max values 
 
 
 #print(methodlist)                
