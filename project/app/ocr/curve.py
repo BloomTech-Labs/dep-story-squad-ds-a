@@ -77,6 +77,28 @@ def compile(listofdicts, function)-> []:
                     scorelist.append(score)
     return(scorelist)
 
-print(compile(dictlist, "evaluate"))    
-                
-            
+print(compile(dictlist, "evaluate")) 
+print("----------------")
+
+def bigcompile(listofdicts):
+
+    bigscorelist = []
+    methodlist = set()
+    #add different methods to methodlist
+    for user in dictlist:
+        for name, scores in user.items():
+            #print(scores)
+            for method, score in scores.items():
+                methodlist.add(method)
+    #for each method in the methodlist, compile, and append the lists to 
+    #bigscorelist array
+    for method in methodlist:
+        x = compile(dictlist, method)
+        bigscorelist.append(x)            
+    #return a list of lists, each list representing a particular method                
+    giantdictionary = dict(zip(methodlist, bigscorelist))
+    
+    return(giantdictionary)
+
+print(bigcompile(dictlist))
+#able to return a list of lists, based on dictionary lists    
