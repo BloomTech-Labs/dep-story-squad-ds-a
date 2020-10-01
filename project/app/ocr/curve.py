@@ -33,7 +33,7 @@ def insert(Database):
     the list
     '''
     dict_list = []
-    for user in Database:
+    for URL in Database:
         x = store(google_handwriting_recognizer(URL), URL:username)
         dict_list.append(x)
     return dict_list 
