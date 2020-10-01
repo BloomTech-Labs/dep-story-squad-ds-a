@@ -14,11 +14,11 @@ def store(input_str: str,  username: str) -> int:
     d = {
         username: {
             "evaluate": evaluate(input_str),
-            "good_vocab_stars": good_vocab(input_str),
-            "efficiency_stars": efficiency(input_str),
-            "decriptiveness_stars": descriptiveness(input_str),
-            "sentence_length_stars": avg_sentence_length(input_str),
-            "word_length_stars": vocab_length(input_str)
+            "good_vocab": good_vocab(input_str),
+            "efficiency": efficiency(input_str),
+            "decriptiveness": descriptiveness(input_str),
+            "sentence_length": avg_sentence_length(input_str),
+            "word_length": vocab_length(input_str)
             }
         }           
     return d    
@@ -84,13 +84,15 @@ print("----------------")
 def bigcompile(listofdicts):
 
     bigscorelist = []
-    methodlist = set()
+    methodlist = []
+    #methodlist = ["evaluate", "good_vocab", "efficiency", "descriptiveness", "sentence_length", "word_length"]
     #add different methods to methodlist
     for user in dictlist:
         for name, scores in user.items():
             #print(scores)
             for method, score in scores.items():
-                methodlist.add(method)
+                if method not in methodlist:
+                    methodlist.append(method)
     #for each method in the methodlist, compile, and append the lists to 
     #bigscorelist array
     for method in methodlist:
@@ -100,6 +102,7 @@ def bigcompile(listofdicts):
     giantdictionary = dict(zip(methodlist, bigscorelist))
     
     return(giantdictionary)
+    #return(bigscorelist)
 print(dictlist)
 print("------------------------------")
 x = bigcompile(dictlist)
@@ -109,7 +112,7 @@ print("---------------------------")
 # 
 # Now we can start doing math on the individual functions and their lists, within the big dictionary
 # 
-# curved grade is (100 * score) / (highscore) 
+
 #This simply requires you to scroll through each array, find the max, return the max as an adjuster
 def maxscorelist(dictlist):
     x = bigcompile(dictlist)
@@ -119,4 +122,28 @@ def maxscorelist(dictlist):
         maxscorelist.append(score)
     return(maxscorelist)
 
-print(maxscorelist(dictlist))        
+print(maxscorelist(dictlist)) 
+print("-----------------------------") 
+
+#now that we have maxlist values for each value, since it is ordered, we can run the curve function on the individual 
+# arrays, using the maxscorelist value, and return original dictionary values, altered based on the maxscore list
+
+# so curve is 100 * score / maxscore
+
+y = maxscorelist(dictlist)
+
+individ_scorelist = []
+for user, scores in a.items():
+    for method, score in scores.items():
+        individ_scorelist.append(score)
+
+print(individ_scorelist)
+
+print("------------------------------")
+
+
+
+
+#print(methodlist)                
+        
+
