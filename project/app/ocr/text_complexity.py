@@ -1,7 +1,7 @@
 from autocorrect import Speller
 import re
 import spacy
-from spacy.tokenizer import Tokenizer
+#from spacy.tokenizer import Tokenizer
 from nltk.stem import PorterStemmer
 import json
 from wordcount import wordlist
