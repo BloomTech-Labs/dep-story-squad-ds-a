@@ -1,5 +1,6 @@
 from text_complexity import evaluate, good_vocab, efficiency, descriptiveness, \
         avg_sentence_length, vocab_length
+import numpy as np         
 #from google_handwriting_recognition.py import google_handwriting_recognizer_dir, google_handwriting_recognizer
 
 string = "Great success. My name is Borat. I have come to America, to find Pamela Anderson, and \
@@ -99,6 +100,23 @@ def bigcompile(listofdicts):
     giantdictionary = dict(zip(methodlist, bigscorelist))
     
     return(giantdictionary)
+print(dictlist)
+print("------------------------------")
+x = bigcompile(dictlist)
+print(x)
+print("---------------------------")
+#able to return a list of lists, based on dictionary lists   
+# 
+# Now we can start doing math on the individual functions and their lists, within the big dictionary
+# 
+# curved grade is (100 * score) / (highscore) 
+#This simply requires you to scroll through each array, find the max, return the max as an adjuster
+def maxscorelist(dictlist):
+    x = bigcompile(dictlist)
+    maxscorelist = []
+    for method, scores in x.items():
+        score = np.max(scores)
+        maxscorelist.append(score)
+    return(maxscorelist)
 
-print(bigcompile(dictlist))
-#able to return a list of lists, based on dictionary lists    
+print(maxscorelist(dictlist))        
