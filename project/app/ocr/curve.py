@@ -129,29 +129,33 @@ print("-----------------------------")
 # arrays, using the maxscorelist value, and return original dictionary values, altered based on the maxscore list
 
 # so curve is 100 * score / maxscore
-def finalscore(dictlist, user, string):
-    #so this function takes in basically all the other functions functionality to provide a final score for given user,
-    # but it requires a list of dictionaries, hence the only remaining functionality has to be in creating this list 
-    # of dictionaries
-    y = maxscorelist(dictlist)
-    z = store(string, "user" )
 
-    #so a list of dictionaries is fed in, with the 6 different methods, it is compiled, and bigcompiled, and finally
-    # a maxscorelist is returned, representing the top scores from all of the values in each dictionary category
-    individ_scorelist = []
-    for userid, scores in z.items():
-        for method, score in scores.items():
-            individ_scorelist.append(score)
-    #the individ_scorelist are the scores of the specific user, from the user argument, 
-    finalscore = [i / j for i, j in zip(individ_scorelist, y)] 
-    # the final score takes the specific users score, divides them by the maximum score from the maxscorelist, and returns a
-    # final score array, representing the final scores for the given user, in order
-    return(finalscore)
-
-print(finalscore(dictlist, "bill", string))
+#print(finalscore(dictlist, "bill", string))
+#print(dictlist)
 #now we want to update individual scores based on max values 
+def finalscore(dictlist, user):
+    #calculates adjusted curved scored for particular user and particular dictionary list
+    y = maxscorelist(dictlist)
+    
+    individ_scores = []
+    
+    for entry in dictlist:
+        for user, scores in entry.items():
+            if user == user:
+                for method, score in scores.items():
+                    individ_scores.append(score)
+    
+    finalscore = [i / j for i, j in zip(individ_scores, y)] 
+    
+    methods = ["evaluate" , "good_vocab" , "efficiency" ,\
+        "decriptiveness", "sentence_length", "word_length"]  
+    
+    newdict = dict(zip(methods, finalscore))              
+     
+    return(newdict)
 
-
+print(finalscore(dictlist, "bill"))
+                
 #print(methodlist)  
 # 
 # What we need now, is a function that parses a database, creates a list of dictionaries from strings and urlIds, then 
