@@ -120,6 +120,9 @@ def maxscorelist(dictlist):
     for method, scores in x.items():
         score = np.max(scores)
         maxscorelist.append(score)
+    methods = []
+    #gets functions used in dictlist
+    
     return(maxscorelist)
 
 print(maxscorelist(dictlist)) 
@@ -147,7 +150,7 @@ def finalscore(dictlist, userid):
     
     finalscore = [i / j for i, j in zip(individ_scores, y)] 
     methods = []
-    
+    #gets functions used in dictlist
     for entry in dictlist:
         for user, scores in entry.items():
             for method, score in scores.items():
@@ -161,6 +164,15 @@ def finalscore(dictlist, userid):
 
 print(finalscore(dictlist, "bill"))
 
+def curveddatabase(listofdicts):
+    curvedscoredict = []
+    for entry in listofdicts:
+        for user, scores in entry.items():
+            x = finalscore(listofdicts, user)
+            curvedscoredict.append(x)
+    return curvedscoredict        
+               
+print(curveddatabase(dictlist))
 
 #print(m)                
                 
