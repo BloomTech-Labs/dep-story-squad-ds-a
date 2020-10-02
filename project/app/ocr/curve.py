@@ -146,16 +146,23 @@ def finalscore(dictlist, userid):
                     individ_scores.append(score)
     
     finalscore = [i / j for i, j in zip(individ_scores, y)] 
+    methods = []
     
-    methods = ["evaluate" , "good_vocab" , "efficiency" ,\
-        "decriptiveness", "sentence_length", "word_length"]  
-    
+    for entry in dictlist:
+        for user, scores in entry.items():
+            for method, score in scores.items():
+                if method not in methods:
+                    methods.append(method)
+        
     newdict = dict(zip(methods, finalscore))              
     FinalDict = { userid: newdict}  
     #returns dictionary entry with adjusted curved scores
     return(FinalDict)
 
 print(finalscore(dictlist, "bill"))
+
+
+#print(m)                
                 
 #print(methodlist)  
 # 
