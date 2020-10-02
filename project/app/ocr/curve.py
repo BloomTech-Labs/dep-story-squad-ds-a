@@ -133,7 +133,7 @@ print("-----------------------------")
 #print(finalscore(dictlist, "bill", string))
 #print(dictlist)
 #now we want to update individual scores based on max values 
-def finalscore(dictlist, user):
+def finalscore(dictlist, userid):
     #calculates adjusted curved scored for particular user and particular dictionary list
     y = maxscorelist(dictlist)
     
@@ -141,7 +141,7 @@ def finalscore(dictlist, user):
     
     for entry in dictlist:
         for user, scores in entry.items():
-            if user == user:
+            if user == userid:
                 for method, score in scores.items():
                     individ_scores.append(score)
     
@@ -151,8 +151,9 @@ def finalscore(dictlist, user):
         "decriptiveness", "sentence_length", "word_length"]  
     
     newdict = dict(zip(methods, finalscore))              
-     
-    return(newdict)
+    FinalDict = { userid: newdict}  
+    #returns dictionary entry with adjusted curved scores
+    return(FinalDict)
 
 print(finalscore(dictlist, "bill"))
                 
