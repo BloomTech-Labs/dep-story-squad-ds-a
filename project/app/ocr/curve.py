@@ -13,12 +13,12 @@ string3 = " Once you have a list of dictionaries, you can scroll through each sc
 def store(input_str: str,  username: str) -> int:
     d = {
         username: {
-            "evaluate_stars": evaluate(input_str),
-            "good_vocab-stars": good_vocab(input_str),
-            "efficiency_stars": efficiency(input_str),
-            "decriptiveness_stars": descriptiveness(input_str),
-            "sentence_length_stars": avg_sentence_length(input_str),
-            "word_length_stars": vocab_length(input_str)
+            "evaluate": evaluate(input_str),
+            "good_vocab": good_vocab(input_str),
+            "efficiency": efficiency(input_str),
+            "decriptiveness": descriptiveness(input_str),
+            "sentence_length": avg_sentence_length(input_str),
+            "word_length": vocab_length(input_str)
             }
         }           
     return d    
@@ -165,8 +165,14 @@ def finalscore(dictlist, userid):
             for method, score in scores.items():
                 if method not in methods:
                     methods.append(method)
+    added = "_stars"
+    finalmethods = []
+    for method in methods:
+        finalmethod = method + added
+        finalmethods.append(finalmethod)
+
         
-    newdict = dict(zip(methods, finalscore1))              
+    newdict = dict(zip(finalmethods, finalscore1))              
     FinalDict = { userid: newdict}  
     #returns dictionary entry with adjusted curved scores
     return(FinalDict)
