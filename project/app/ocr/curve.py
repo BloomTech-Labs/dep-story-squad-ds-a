@@ -13,12 +13,12 @@ string3 = " Once you have a list of dictionaries, you can scroll through each sc
 def store(input_str: str,  username: str) -> int:
     d = {
         username: {
-            "evaluate": evaluate(input_str),
-            "good_vocab": good_vocab(input_str),
-            "efficiency": efficiency(input_str),
-            "decriptiveness": descriptiveness(input_str),
-            "sentence_length": avg_sentence_length(input_str),
-            "word_length": vocab_length(input_str)
+            "evaluate_stars": evaluate(input_str),
+            "good_vocab-stars": good_vocab(input_str),
+            "efficiency_stars": efficiency(input_str),
+            "decriptiveness_stars": descriptiveness(input_str),
+            "sentence_length_stars": avg_sentence_length(input_str),
+            "word_length_stars": vocab_length(input_str)
             }
         }           
     return d    
@@ -29,7 +29,7 @@ def store(input_str: str,  username: str) -> int:
 #append it to dict_list2, now should have list of dictionaries to scroll through
 
 '''
-def insert(Database):
+def create_dictlist(Database):
     
     In theory this takes a database, scrolls through each 
     URL in the database, uses google OCR to create text from the URL and receives corresponding Username,
@@ -148,7 +148,16 @@ def finalscore(dictlist, userid):
                 for method, score in scores.items():
                     individ_scores.append(score)
     
-    finalscore = [i / j for i, j in zip(individ_scores, y)] 
+    finalscore = [i / j for i, j in zip(individ_scores, y)]
+    finalscore1 = []
+    for score in finalscore:
+        a = score / .2
+        b = round(a*2) /2
+        finalscore1.append(b) 
+    
+
+    #x = good_vocab(input_str) / .12
+    #y = round(x*2)/2 
     methods = []
     #gets functions used in dictlist
     for entry in dictlist:
@@ -157,7 +166,7 @@ def finalscore(dictlist, userid):
                 if method not in methods:
                     methods.append(method)
         
-    newdict = dict(zip(methods, finalscore))              
+    newdict = dict(zip(methods, finalscore1))              
     FinalDict = { userid: newdict}  
     #returns dictionary entry with adjusted curved scores
     return(FinalDict)
@@ -171,7 +180,11 @@ def curveddatabase(listofdicts):
             x = finalscore(listofdicts, user)
             curvedscoredict.append(x)
     return curvedscoredict        
-               
+
+print("-------------------------")
+print(dictlist)
+print("---------------------------------")
+
 print(curveddatabase(dictlist))
 
 #print(m)                
