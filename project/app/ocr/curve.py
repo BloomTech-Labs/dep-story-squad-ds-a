@@ -76,6 +76,8 @@ def compiler(listofdicts, function)-> []:
             for method, score in scores.items():
                 if method == function:
                     scorelist.append(score)
+    #for given function name, scrolls through list of nested dictionaries, returns all values to an array
+    #returns the array of scores
     return(scorelist)
 
 print(compiler(dictlist, "evaluate")) 
@@ -85,11 +87,9 @@ def bigcompile(listofdicts):
 
     bigscorelist = []
     methodlist = []
-    #methodlist = ["evaluate", "good_vocab", "efficiency", "descriptiveness", "sentence_length", "word_length"]
     #add different methods to methodlist
     for user in dictlist:
         for name, scores in user.items():
-            #print(scores)
             for method, score in scores.items():
                 if method not in methodlist:
                     methodlist.append(method)
@@ -98,11 +98,11 @@ def bigcompile(listofdicts):
     for method in methodlist:
         x = compiler(dictlist, method)
         bigscorelist.append(x)            
-    #return a list of lists, each list representing a particular method                
+    #return a dictionary object with all methods and their corresponding arrays               
     giantdictionary = dict(zip(methodlist, bigscorelist))
     
     return(giantdictionary)
-    #return(bigscorelist)
+    
 print(dictlist)
 print("------------------------------")
 x = bigcompile(dictlist)
@@ -115,29 +115,23 @@ print("---------------------------")
 
 #This simply requires you to scroll through each array, find the max, return the max as an adjuster
 def maxscorelist(dictlist):
+    #arrange dictionary into methods, and arrays of corresponding scores
     x = bigcompile(dictlist)
     maxscorelist = []
     for method, scores in x.items():
         score = np.max(scores)
         maxscorelist.append(score)
-    methods = []
-    #gets functions used in dictlist
-    
+    #append high score from each corresponding array to maxscore array, return array
+        
     return(maxscorelist)
 
 print(maxscorelist(dictlist)) 
 print("-----------------------------") 
 
-#now that we have maxlist values for each value, since it is ordered, we can run the curve function on the individual 
-# arrays, using the maxscorelist value, and return original dictionary values, altered based on the maxscore list
 
-# so curve is 100 * score / maxscore
-
-#print(finalscore(dictlist, "bill", string))
-#print(dictlist)
-#now we want to update individual scores based on max values 
 def finalscore(dictlist, userid):
     #calculates adjusted curved scored for particular user and particular dictionary list
+    #gets maximum score array for entire dictionary list
     y = maxscorelist(dictlist)
     
     individ_scores = []
@@ -147,44 +141,40 @@ def finalscore(dictlist, userid):
             if user == userid:
                 for method, score in scores.items():
                     individ_scores.append(score)
-    
+    #take individual user scores and divide by maxscores to create finalscore array
     finalscore = [i / j for i, j in zip(individ_scores, y)]
     finalscore1 = []
+    #divide finalscores by .2 and round to nearest half star
     for score in finalscore:
         a = score / .2
         b = round(a*2) /2
         finalscore1.append(b) 
-    
-
-    #x = good_vocab(input_str) / .12
-    #y = round(x*2)/2 
+   
     methods = []
-    #gets functions used in dictlist
+    added = "_stars"
+    #gets functions used in dictlist, adds star title to them
     for entry in dictlist:
         for user, scores in entry.items():
             for method, score in scores.items():
                 if method not in methods:
-                    methods.append(method)
-    added = "_stars"
-    finalmethods = []
-    for method in methods:
-        finalmethod = method + added
-        finalmethods.append(finalmethod)
-
-        
-    newdict = dict(zip(finalmethods, finalscore1))              
+                    methods.append(method+added)
+    #appends new method names with star ratings to new dictionary        
+    newdict = dict(zip(methods, finalscore1))              
     FinalDict = { userid: newdict}  
-    #returns dictionary entry with adjusted curved scores
+    #returns new dictionary
     return(FinalDict)
 
 print(finalscore(dictlist, "bill"))
 
 def curveddatabase(listofdicts):
     curvedscoredict = []
+    #for each userid in dictionary list, we perform finalscore on it, and convert scores into curved star ratings
     for entry in listofdicts:
         for user, scores in entry.items():
             x = finalscore(listofdicts, user)
+            #append each dictionary item to list
             curvedscoredict.append(x)
+    #return dictionary in original dictionary list form, but with ratings curved and turned into star ratings
     return curvedscoredict        
 
 print("-------------------------")
