@@ -1,3 +1,4 @@
+# from threading import main_thread
 from remote_pdb import set_trace as st
 # from pdb import set_trace as st
 import io
@@ -230,3 +231,16 @@ def delete_all_file_types(file_types: List[str], dir: str = "./") -> None:
     for file_name in os.listdir(dir):
         if file_name.split(".")[-1].lower() in file_types:
             os.remove(file_name)
+
+
+if __name__ == "__main__":
+    image_url = r"https://s.imgur.com/images/logo-1200-630.jpg?2"
+    from google.cloud import vision
+    client = vision.ImageAnnotatorClient()
+    image = vision.Image()
+    image.source.image_uri = image_url
+
+    response = client.document_text_detection(image=image)
+    # response = client.text_detection(image=image)
+    return_str = response.full_text_annotation.text.replace("\n", " ")
+    print(return_str)
