@@ -79,7 +79,7 @@ def compiler(listofdicts, function)-> []:
     #for given function name, scrolls through list of nested dictionaries, returns all values to an array
     #returns the array of scores
     return(scorelist)
-
+print("---------------------------------")
 print(compiler(dictlist, "evaluate")) 
 print("----------------")
 
@@ -103,8 +103,8 @@ def bigcompile(listofdicts):
     
     return(giantdictionary)
     
-print(dictlist)
-print("------------------------------")
+#print(dictlist)
+#print("------------------------------")
 x = bigcompile(dictlist)
 print(x)
 print("---------------------------")
