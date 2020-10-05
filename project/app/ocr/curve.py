@@ -1,5 +1,6 @@
-from text_complexity import evaluate, good_vocab, efficiency, descriptiveness, \
+from app.ocr.text_complexity import evaluate, good_vocab, efficiency, descriptiveness, \
         avg_sentence_length, vocab_length
+from app.ocr.google_handwriting_recognition import google_handwriting_recognizer_dir        
 import numpy as np         
 #from google_handwriting_recognition.py import google_handwriting_recognizer_dir, google_handwriting_recognizer
 
@@ -22,15 +23,78 @@ def store(input_str: str,  username: str) -> int:
             }
         }           
     return d    
+ 
 
+database =    [
+        {
+            "user_id": "12322187",
+            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322187/story_5"
+        },
+        {
+            "user_id": "12322188",
+            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322188/story_5"
+        },
+        {
+            "user_id": "12322189",
+            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322189/story_5"
+        },
+        {
+            "user_id": "12322190",
+            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322190/story_5"
+        },
+        {
+            "user_id": "12322191",
+            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322191/story_5"
+        },
+        {
+            "user_id": "12322192",
+            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322192/story_5"
+        },
+        {
+            "user_id": "12322193",
+            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322193/story_5"
+        },
+        {
+            "user_id": "12322194",
+            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322194/story_5"
+        },
+        {
+            "user_id": "12322195",
+            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322195/story_5"
+        },
+    ]
 #print(store(string, "bill"))
 
 # take in a database of URLs associated with particular usernames, store it in dictionary with scores,
 #append it to dict_list2, now should have list of dictionaries to scroll through
+def create_dictlist(Database_list):
+    dictlist = []
+    userlist = []
+    dirlist = []
+    
+
+    for x in database:
+        for key, value in x.items():
+            if key == "user_id":
+                userlist.append(value)
+            elif key == "s3_dir":
+                dirlist.append(value)
+    stringlist = []
+    for x in dirlist:
+        y = google_handwriting_recognizer_dir(x)
+        stringlist.append(y)
+    
+        
+
+
+
+    return stringlist
+print(create_dictlist(database))                
+
 
 '''
 def create_dictlist(Database):
-    
+   
     In theory this takes a database, scrolls through each 
     URL in the database, uses google OCR to create text from the URL and receives corresponding Username,
     feeds the string and username into the store function, and appends it to a list of dictionaries, returns 

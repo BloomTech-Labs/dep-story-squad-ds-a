@@ -118,7 +118,7 @@ def google_handwriting_recognizer_dir(s3_dir: str = None) -> str:
 
         s3 = boto3.resource('s3')
         bucket = s3.Bucket('training-images-team-a')
-        st()
+        #st()
         output_file_name = s3_obj.split("/")[-1]
         bucket.download_file(s3_obj, output_file_name)
         ocr_text_list = [] 
