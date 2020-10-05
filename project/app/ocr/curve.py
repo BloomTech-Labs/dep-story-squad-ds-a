@@ -220,6 +220,45 @@ def Star_Scores(Database_list):
     return finaldictionary
 
 print(Star_Scores(database))
+
+def Scoredatabase(Database_list):
+    '''
+    Takes in list of dictionaries with s3 URLs and user IDs, 
+    Runs URL through Google_handwriting_recognizer_dir model,
+    Returns List of dictionaries [{user1}:{evaluate:score, good_vocab:score, efficiency:score, \
+                            descriptiveness:score, sentence_length:score, word_length:score}}, {user2}:{etc}}]
+    '''
+
+    dictlist1 = []
+    userlist = []
+    dirlist = []
+    
+
+    for x in Database_list:
+        for key, value in x.items():
+            if key == "user_id":
+                userlist.append(value)
+            elif key == "s3_dir":
+                dirlist.append(value)
+    stringlist = []
+    for x in dirlist:
+        y = google_handwriting_recognizer_dir(x)
+        z = ",".join(y)
+       #appends joined text for each URL in the directory
+        stringlist.append(z)
+    #stringlist has list of strings, userlist has list of usernames corresponding to those strings,
+    #want to run store on those to make dictionary objects
+    dict1 = dict(zip(stringlist, userlist))
+
+    for string, username in dict1.items():
+        x = store(string, username) 
+        dictlist1.append(x)   
+
+    return dictlist1     
+
+
+print(Scoredatabase(database))    
+
 #print(maxscorelist(abc))
 
 #print(bigcompile(create_dictlist(database)))     
