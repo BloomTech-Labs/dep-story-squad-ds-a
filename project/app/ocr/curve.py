@@ -225,7 +225,7 @@ def Scoredatabase(Database_list):
     '''
     Takes in list of dictionaries with s3 URLs and user IDs, 
     Runs URL through Google_handwriting_recognizer_dir model,
-    Returns List of dictionaries [{user1}:{evaluate:score, good_vocab:score, efficiency:score, \
+    Returns List of dictionaries [{user1:{evaluate:score, good_vocab:score, efficiency:score, \
                             descriptiveness:score, sentence_length:score, word_length:score}}, {user2}:{etc}}]
     '''
 
