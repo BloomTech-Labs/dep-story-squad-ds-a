@@ -3,21 +3,12 @@ services:
   web:
     env_file: .env
     build: ./project
-
-<<<<<<< HEAD
     command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
     # command: python -m app.ocr.text_complexity
     # command: python -m app.ocr.google_handwriting_recognition
-=======
-
-    # command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
-    command: python -m app.ocr.text_complexity
->>>>>>> eb8681d3ed4f671ba53041133d1ba79be0528b26
-
     volumes:
       - ./project:/usr/src/app
     ports:
       - 8000:8000
-
       # for telnet and debugging using pdb_remote
       - 4444:4444
