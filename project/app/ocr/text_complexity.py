@@ -53,7 +53,7 @@ def descriptiveness(input_str: str) -> str:
     for part_of_speech in x:
         if part_of_speech == "PROPN" or part_of_speech == "NOUN" :
             count += 1
-        elif part_of_speech == "VERB" or part_of_speech == "ADJ" or part_of_speech == "ADV" :
+        elif part_of_speech == "VERB" or part_of_speech == "ADJ" :
             count2 += 1
     if count == 0:
         return 0
