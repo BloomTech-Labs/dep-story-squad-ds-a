@@ -79,7 +79,7 @@ def compiler(listofdicts, function)-> []:
     #for given function name, scrolls through list of nested dictionaries, returns all values to an array
     #returns the array of scores
     return(scorelist)
-print("---------------------------------")
+print("-----------------------")
 print(compiler(dictlist, "evaluate")) 
 print("----------------")
 
@@ -109,11 +109,7 @@ x = bigcompile(dictlist)
 print(x)
 print("---------------------------")
 #able to return a list of lists, based on dictionary lists   
-# 
-# Now we can start doing math on the individual functions and their lists, within the big dictionary
-# 
 
-#This simply requires you to scroll through each array, find the max, return the max as an adjuster
 def maxscorelist(dictlist):
     #arrange dictionary into methods, and arrays of corresponding scores
     x = bigcompile(dictlist)
@@ -183,20 +179,11 @@ print("---------------------------------")
 
 print(curveddatabase(dictlist))
 
-#print(m)                
-                
-#print(methodlist)  
-# 
-# What we need now, is a function that parses a database, creates a list of dictionaries from strings and urlIds, then 
-# takes the dictionaries and combines them into one giant dictionary list, this will be represented in this case by DictList, 
-# as the variable
-# 
-# we have to store all the scores initially in this database, once the deadline is reached, submissions end, we calculate 
-# adjusted scores for each user in the Dictlist, replace old scores with adjusted scores,
-#  and update dictlist with curved scores, and send back to backend
-# 
-# also, we might want to convert the actual numerical scores into stars, which isnt hard at all, just take finalscores 
-# for each user, divide by .2, and round to nearest .5
 
-#  
+ 
+
+ 
+
+
+  
 

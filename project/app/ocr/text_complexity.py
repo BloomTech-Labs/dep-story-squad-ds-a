@@ -4,7 +4,7 @@ import spacy
 #from spacy.tokenizer import Tokenizer
 from nltk.stem import PorterStemmer
 import json
-from app.ocr.wordcount import wordlist
+from wordcount import wordlist
 
 # initializing object
 nlp = spacy.load("en_core_web_sm")
@@ -53,8 +53,10 @@ def descriptiveness(input_str: str) -> str:
     for part_of_speech in x:
         if part_of_speech == "PROPN" or part_of_speech == "NOUN" :
             count += 1
-        elif part_of_speech == "VERB" or part_of_speech == "ADJ"  :
+
+        elif part_of_speech == "VERB" or part_of_speech == "ADJ" :
             count2 += 1
+
     if count == 0:
         return 0
     elif count2 / count > 1:
