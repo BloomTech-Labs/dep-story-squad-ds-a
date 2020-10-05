@@ -47,8 +47,7 @@ async def ocr(params: ImageOcrS3Obj):
 
         return {
             "ocr_text": ocr_text,
-            "scores": scores
-            
+            "scores": scores   
         }
 
     else:
