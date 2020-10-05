@@ -7,6 +7,7 @@ services:
     command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
     # command: python -m app.ocr.text_complexity
     # command: python -m app.ocr.google_handwriting_recognition
+
     volumes:
       - ./project:/usr/src/app
     ports:
