@@ -34,15 +34,20 @@ async def ocr(params: ImageOcrS3Obj):
 
     if params.s3_obj is not None:
         ocr_text = google_handwriting_recognizer(s3_obj=params.s3_obj)
+        scores = -1
+        if params.get_complexity_score == 1:
+            scores = {
+                "vocab_score": good_vocab_stars(ocr_text),
+                "efficiency_score": efficiency_stars(ocr_text),
+                "descriptiveness_score": descriptiveness_stars(ocr_text),
+                "sentence_length_score": sentence_length_stars(ocr_text),
+                "word_length_score": word_length_stars(ocr_text),
+                "complexity_score": evaluate(ocr_text)
+            }
+
         return {
             "ocr_text": ocr_text,
-            "vocab_score" : good_vocab_stars(ocr_text),
-            "efficiency_score" : efficiency_stars(ocr_text),
-            "descriptiveness_score" : descriptiveness_stars(ocr_text),
-            "sentence_length_score" : sentence_length_stars(ocr_text),
-            "word_length_score" : word_length_stars(ocr_text),
-            "complexity_score": evaluate(ocr_text)
-            
+            "scores": scores   
         }
 
     else:

@@ -14,3 +14,4 @@ downloaded_img.jpg
 *.pdf
 !test_pdf_1.pdf
 encrypt.py
+t*.py

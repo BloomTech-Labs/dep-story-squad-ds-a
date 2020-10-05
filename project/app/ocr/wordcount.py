@@ -51,7 +51,7 @@ nlp = spacy.load("en_core_web_sm")
 #jesse_words = j
 
 print("starting to read hadi's file")
-with open("./words.txt") as file_obj:
+with open("./app/ocr/words.txt") as file_obj:
     words = file_obj.readlines()
 
 wordlist = []

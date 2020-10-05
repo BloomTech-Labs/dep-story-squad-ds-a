@@ -4,7 +4,7 @@ import spacy
 #from spacy.tokenizer import Tokenizer
 from nltk.stem import PorterStemmer
 import json
-from wordcount import wordlist
+from app.ocr.wordcount import wordlist
 
 # initializing object
 nlp = spacy.load("en_core_web_sm")
