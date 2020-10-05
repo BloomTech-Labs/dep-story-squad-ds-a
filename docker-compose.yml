@@ -4,9 +4,15 @@ services:
     env_file: .env
     build: ./project
 
+
     # command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+<<<<<<< HEAD
     command: python -m app.ocr.curve 
     
+=======
+    command: python -m app.ocr.text_complexity
+
+>>>>>>> ff38972a335c3a902461add55b9c7b387672eec3
     volumes:
       - ./project:/usr/src/app
     ports:

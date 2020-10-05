@@ -1,6 +1,9 @@
-# from threading import main_thread
-from remote_pdb import set_trace as st
+# from pudb.remote import set_trace as st
+# from remote_pdb import RemotePdb
+# from ipdb import set_trace as st
 # from pdb import set_trace as st
+# from web_pdb import set_trace as st
+
 import io
 import os
 import requests
@@ -98,10 +101,6 @@ def google_handwriting_recognizer(
     return return_str
 
 
- 
-############
-
-
 def google_handwriting_recognizer_dir(s3_dir: str = None) -> str:
     """
         Will return the text of a handwritten text.
@@ -112,10 +111,11 @@ def google_handwriting_recognizer_dir(s3_dir: str = None) -> str:
             Could be having 1 or more .jpg files
     """
 
-    if s3_obj is not None:
+    if s3_dir is not None:
         # image is stored in an S3 bucket
         # need to pass all of the images to google_handwriting_recognizer
 
+<<<<<<< HEAD
         s3 = boto3.resource('s3')
         bucket = s3.Bucket('training-images-team-a')
         #st()
@@ -124,14 +124,26 @@ def google_handwriting_recognizer_dir(s3_dir: str = None) -> str:
         ocr_text_list = [] 
         for image_file in image_objs:
             ocr_text_list.append(google_handwriting_recognizer(s3_obj=image_file))
+=======
+        client = boto3.client('s3')
+        response = client.list_objects_v2(
+            Bucket='training-images-team-a',
+            Prefix=s3_dir,
+            MaxKeys=100
+        )
+        # st(term_size=(200, 50), host="0.0.0.0", port=4444)
+        ocr_text_list = []
+        for s3_obj_dict in response.get('Contents'):
+            s3_obj = s3_obj_dict["Key"]
+            ocr_text_list.append(
+                google_handwriting_recognizer(s3_obj=s3_obj)
+            )
+>>>>>>> ff38972a335c3a902461add55b9c7b387672eec3
 
         return ocr_text_list
 
     else:
-        return "No parameters were set!"
-
-##################
-
+        return "s3_dir was not set!"
 
 
 def google_pdf_handwriting_recognizer(
@@ -151,7 +163,7 @@ def google_pdf_handwriting_recognizer(
     """
 
     ocr_text_list = []
-    
+
     # 1. see if pdf is local or online
     if url is not None:
         # pdf is stored online, and it should be downloaded first
@@ -234,13 +246,33 @@ def delete_all_file_types(file_types: List[str], dir: str = "./") -> None:
 
 
 if __name__ == "__main__":
-    image_url = r"https://s.imgur.com/images/logo-1200-630.jpg?2"
-    from google.cloud import vision
-    client = vision.ImageAnnotatorClient()
-    image = vision.Image()
+    # The main does a url handwrite recognition without downloading the files
+
+    google_credentiaol_dict = os.getenv("GOOGLE_CREDENTIALS_DICT")
+    google_credentiaol_dict = google_credentiaol_dict[1:]
+
+    json_acct_info = json.loads(google_credentiaol_dict)
+    credentials = service_account.Credentials.from_service_account_info(
+        json_acct_info)
+
+    client_options = {'api_endpoint': 'eu-vision.googleapis.com'}
+    client = vision.ImageAnnotatorClient(
+        client_options=client_options,
+        credentials=credentials
+    )
+
+    image_url = r"https://s.imgur.com/images/logo-1200-630.jpg"
+
+    response = requests.get(image_url)
+    with open("downloaded_img.jpg", "wb") as file_obj:
+        file_obj.write(response.content)
+
+    with io.open("downloaded_img.jpg", 'rb') as image_file:
+        content = image_file.read()
+    image = vision.types.Image()
     image.source.image_uri = image_url
 
-    response = client.document_text_detection(image=image)
-    # response = client.text_detection(image=image)
+    response = client.text_detection(image=image)
     return_str = response.full_text_annotation.text.replace("\n", " ")
+
     print(return_str)
