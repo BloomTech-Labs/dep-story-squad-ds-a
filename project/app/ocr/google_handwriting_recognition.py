@@ -115,16 +115,6 @@ def google_handwriting_recognizer_dir(s3_dir: str = None) -> str:
         # image is stored in an S3 bucket
         # need to pass all of the images to google_handwriting_recognizer
 
-<<<<<<< HEAD
-        s3 = boto3.resource('s3')
-        bucket = s3.Bucket('training-images-team-a')
-        #st()
-        output_file_name = s3_obj.split("/")[-1]
-        bucket.download_file(s3_obj, output_file_name)
-        ocr_text_list = [] 
-        for image_file in image_objs:
-            ocr_text_list.append(google_handwriting_recognizer(s3_obj=image_file))
-=======
         client = boto3.client('s3')
         response = client.list_objects_v2(
             Bucket='training-images-team-a',
@@ -138,7 +128,6 @@ def google_handwriting_recognizer_dir(s3_dir: str = None) -> str:
             ocr_text_list.append(
                 google_handwriting_recognizer(s3_obj=s3_obj)
             )
->>>>>>> ff38972a335c3a902461add55b9c7b387672eec3
 
         return ocr_text_list
 

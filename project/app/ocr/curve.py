@@ -1,6 +1,6 @@
 from app.ocr.text_complexity import evaluate, good_vocab, efficiency, descriptiveness, \
         avg_sentence_length, vocab_length
-from app.ocr.google_handwriting_recognition import google_handwriting_recognizer_dir        
+from app.ocr.google_handwriting_recognition import google_handwriting_recognizer_dir, google_handwriting_recognizer    
 import numpy as np         
 #from google_handwriting_recognition.py import google_handwriting_recognizer_dir, google_handwriting_recognizer
 
@@ -12,6 +12,10 @@ string3 = " Once you have a list of dictionaries, you can scroll through each sc
     one by one,  and get the data needed to start implementing the curve function, to then ultimately, \
         return star values for each player"
 def store(input_str: str,  username: str) -> int:
+    '''
+    Stores dictionary object after running the string through complexity model..output is dictionary with
+    {userID: {score_names: scores}}
+    '''
     d = {
         username: {
             "evaluate": evaluate(input_str),
@@ -23,92 +27,7 @@ def store(input_str: str,  username: str) -> int:
             }
         }           
     return d    
- 
 
-database =    [
-        {
-            "user_id": "12322187",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322187/story_5"
-        },
-        {
-            "user_id": "12322188",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322188/story_5"
-        },
-        {
-            "user_id": "12322189",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322189/story_5"
-        },
-        {
-            "user_id": "12322190",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322190/story_5"
-        },
-        {
-            "user_id": "12322191",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322191/story_5"
-        },
-        {
-            "user_id": "12322192",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322192/story_5"
-        },
-        {
-            "user_id": "12322193",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322193/story_5"
-        },
-        {
-            "user_id": "12322194",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322194/story_5"
-        },
-        {
-            "user_id": "12322195",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322195/story_5"
-        },
-    ]
-#print(store(string, "bill"))
-
-# take in a database of URLs associated with particular usernames, store it in dictionary with scores,
-#append it to dict_list2, now should have list of dictionaries to scroll through
-def create_dictlist(Database_list):
-    dictlist = []
-    userlist = []
-    dirlist = []
-    
-
-    for x in database:
-        for key, value in x.items():
-            if key == "user_id":
-                userlist.append(value)
-            elif key == "s3_dir":
-                dirlist.append(value)
-    stringlist = []
-    for x in dirlist:
-        y = google_handwriting_recognizer_dir(x)
-        stringlist.append(y)
-    
-        
-
-
-
-    return stringlist
-print(create_dictlist(database))                
-
-
-'''
-def create_dictlist(Database):
-   
-    In theory this takes a database, scrolls through each 
-    URL in the database, uses google OCR to create text from the URL and receives corresponding Username,
-    feeds the string and username into the store function, and appends it to a list of dictionaries, returns 
-    the list
-    
-    dict_list = []
-    for URL in Database:
-        x = store(google_handwriting_recognizer(URL), URL:username)
-        dict_list.append(x)
-    return dict_list 
-'''
-# Once you have a list of dictionaries, you can scroll through each score related to each function, one by one,
-# and get the data needed to start implementing the curve function, to then ultimately, return star values
-# for each player
 
 a = store(string, "bill" )
 b = store(string2, "Kate")
@@ -117,17 +36,11 @@ c = store(string3, "Edward")
 #print(b)
 #print(c)
 
-dictlist = []
-dictlist.append(a)
-dictlist.append(b)
-dictlist.append(c)
-#print(dictlist)
+dictlist2 = []
+dictlist2.append(a)
+dictlist2.append(b)
+dictlist2.append(c)
 
-#for username in dictlist:
-#    for name, scores in username.items():
-#        for method, score in scores.items():
-#            if method == "evaluate":
-#                print(f"{name}, {method}:",score)
         
 def compiler(listofdicts, function)-> []: 
     '''
@@ -140,19 +53,22 @@ def compiler(listofdicts, function)-> []:
             for method, score in scores.items():
                 if method == function:
                     scorelist.append(score)
-    #for given function name, scrolls through list of nested dictionaries, returns all values to an array
-    #returns the array of scores
+    
     return(scorelist)
 print("-----------------------")
-print(compiler(dictlist, "evaluate")) 
+print(compiler(dictlist2, "evaluate")) 
 print("----------------")
 
 def bigcompile(listofdicts):
+    '''
+    Scrolls through entire list of dictionaries, returns dictionary object with {method_name: [list of scores]}
+    for all method names used in text complexity process
+    '''
 
     bigscorelist = []
     methodlist = []
     #add different methods to methodlist
-    for user in dictlist:
+    for user in listofdicts:
         for name, scores in user.items():
             for method, score in scores.items():
                 if method not in methodlist:
@@ -160,7 +76,7 @@ def bigcompile(listofdicts):
     #for each method in the methodlist, compile, and append the lists to 
     #bigscorelist array
     for method in methodlist:
-        x = compiler(dictlist, method)
+        x = compiler(listofdicts, method)
         bigscorelist.append(x)            
     #return a dictionary object with all methods and their corresponding arrays               
     giantdictionary = dict(zip(methodlist, bigscorelist))
@@ -169,14 +85,18 @@ def bigcompile(listofdicts):
     
 #print(dictlist)
 #print("------------------------------")
-x = bigcompile(dictlist)
+x = bigcompile(dictlist2)
 print(x)
 print("---------------------------")
 #able to return a list of lists, based on dictionary lists   
 
-def maxscorelist(dictlist):
+def maxscorelist(listofdicts):
+    '''
+    Compiles all lists of scores and their methods, scrolls through all lists, returns one list of max scores for each
+    list : [a, b, c, d, e, f]
+    '''
     #arrange dictionary into methods, and arrays of corresponding scores
-    x = bigcompile(dictlist)
+    x = bigcompile(listofdicts)
     maxscorelist = []
     for method, scores in x.items():
         score = np.max(scores)
@@ -185,18 +105,22 @@ def maxscorelist(dictlist):
         
     return(maxscorelist)
 
-print(maxscorelist(dictlist)) 
+print(maxscorelist(dictlist2)) 
 print("-----------------------------") 
 
 
-def finalscore(dictlist, userid):
-    #calculates adjusted curved scored for particular user and particular dictionary list
-    #gets maximum score array for entire dictionary list
-    y = maxscorelist(dictlist)
+def finalscore(listofdicts, userid):
+    '''
+    Scrolls through list of dictionaries, searches for particular userId, matches user's scores up with maximum scores,
+    amends users values to reflect percentage of high score, then turns that amended value into a star rating, returns
+    dictionary list in same form of original STORE method dictionary, only this time scores are in star values, and methods
+    are in star methods
+    '''
+    y = maxscorelist(listofdicts)
     
     individ_scores = []
     
-    for entry in dictlist:
+    for entry in listofdicts:
         for user, scores in entry.items():
             if user == userid:
                 for method, score in scores.items():
@@ -213,7 +137,7 @@ def finalscore(dictlist, userid):
     methods = []
     added = "_stars"
     #gets functions used in dictlist, adds star title to them
-    for entry in dictlist:
+    for entry in listofdicts:
         for user, scores in entry.items():
             for method, score in scores.items():
                 if method not in methods:
@@ -224,9 +148,14 @@ def finalscore(dictlist, userid):
     #returns new dictionary
     return(FinalDict)
 
-print(finalscore(dictlist, "bill"))
+print(finalscore(dictlist2, "bill"))
 
 def curveddatabase(listofdicts):
+    '''
+    performs a compilation of the final score method by compiling all individual final scores into a list of dictionaries
+    with all user's scores reflecting a curved star score value
+    '''
+    
     curvedscoredict = []
     #for each userid in dictionary list, we perform finalscore on it, and convert scores into curved star ratings
     for entry in listofdicts:
@@ -238,13 +167,64 @@ def curveddatabase(listofdicts):
     return curvedscoredict        
 
 print("-------------------------")
-print(dictlist)
+print(dictlist2)
 print("---------------------------------")
 
-print(curveddatabase(dictlist))
+print(curveddatabase(dictlist2))
 
+database =    [
+        {
+            "user_id": "12322187",
+            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322187/story_5"
+        }
+        
+    ]
+#print(store(string, "bill"))
 
- 
+# take in a database of URLs associated with particular usernames, store it in dictionary with scores,
+#append it to dict_list2, now should have list of dictionaries to scroll through
+def Star_Scores(Database_list):
+    '''
+    This function does it all. Takes in a Database list, parses it for s3 links, and user IDs, runs google image 
+    recognizer on the strings, and implements the Store method on the string:UserId. 
+    Compiles all Store dictionaries into one dictionary list, and then runs the curveddatabase function on this list,
+    returning a list of dictionaries with curved star scores. 
+    '''
+    
+    dictlist1 = []
+    userlist = []
+    dirlist = []
+    
+
+    for x in Database_list:
+        for key, value in x.items():
+            if key == "user_id":
+                userlist.append(value)
+            elif key == "s3_dir":
+                dirlist.append(value)
+    stringlist = []
+    for x in dirlist:
+        y = google_handwriting_recognizer_dir(x)
+        z = ",".join(y)
+       #appends joined text for each URL in the directory
+        stringlist.append(z)
+    #stringlist has list of strings, userlist has list of usernames corresponding to those strings,
+    #want to run store on those to make dictionary objects
+    dict1 = dict(zip(stringlist, userlist))
+
+    for string, username in dict1.items():
+        x = store(string, username) 
+        dictlist1.append(x)   
+  
+    finaldictionary = curveddatabase(dictlist1)
+    return finaldictionary
+
+print(Star_Scores(database))
+#print(maxscorelist(abc))
+
+#print(bigcompile(create_dictlist(database)))     
+#print(a)
+#print(b) 
 
  
 
