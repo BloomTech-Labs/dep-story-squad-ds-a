@@ -2,6 +2,7 @@ from app.ocr.text_complexity import evaluate, good_vocab, efficiency, descriptiv
         avg_sentence_length, vocab_length
 from app.ocr.google_handwriting_recognition import google_handwriting_recognizer_dir, google_handwriting_recognizer    
 import numpy as np         
+import statistics 
 #from google_handwriting_recognition.py import google_handwriting_recognizer_dir, google_handwriting_recognizer
 
 def store(input_str: str,  username: str) -> int:
@@ -243,6 +244,45 @@ def FinalStarDatabase(Database_list):
             newdictlist.append(x)
     
     return (newdictlist)
+
+def avg_std_dict(listofdicts):
+    '''
+    Takes in a list of dictionaries of users and their complexity score ratings , their corresponding methods,
+    returns a dictionary list, 1st dictionary represents average of scores, 
+    2nd dictionary represents standard deviation of scores
+    '''
+
+    x = bigcompile(listofdicts)
+    methodlist = []
+    
+    for method, scores in x.items():
+        y = method
+        methodlist.append(y)
+    score_lists = []
+    
+    for scores in x.values():
+        score_lists.append(scores)
+    #list of averages
+    mean_lists = []
+    #list of standard deviations
+    std_lists = []
+    for x in score_lists:
+        b = sum(x)/len(x)
+        mean_lists.append(b)
+    for y in score_lists:
+        a = np.std(y)
+        std_lists.append(a)
+
+    
+    new_dict = dict(zip(methodlist, mean_lists))
+    new_dict2 = dict(zip(methodlist, std_lists))
+    FinalDict = []
+    FinalDict.append(new_dict)
+    FinalDict.append(new_dict2)
+    
+
+    return(FinalDict)
+
 if __name__ == "__main__":
 
     string = "Great success. My name is Borat. I have come to America, to find Pamela Anderson, and \
@@ -271,13 +311,13 @@ if __name__ == "__main__":
      that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well. "
     
     a = store(string, "bill" )
-    #b = store(string2, "Kate")
-    #c = store(string3, "Edward")
-    #d = store(string4, "Bobby")
-    #e = store(string5, "Hadi")
-    #f = store(string6, "Jesse")
-    #g = store(string7, "Pierre")
-    #h = store(string8, "Bruce")
+    b = store(string2, "Kate")
+    c = store(string3, "Edward")
+    d = store(string4, "Bobby")
+    e = store(string5, "Hadi")
+    f = store(string6, "Jesse")
+    g = store(string7, "Pierre")
+    h = store(string8, "Bruce")
 
     #print(a)
     #print(b)
@@ -285,13 +325,13 @@ if __name__ == "__main__":
 
     dictlist2 = []
     dictlist2.append(a)
-    #dictlist2.append(b)
-    #dictlist2.append(c)
-    #dictlist2.append(d)
-    #dictlist2.append(e)
-    #dictlist2.append(f)
-    #dictlist2.append(g)
-    #dictlist2.append(h)
+    dictlist2.append(b)
+    dictlist2.append(c)
+    dictlist2.append(d)
+    dictlist2.append(e)
+    dictlist2.append(f)
+    dictlist2.append(g)
+    dictlist2.append(h)
 
     database =    [
         {
@@ -316,8 +356,11 @@ if __name__ == "__main__":
 
     #print(Star_Scores(database))
     #print(Scoredatabase(database))
-    print(dictlist2)
-    print(FinalStarDatabase(database))         
+    
+        
+    print(avg_std_dict(dictlist2)) 
+
+    #print(FinalStarDatabase(database))         
 #print(maxscorelist(abc))
 
 #print(bigcompile(create_dictlist(database)))     
