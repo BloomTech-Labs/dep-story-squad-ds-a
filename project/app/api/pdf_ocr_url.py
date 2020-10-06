@@ -13,8 +13,8 @@ class PdfOcrURL(BaseModel):
     get_complexity_score: int = 0
 
 
-@router.post('/pdf_ocr_url')
-async def ocr(params: PdfOcrURL):
+@router.post('/HTR/pdf/url', tags=["Handwritten Text Recognition"])
+async def pdf_handwritten_text_recognition_url(params: PdfOcrURL):
     """
     Handwriting recognizer with google's vision API for PDFs
 

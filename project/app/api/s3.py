@@ -12,7 +12,7 @@ client = boto3.client('s3')
 s3 = boto3.resource('s3')
 bucket = s3.Bucket('training-images-team-a')
 
-@router.get('/s3/{OBJECT}')
+@router.get('/s3/{OBJECT}', tags=["S3 Bucket"])
 async def s3(object):
     f = io.BytesIO()
     bucket.download_fileobj("Stories Dataset/Transcribed Stories/31--/3101/Photo 3101.jpg", f)

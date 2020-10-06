@@ -14,8 +14,8 @@ class ImageOcrURL(BaseModel):
     get_complexity_score: int = 0
 
 
-@router.post('/image_ocr_url')
-async def ocr(params: ImageOcrURL):
+@router.post('/HTR/image/url', tags=["Handwritten Text Recognition"])
+async def image_handwritten_text_recognition_url(params: ImageOcrURL):
     """
     Handwriting recognizer with google's vision API for images
 
