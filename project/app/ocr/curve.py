@@ -282,6 +282,10 @@ def avg_std_dict(listofdicts):
     
 
     return(FinalDict)
+#With averages and Standard Deviations of scores, we can now go through individual dictionary entries, compare their individual
+# scores to the averages, using standard deviation and absolute value logic, we can give each user an individual +- score,
+# for each one of their methods, return eventually an array of users, and their particular overall scores.
+# Use that array to match users up with other users, in a manual matchmaking dictionary process.     
 
 if __name__ == "__main__":
 
