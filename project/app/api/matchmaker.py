@@ -10,96 +10,27 @@ router = APIRouter()
 
 
 class Matchmaker(BaseModel):
-    user_stories = [
-        {
-            "uuid": "12322187",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322187/story_5"
-        },
-        {
-            "uuid": "12322188",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322188/story_5"
-        },
-        {
-            "uuid": "12322189",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322189/story_5"
-        },
-        {
-            "uuid": "12322190",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322190/story_5"
-        },
-        {
-            "uuid": "12322191",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322191/story_5"
-        },
-        {
-            "uuid": "12322192",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322192/story_5"
-        },
-        {
-            "uuid": "12322193",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322193/story_5"
-        },
-        {
-            "uuid": "12322194",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322194/story_5"
-        },
-        {
-            "uuid": "12322195",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322195/story_5"
-        },
-    ]
-
-    # user_stories: List[Dict["uuid": str, "s3_dir": str]] = Field(..., example=example)
+    user_stories: Dict[str, List] = Field(..., example={
+        "uuids": [
+            "12322187"
+            "12322188"
+            "12322189"
+            "12322190"
+            "12322191"
+            "12322192"
+        ]
+    })
 
 
-@router.post('/matchmaker')
+@router.post('/multiplayer/matchmaker', tags=["Multiplayer"])
 async def ocr(params: Matchmaker):
     """
     Matchmakes
 
     ### Request Body
 
-    - `user_stories`: string
+    - `uuids`: List
         - example:
-    [
-        {
-            "user_id": "12322187",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322187/story_5"
-        },
-        {
-            "user_id": "12322188",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322188/story_5"
-        },
-        {
-            "user_id": "12322189",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322189/story_5"
-        },
-        {
-            "user_id": "12322190",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322190/story_5"
-        },
-        {
-            "user_id": "12322191",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322191/story_5"
-        },
-        {
-            "user_id": "12322192",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322192/story_5"
-        },
-        {
-            "user_id": "12322193",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322193/story_5"
-        },
-        {
-            "user_id": "12322194",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322194/story_5"
-        },
-        {
-            "user_id": "12322195",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322195/story_5"
-        },
-    ]
-
 
     ### Response
     - `teams`: list in list

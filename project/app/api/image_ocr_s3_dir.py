@@ -13,8 +13,8 @@ class ImageOcrS3Dir(BaseModel):
     get_complexity_score: int = 0
 
 
-@router.post('/img_ocr_s3_dir')
-async def ocr(params: ImageOcrS3Dir):
+@router.post('/HTR/image/s3_dir', tags=["Handwritten Text Recognition"])
+async def image_handwritten_text_recognition_S3_directory(params: ImageOcrS3Dir):
     """
     Handwriting recognizer with google's vision API for
     all .jpg files in a dir
