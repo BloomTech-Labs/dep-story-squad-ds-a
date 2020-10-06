@@ -213,8 +213,21 @@ def Scoredatabase(Database_list):
 
     return dictlist1     
 
-
-
+def FinalStoreDatabase(Database_list):
+    '''
+    Takes a stored database and adds the user Id as a key and user as a key value pair to the dictionary itself,
+    returns list of dictionaries 
+    '''
+    a = Scoredatabase(Database_list)
+    
+    newdictlist = []
+    for entry in a:
+        for user, scores in entry.items():
+            x = scores
+            x['userid'] = user
+            newdictlist.append(x)
+    
+    return (newdictlist)
 
 if __name__ == "__main__":
 
@@ -244,13 +257,13 @@ if __name__ == "__main__":
      that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well. "
     
     a = store(string, "bill" )
-    b = store(string2, "Kate")
-    c = store(string3, "Edward")
-    d = store(string4, "Bobby")
-    e = store(string5, "Hadi")
-    f = store(string6, "Jesse")
-    g = store(string7, "Pierre")
-    h = store(string8, "Bruce")
+    #b = store(string2, "Kate")
+    #c = store(string3, "Edward")
+    #d = store(string4, "Bobby")
+    #e = store(string5, "Hadi")
+    #f = store(string6, "Jesse")
+    #g = store(string7, "Pierre")
+    #h = store(string8, "Bruce")
 
     #print(a)
     #print(b)
@@ -258,13 +271,13 @@ if __name__ == "__main__":
 
     dictlist2 = []
     dictlist2.append(a)
-    dictlist2.append(b)
-    dictlist2.append(c)
-    dictlist2.append(d)
-    dictlist2.append(e)
-    dictlist2.append(f)
-    dictlist2.append(g)
-    dictlist2.append(h)
+    #dictlist2.append(b)
+    #dictlist2.append(c)
+    #dictlist2.append(d)
+    #dictlist2.append(e)
+    #dictlist2.append(f)
+    #dictlist2.append(g)
+    #dictlist2.append(h)
 
     database =    [
         {
@@ -273,23 +286,24 @@ if __name__ == "__main__":
         }
         
     ]
-    print("-----------------------")
-    print(compiler(dictlist2, "evaluate")) 
-    print("----------------")
-    x = bigcompile(dictlist2)
-    print(x)
-    print("---------------------------")
-    print(maxscorelist(dictlist2)) 
-    print("-----------------------------")
-    print("-------------------------")
+    #print("-----------------------")
+    #print(compiler(dictlist2, "evaluate")) 
+    #print("----------------")
+    #x = bigcompile(dictlist2)
+    #print(x)
+    #print("---------------------------")
+    #print(maxscorelist(dictlist2)) 
+    #print("-----------------------------")
+    #print("-------------------------")
+    #print(dictlist2)
+    #print("---------------------------------") 
+    #print(finalscore(dictlist2, "bill"))
+    #print(curveddatabase(dictlist2))
+
+    #print(Star_Scores(database))
+    #print(Scoredatabase(database))
     print(dictlist2)
-    print("---------------------------------") 
-    print(finalscore(dictlist2, "bill"))
-    print(curveddatabase(dictlist2))
-
-    print(Star_Scores(database))
-    print(Scoredatabase(database))
-
+    print(FinalStoreDatabase(database))         
 #print(maxscorelist(abc))
 
 #print(bigcompile(create_dictlist(database)))     
