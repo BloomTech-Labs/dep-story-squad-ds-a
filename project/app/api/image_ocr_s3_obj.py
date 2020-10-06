@@ -1,16 +1,15 @@
 from fastapi import APIRouter, HTTPException
 # from remote_pdb import set_trace as st
 from app.ocr.google_handwriting_recognition import google_handwriting_recognizer
-from app.ocr.text_complexity import evaluate, good_vocab_stars, efficiency_stars, descriptiveness_stars, \
-        sentence_length_stars, word_length_stars
-from pydantic import BaseModel
+from app.ocr.text_complexity import get_text_scores
+from pydantic import BaseModel, Field, validator
 
 router = APIRouter()
 
 
 class ImageOcrS3Obj(BaseModel):
-    s3_obj: str
-    get_complexity_score: int = 0
+    s3_obj: str = Field(..., example="Stories Dataset/Transcribed Stories/31--/3101/Photo 3101.jpg")
+    get_complexity_score: int = Field(..., example=1)
 
 
 @router.post('/HTR/image/s3_obj', tags=["Handwritten Text Recognition"])
@@ -21,8 +20,7 @@ async def image_handwritten_text_recognition_S3_object(params: ImageOcrS3Obj):
     ### Request Body
 
     - `s3_obj`: string
-        - example:
-        "Stories Dataset/Transcribed Stories/31--/3101/Photo 3101.jpg"
+        #### The s3 key of the single image that text and complexity scores are needed.
 
     - `get_text_complexity`: int
         #### A number that is only 0 or 1, to specify whether to get the text complexity score or no
@@ -36,18 +34,11 @@ async def image_handwritten_text_recognition_S3_object(params: ImageOcrS3Obj):
         ocr_text = google_handwriting_recognizer(s3_obj=params.s3_obj)
         scores = -1
         if params.get_complexity_score == 1:
-            scores = {
-                "vocab_score": good_vocab_stars(ocr_text),
-                "efficiency_score": efficiency_stars(ocr_text),
-                "descriptiveness_score": descriptiveness_stars(ocr_text),
-                "sentence_length_score": sentence_length_stars(ocr_text),
-                "word_length_score": word_length_stars(ocr_text),
-                "complexity_score": evaluate(ocr_text)
-            }
+            scores = get_text_scores(ocr_text)
 
         return {
             "ocr_text": ocr_text,
-            "scores": scores   
+            "scores": scores
         }
 
     else:
