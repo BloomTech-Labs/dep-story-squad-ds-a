@@ -50,7 +50,7 @@ nlp = spacy.load("en_core_web_sm")
 ########
 #jesse_words = j
 
-print("starting to read hadi's file")
+# print("starting to read hadi's file")
 
 with open("app/ocr/words.txt") as file_obj:
 
@@ -61,7 +61,7 @@ for x in words :
     if (len(x) >= 5 and x.strip().isalpha()):
         wordlist.append(x.strip().lower())
 
-print("ending hadi's file reading")
+# print("ending hadi's file reading")
 
 #for word in j :
 #    if len(word) > 5 and word.islower() and word.isalpha():
@@ -79,7 +79,7 @@ print("ending hadi's file reading")
 #            count += x
 #            return(count / len(size))
 
-print(len(wordlist))            
+# print(len(wordlist))       
         
 
     
