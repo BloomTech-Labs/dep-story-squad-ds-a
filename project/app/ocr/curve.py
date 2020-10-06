@@ -4,13 +4,6 @@ from app.ocr.google_handwriting_recognition import google_handwriting_recognizer
 import numpy as np         
 #from google_handwriting_recognition.py import google_handwriting_recognizer_dir, google_handwriting_recognizer
 
-string = "Great success. My name is Borat. I have come to America, to find Pamela Anderson, and \
-        make her my wife. Very nice!"
-string2 = "take in a database of URLs associated with particular usernames, store it in dictionary with scores,\
-    append it to dict_list2, now should have list of dictionaries to scroll through"
-string3 = " Once you have a list of dictionaries, you can scroll through each score related to each function, \
-    one by one,  and get the data needed to start implementing the curve function, to then ultimately, \
-        return star values for each player"
 def store(input_str: str,  username: str) -> int:
     '''
     Stores dictionary object after running the string through complexity model..output is dictionary with
@@ -29,19 +22,7 @@ def store(input_str: str,  username: str) -> int:
     return d    
 
 
-a = store(string, "bill" )
-b = store(string2, "Kate")
-c = store(string3, "Edward")
-#print(a)
-#print(b)
-#print(c)
-
-dictlist2 = []
-dictlist2.append(a)
-dictlist2.append(b)
-dictlist2.append(c)
-
-        
+       
 def compiler(listofdicts, function)-> []: 
     '''
     takes in list of dictionaries, and function name, returns array of scores for that
@@ -55,9 +36,7 @@ def compiler(listofdicts, function)-> []:
                     scorelist.append(score)
     
     return(scorelist)
-print("-----------------------")
-print(compiler(dictlist2, "evaluate")) 
-print("----------------")
+
 
 def bigcompile(listofdicts):
     '''
@@ -83,12 +62,7 @@ def bigcompile(listofdicts):
     
     return(giantdictionary)
     
-#print(dictlist)
-#print("------------------------------")
-x = bigcompile(dictlist2)
-print(x)
-print("---------------------------")
-#able to return a list of lists, based on dictionary lists   
+
 
 def maxscorelist(listofdicts):
     '''
@@ -105,8 +79,7 @@ def maxscorelist(listofdicts):
         
     return(maxscorelist)
 
-print(maxscorelist(dictlist2)) 
-print("-----------------------------") 
+
 
 
 def finalscore(listofdicts, userid):
@@ -148,7 +121,7 @@ def finalscore(listofdicts, userid):
     #returns new dictionary
     return(FinalDict)
 
-print(finalscore(dictlist2, "bill"))
+
 
 def curveddatabase(listofdicts):
     '''
@@ -166,23 +139,8 @@ def curveddatabase(listofdicts):
     #return dictionary in original dictionary list form, but with ratings curved and turned into star ratings
     return curvedscoredict        
 
-print("-------------------------")
-print(dictlist2)
-print("---------------------------------")
 
-print(curveddatabase(dictlist2))
 
-database =    [
-        {
-            "user_id": "12322187",
-            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322187/story_5"
-        }
-        
-    ]
-#print(store(string, "bill"))
-
-# take in a database of URLs associated with particular usernames, store it in dictionary with scores,
-#append it to dict_list2, now should have list of dictionaries to scroll through
 def Star_Scores(Database_list):
     '''
     This function does it all. Takes in a Database list, parses it for s3 links, and user IDs, runs google image 
@@ -219,13 +177,12 @@ def Star_Scores(Database_list):
     finaldictionary = curveddatabase(dictlist1)
     return finaldictionary
 
-print(Star_Scores(database))
+
 
 def Scoredatabase(Database_list):
     '''
     Takes in list of dictionaries with s3 URLs and user IDs, 
-    Runs URL through Google_handwriting_recognizer_dir model,
-    Returns List of dictionaries [{user1:{evaluate:score, good_vocab:score, efficiency:score, \
+    Returns List of dictionaries [{user1}:{evaluate:score, good_vocab:score, efficiency:score, \
                             descriptiveness:score, sentence_length:score, word_length:score}}, {user2}:{etc}}]
     '''
 
@@ -257,13 +214,88 @@ def Scoredatabase(Database_list):
     return dictlist1     
 
 
-print(Scoredatabase(database))    
+
+
+if __name__ == "__main__":
+
+    string = "Great success. My name is Borat. I have come to America, to find Pamela Anderson, and \
+        make her my wife. Very nice!"
+    string2 = "take in a database of URLs associated with particular usernames, store it in dictionary with scores,\
+    append it to dict_list2, now should have list of dictionaries to scroll through"
+    string3 = " Once you have a list of dictionaries, you can scroll through each score related to each function, \
+    one by one,  and get the data needed to start implementing the curve function, to then ultimately, \
+        return star values for each player"
+    string4 = "Remember that the Learning Rate is a hyperparameter that is specific to your gradient-descent based optimizer \
+    selection. A learning rate that is too high will cause divergent behavior, but a Learning Rate that is\
+         too low will fail to converge, again, you're looking for the sweet spot."
+    string5 = "Momentum is a hyperparameter that is more commonly associated with Stochastic Gradient Descent. \
+    SGD is a common optimizer because it's what people understand and know, but I doubt it will get you the \
+        best results, you can try hyperparameter tuning its attributes and see if you can beat the performance from adam."         
+    string6 = "Using dropout on hidden layers might not have any effect while using dropout on hidden layers might\
+     have a substantial effect. You don't necessarily need to turn use dropout unless you see that your model\
+          has overfitting and generalizability problems."
+    string7 = "In the case of a binomial outcome (flipping a coin), the binomial distribution may be \
+    approximated by a normal distribution (for sufficiently large n {\displaystyle n} n). Because \
+        the square of a standard normal distribution is the chi-square distribution with one degree of freedom,\
+             the probability of a result such as 1 heads in 10 trials can be approximated either by using \
+                 the normal distribution directly, or the chi-square distribution for the normalised,\
+                      squared difference between observed and expected value."
+    string8 = "The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly\
+     that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well. "
+    
+    a = store(string, "bill" )
+    b = store(string2, "Kate")
+    c = store(string3, "Edward")
+    d = store(string4, "Bobby")
+    e = store(string5, "Hadi")
+    f = store(string6, "Jesse")
+    g = store(string7, "Pierre")
+    h = store(string8, "Bruce")
+
+    #print(a)
+    #print(b)
+    #print(c)
+
+    dictlist2 = []
+    dictlist2.append(a)
+    dictlist2.append(b)
+    dictlist2.append(c)
+    dictlist2.append(d)
+    dictlist2.append(e)
+    dictlist2.append(f)
+    dictlist2.append(g)
+    dictlist2.append(h)
+
+    database =    [
+        {
+            "user_id": "12322187",
+            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322187/story_5"
+        }
+        
+    ]
+    print("-----------------------")
+    print(compiler(dictlist2, "evaluate")) 
+    print("----------------")
+    x = bigcompile(dictlist2)
+    print(x)
+    print("---------------------------")
+    print(maxscorelist(dictlist2)) 
+    print("-----------------------------")
+    print("-------------------------")
+    print(dictlist2)
+    print("---------------------------------") 
+    print(finalscore(dictlist2, "bill"))
+    print(curveddatabase(dictlist2))
+
+    print(Star_Scores(database))
+    print(Scoredatabase(database))
 
 #print(maxscorelist(abc))
 
 #print(bigcompile(create_dictlist(database)))     
 #print(a)
-#print(b) 
+#print(b)
+# Work with dictlist 2 to make a sample matchmaking model 
 
  
 
