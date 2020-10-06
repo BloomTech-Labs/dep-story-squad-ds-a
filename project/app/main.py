@@ -2,7 +2,15 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import dotenv
-from app.api import image_ocr_url, image_ocr_s3_obj, pdf_ocr_url, pdf_ocr_s3_obj, s3, image_ocr_s3_dir, matchmaker, add_players
+from app.api import image_ocr_url,\
+    image_ocr_s3_obj,\
+    pdf_ocr_url,\
+    pdf_ocr_s3_obj,\
+    s3,\
+    image_ocr_s3_dir,\
+    matchmaker,\
+    add_players,\
+    get_players
 
 dotenv.load_dotenv()
 
@@ -30,6 +38,7 @@ app.include_router(s3.router)
 app.include_router(matchmaker.router)
 
 app.include_router(add_players.router)
+app.include_router(get_players.router)
 
 app.add_middleware(
     CORSMiddleware,

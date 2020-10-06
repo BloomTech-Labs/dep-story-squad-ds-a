@@ -25,7 +25,7 @@ class AddPlayers(BaseModel):
 
 
 # TODO make it actually it is available for Mon ~ Wed
-@router.post('/multiplayer/add_players')
+@router.post('/multiplayer/add_players', tags=["Multiplayer"])
 async def add_players(params: AddPlayers):
     """
     It's available to use from Monday till Wednesday.
