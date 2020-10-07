@@ -224,6 +224,7 @@ def FinalStoreDatabase(Database_list):
             newdictlist.append(x)
 
     return (newdictlist)
+
 def FinalStarDatabase(Database_list):
     '''
     Takes a stored database and adds the user Id as a key and user as a key value pair to the dictionary itself,
@@ -301,6 +302,7 @@ def divide_chunks(l, n):
     # looping till length l 
     for i in range(0, len(l), n):  
         yield l[i:i + n] 
+
 def matchmaker(listofdicts):
     '''
     Takes in list of dictionaries of users and their scores, matches users up to the average score,
@@ -389,7 +391,7 @@ def Final_Match(listofdicts):
     
     finalmatch = []
     valuelist2 = []
-    botvar = "bot"
+    botvar = "added_cpu_bot"
     for lists in dividedlists:
         for value in lists:
             valuelist2.append(value)
