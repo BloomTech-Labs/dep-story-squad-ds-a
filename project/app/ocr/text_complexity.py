@@ -260,25 +260,17 @@ def descriptiveness_stars(input_str: str) -> int:
     
     return min(y,5)                               
 
-def store(input_str: str) -> str:
-    str1 = vocab_length(input_str)
-    str2 = avg_sentence_length(input_str)
-    str3 = efficiency(input_str)
-    str4 = descriptiveness(input_str)
-    str5 = good_vocab(input_str)
-    str6 = evaluate(input_str)
 
-    jsonStr = json.dumps(str1)
-    jsonStr2 = json.dumps(str2)
-    jsonStr3 = json.dumps(str3)
-    jsonStr4 = json.dumps(str4)
-    jsonStr5 = json.dumps(str5)
-    jsonStr6 = json.dumps(str6)
-    storage = [ f"vocab_length: {(jsonStr)} ",  f"avg_sentence_length score: {(jsonStr2)}",  \
-        f"efficiency score: {(jsonStr3)}" , f"descriptiveness score: {(jsonStr)} ",\
-            f"good_vocab: {(jsonStr5)}", f"evaluate: {(jsonStr6)}"]
-    
-    return storage
+def get_text_scores(input_str: str) -> str:
+    return {
+        "vocab_length": vocab_length(input_str),
+        "avg_sentence_length": avg_sentence_length(input_str),
+        "efficiency": efficiency(input_str),
+        "descriptiveness": descriptiveness(input_str),
+        "good_vocab": good_vocab(input_str),
+        "evaluate": evaluate(input_str)
+    }
+
 
 if __name__ == '__main__':
     # corrected = spellcheck(normal)
