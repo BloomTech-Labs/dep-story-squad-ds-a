@@ -525,8 +525,15 @@ if __name__ == "__main__":
     #finalscorez is a dictionary object with user:final score, this is how matchmaking process can work
     print("----------------------------")
     '''
+    zz = Scoredatabase(database)
+    print(zz)
+    print(dictlist2)
     print(matchmaker(dictlist2))
-    
+    #print(matchmaker(zz))
+    #So far, we have a way to access the s3 database, 
+    #Run Scoredatabase on a database object, turn that output into a variable, 
+    # run matchmaker on that variable to return users and their scores, 
+    # use scores to match users into groups of 4
     
     
     
