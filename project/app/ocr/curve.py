@@ -245,7 +245,7 @@ def FinalStarDatabase(Database_list):
     
     return (newdictlist)
 
-def avg_std_dict(listofdicts):
+def avg_dict(listofdicts):
     '''
     Takes in a list of dictionaries of users and their complexity score ratings , their corresponding methods,
     returns a dictionary list, 1st dictionary represents average of scores, 
@@ -265,23 +265,35 @@ def avg_std_dict(listofdicts):
     #list of averages
     mean_lists = []
     #list of standard deviations
-    std_lists = []
+    
     for x in score_lists:
         b = sum(x)/len(x)
         mean_lists.append(b)
+    
+    
+    new_dict = dict(zip(methodlist, mean_lists))
+      
+
+    return(new_dict)
+
+def std_dict(listofdicts):
+    x = bigcompile(listofdicts)
+    methodlist = []
+    
+    for method, scores in x.items():
+        y = method
+        methodlist.append(y)
+    score_lists = []
+    std_lists = []
+    for scores in x.values():
+        score_lists.append(scores)
     for y in score_lists:
         a = np.std(y)
         std_lists.append(a)
-
     
-    new_dict = dict(zip(methodlist, mean_lists))
-    new_dict2 = dict(zip(methodlist, std_lists))
-    FinalDict = []
-    FinalDict.append(new_dict)
-    FinalDict.append(new_dict2)
-    
+    new_dict2 = dict(zip(methodlist, std_lists))    
 
-    return(FinalDict)
+    return new_dict2 
 #With averages and Standard Deviations of scores, we can now go through individual dictionary entries, compare their individual
 # scores to the averages, using standard deviation and absolute value logic, we can give each user an individual +- score,
 # for each one of their methods, return eventually an array of users, and their particular overall scores.
@@ -362,17 +374,40 @@ if __name__ == "__main__":
     #print(Scoredatabase(database))
     
         
-    print(avg_std_dict(dictlist2)) 
+    
 
     #print(FinalStarDatabase(database))         
 #print(maxscorelist(abc))
 
 #print(bigcompile(create_dictlist(database)))     
-#print(a)
-#print(b)
-# Work with dictlist 2 to make a sample matchmaking model 
 
- 
+
+
+
+    #print(avg_std_dict(dictlist2))
+    avgdict = avg_dict(dictlist2)
+    stddict = std_dict(dictlist2)
+    print(avgdict)
+    print(stddict)
+    for user in dictlist2:
+        print(user)
+
+    #namelist1 = []
+    #methodlist2 = []
+    #scorelist1 = []
+    #for entry in dictlist2:
+    #    for user in entry.keys():
+    #        namelist1.append(user)
+    #    for scores in entry.values():
+    #        for method in scores.keys():
+    #            if method not in methodlist2:
+    #                methodlist2.append(method)
+        
+
+
+    #print(namelist1)
+    #print(methodlist2)            
+    
 
 
   
