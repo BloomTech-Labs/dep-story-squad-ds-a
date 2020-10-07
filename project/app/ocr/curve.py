@@ -394,7 +394,14 @@ def Final_Match(listofdicts):
     
     finalmatchedlist =  list(divide_chunks(finalmatch, teamsize))  
     
-    return finalmatchedlist      
+    return finalmatchedlist  
+
+def Pipeline(Database_list):
+    
+    Dictlist = Scoredatabase(Database_list)
+    Finalmatchups = Final_Match(Dictlist)
+
+    return Finalmatchups     
 
 #With averages and Standard Deviations of scores, we can now go through individual dictionary entries, compare their individual
 # scores to the averages, using standard deviation and absolute value logic, we can give each user an individual +- score,
