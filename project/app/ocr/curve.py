@@ -375,7 +375,8 @@ def matchmaker(listofdicts):
 def Final_Match(listofdicts):
     '''
     Takes matchmaking dictionary, orders the values, matches users up with the ordered values,
-    and divides all users into teams of 4 based on their ordered value
+    and divides all users into teams of 4 based on their ordered value. Accounts for remainder 
+    by evenly placing bots in groups, while not disturbing the distribution of scores
     '''
     teamsize = 4
     
@@ -392,6 +393,7 @@ def Final_Match(listofdicts):
     finalmatch = []
     valuelist2 = []
     botvar = "added_cpu_bot"
+    
     for lists in dividedlists:
         for value in lists:
             valuelist2.append(value)
@@ -402,11 +404,44 @@ def Final_Match(listofdicts):
                 finalmatch.append(user)
     
     while len(finalmatch) % teamsize != 0:
-        finalmatch.append(botvar)
+        if len(finalmatch) % teamsize == 3:
+            finalmatch.append(botvar)
+        
+        elif len(finalmatch) % teamsize == 2:
+            if len(finalmatch) < 5:
+                finalmatch.append(botvar)
+                finalmatch.append(botvar)
+            elif len(finalmatch) >5:
+                finalmatch.append(botvar)
+                finalmatch.append(botvar)
+                #now swap botvar with list position -5
+                finalmatch[-5], finalmatch[-2] = finalmatch[-2], finalmatch[-5]
+                       
+        elif len(finalmatch) % teamsize == 1:
+            if len(finalmatch) < 2:
+                finalmatch.append(botvar)
+                finalmatch.append(botvar)
+                finalmatch.append(botvar)
+            elif len(finalmatch) > 4 and len(finalmatch) < 9:
+                finalmatch.append(botvar)
+                finalmatch.append(botvar)
+                finalmatch.append(botvar)
+                finalmatch[-5], finalmatch[-3] = finalmatch[-3], finalmatch[-5]
+            elif len(finalmatch) > 8:
+                finalmatch.append(botvar)
+                finalmatch.append(botvar)
+                finalmatch.append(botvar)
+                finalmatch[-9], finalmatch[-8] = finalmatch[-8], finalmatch[-9]
+                finalmatch[-9], finalmatch[-7] = finalmatch[-7], finalmatch[-9]
+                finalmatch[-9], finalmatch[-6] = finalmatch[-6], finalmatch[-9]
+                finalmatch[-9], finalmatch[-3] = finalmatch[-3], finalmatch[-9]
+                finalmatch[-2], finalmatch[-5] = finalmatch[-5], finalmatch[-2]
+
 
     finalmatchedlist =  list(divide_chunks(finalmatch, teamsize))  
     
-    return finalmatchedlist  
+    return finalmatchedlist
+    #return finalmatch  
 
 def Pipeline(Database_list):
     '''
@@ -427,7 +462,7 @@ def Pipeline(Database_list):
 
 
 if __name__ == "__main__":
-    print("main_1")
+    
     string = "Great success. My name is Borat. I have come to America, to find Pamela Anderson, and \
         make her my wife. Very nice!"
     string2 = "take in a database of URLs associated with particular usernames, store it in dictionary with scores,\
@@ -452,16 +487,20 @@ if __name__ == "__main__":
                       squared difference between observed and expected value."
     string8 = "The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly\
      that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well. "
-
+    string9 = "Tell me that first, and then, if I like being that person,\
+         I’ll come up: if not, I’ll stay down here till I’m somebody else’—but, \
+             oh dear!” cried Alice, with a sudden burst of tears, “I do wish they\
+                  would put their heads down! I am so very tired of being all alone here"
 
     a = store(string, "bill")
     b = store(string2, "Kate")
     c = store(string3, "Edward")
     d = store(string4, "Bobby")
     e = store(string5, "Hadi")
-    # f = store(string6, "Jesse")
-    # g = store(string7, "Pierre")
-    # h = store(string8, "Bruce")
+    f = store(string6, "Jesse")
+    g = store(string7, "Pierre")
+    h = store(string8, "Bruce")
+    i = store(string9, "Franklin")
 
     # # print(a)
     # # print(b)
@@ -473,10 +512,10 @@ if __name__ == "__main__":
     dictlist2.append(c)
     dictlist2.append(d)
     dictlist2.append(e)
-    # dictlist2.append(f)
-    # dictlist2.append(g)
-    # dictlist2.append(h)
-
+    dictlist2.append(f)
+    dictlist2.append(g)
+    dictlist2.append(h)
+    dictlist2.append(i)
     database = [
 
         {
@@ -664,6 +703,10 @@ if __name__ == "__main__":
     #print(std_dict(abc))
     #print(std_dict(dictlist2))
     print(Final_Match(dictlist2))
+    
+
+
+            
     #abc = Scoredatabase(actual_dictionary)
     #print(std_dict(abc))
     #print(dictlist2)
