@@ -366,6 +366,36 @@ def matchmaker(listofdicts):
     finalscorez = dict(zip(usernames, totalz))
     return(finalscorez)      
 
+def Final_Match(listofdicts):
+
+    teamsize = 4
+    
+    x = matchmaker(listofdicts)
+    y = x.values()
+    
+    valuelist3 = []
+    for value in y:
+        valuelist3.append(value)
+    valuelist3.sort()
+    
+    dividedlists3= list(divide_chunks(valuelist3, teamsize))
+    
+    finalmatch = []
+    valuelist6 = []
+    
+    for lists in dividedlists3:
+        for value in lists:
+            valuelist6.append(value)
+    
+    for num in valuelist6:
+        for key, value in x.items():
+            if num == value:
+                finalmatch.append(key)
+    
+    finalmatchedlist =  list(divide_chunks(finalmatch, teamsize))  
+    
+    return finalmatchedlist      
+
 #With averages and Standard Deviations of scores, we can now go through individual dictionary entries, compare their individual
 # scores to the averages, using standard deviation and absolute value logic, we can give each user an individual +- score,
 # for each one of their methods, return eventually an array of users, and their particular overall scores.
@@ -524,18 +554,38 @@ if __name__ == "__main__":
     print(finalscorez)
     #finalscorez is a dictionary object with user:final score, this is how matchmaking process can work
     print("----------------------------")
-    '''
-    zz = Scoredatabase(database)
-    print(zz)
+    
     print(dictlist2)
     print(matchmaker(dictlist2))
-    #print(matchmaker(zz))
-    #So far, we have a way to access the s3 database, 
-    #Run Scoredatabase on a database object, turn that output into a variable, 
-    # run matchmaker on that variable to return users and their scores, 
-    # use scores to match users into groups of 4
     
     
+    teamsize = 4
+    x = matchmaker(dictlist2)
+    y = x.values()
+    print(y)
+    valuelist3 = []
+    for value in y:
+        valuelist3.append(value)
+    valuelist3.sort()
+    print(valuelist3)
+
+    dividedlists3= list(divide_chunks(valuelist3, teamsize))
+    print(dividedlists3)
+    finalmatch = []
+    valuelist6 = []
+    for lists in dividedlists3:
+        for value in lists:
+            valuelist6.append(value)
+    for num in valuelist6:
+        for key, value in x.items():
+            if num == value:
+                finalmatch.append(key)
+    finalmatchedlist =  list(divide_chunks(finalmatch, teamsize))  
+    print(finalmatchedlist)                          
+    '''
+    print(dictlist2)
+    print(matchmaker(dictlist2))
+    print(Final_Match(dictlist2))
     
     
     
