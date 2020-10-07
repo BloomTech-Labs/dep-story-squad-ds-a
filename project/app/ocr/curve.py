@@ -48,8 +48,8 @@ def bigcompile(listofdicts):
     methodlist = []
     #add different methods to methodlist
     for user in listofdicts:
-        for name, scores in user.items():
-            for method, score in scores.items():
+        for scores in user.values():
+            for method in scores.keys():
                 if method not in methodlist:
                     methodlist.append(method)
     # for each method in the methodlist, compile, and append the lists to 
@@ -86,7 +86,7 @@ def finalscore(listofdicts, userid):
     dictionary list in same form of original STORE method dictionary, only this time scores are in star values, and methods
     are in star methods
     '''
-    y = maxscorelist(listofdicts)
+    max_scores = maxscorelist(listofdicts)
 
     individ_scores = []
 
@@ -96,7 +96,7 @@ def finalscore(listofdicts, userid):
                 for method, score in scores.items():
                     individ_scores.append(score)
     # take individual user scores and divide by maxscores to create finalscore array
-    finalscore = [i / j for i, j in zip(individ_scores, y)]
+    finalscore = [i / j for i, j in zip(individ_scores, max_scores)]
     finalscore1 = []
     # divide finalscores by .2 and round to nearest half star
     for score in finalscore:
@@ -148,18 +148,18 @@ def Star_Scores(Database_list):
     userlist = []
     dirlist = []
 
-    for x in Database_list:
-        for key, value in x.items():
+    for entry in Database_list:
+        for key, value in entry.items():
             if key == "user_id":
                 userlist.append(value)
             elif key == "s3_dir":
                 dirlist.append(value)
     stringlist = []
-    for x in dirlist:
-        y = google_handwriting_recognizer_dir(x)
-        z = ",".join(y)
+    for url in dirlist:
+        output_text = google_handwriting_recognizer_dir(url)
+        joined_text = ",".join(output_text)
         # appends joined text for each URL in the directory
-        stringlist.append(z)
+        stringlist.append(joined_text)
     # stringlist has list of strings, userlist has list of usernames corresponding to those strings,
     # want to run store on those to make dictionary objects
     dict1 = dict(zip(stringlist, userlist))
@@ -191,12 +191,11 @@ def Scoredatabase(Database_list):
                 dirlist.append(value)
     
     stringlist = []
-    for x in dirlist:
-        
-        y = google_handwriting_recognizer_dir(x)
-        z = ",".join(y)
+    for url in dirlist:
+        output_text = google_handwriting_recognizer_dir(url)
+        joined_text = ",".join(output_text)
         # appends joined text for each URL in the directory
-        stringlist.append(z)
+        stringlist.append(joined_text)
     # stringlist has list of strings, userlist has list of usernames corresponding to those strings,
     # want to run store on those to make dictionary objects
     dict1 = dict(zip(stringlist, userlist))
@@ -273,6 +272,10 @@ def avg_dict(listofdicts):
     return(new_dict)
 
 def std_dict(listofdicts):
+    '''
+    takes in a ist of dictionaries, compiles a list of scores for each method, 
+    returns a list of methods and their standard deviations
+    '''
     x = bigcompile(listofdicts)
     methodlist = []
     
@@ -292,15 +295,17 @@ def std_dict(listofdicts):
     return new_dict2 
 
 def divide_chunks(l, n): 
-      
+    '''
+    Divides a list l into separate lists of length n
+    '''  
     # looping till length l 
     for i in range(0, len(l), n):  
         yield l[i:i + n] 
 def matchmaker(listofdicts):
     '''
-    Takes in list of dictionaries, outputs users and their final score based on 
-    standard deviations from the mean of all of their scores, can be used in matching up teams, 
-    in multiplayer mode
+    Takes in list of dictionaries of users and their scores, matches users up to the average score,
+    and uses standard deviations of individual scores to return a dictionary with the {user: overall score}
+    score is then used in matchmaking process
     '''
     avgdict = avg_dict(listofdicts)
     stddict = std_dict(listofdicts)
@@ -367,7 +372,8 @@ def matchmaker(listofdicts):
 
 def Final_Match(listofdicts):
     '''
-    Takes matchmaker dictionary, sorts values, matches players up into teams of 4
+    Takes matchmaking dictionary, orders the values, matches users up with the ordered values,
+    and divides all users into teams of 4 based on their ordered value
     '''
     teamsize = 4
     
@@ -447,10 +453,10 @@ if __name__ == "__main__":
     b = store(string2, "Kate")
     c = store(string3, "Edward")
     d = store(string4, "Bobby")
-    e = store(string5, "Hadi")
-    f = store(string6, "Jesse")
-    g = store(string7, "Pierre")
-    h = store(string8, "Bruce")
+    # e = store(string5, "Hadi")
+    # f = store(string6, "Jesse")
+    # g = store(string7, "Pierre")
+    # h = store(string8, "Bruce")
 
     # # print(a)
     # # print(b)
@@ -461,10 +467,10 @@ if __name__ == "__main__":
     dictlist2.append(b)
     dictlist2.append(c)
     dictlist2.append(d)
-    dictlist2.append(e)
-    dictlist2.append(f)
-    dictlist2.append(g)
-    dictlist2.append(h)
+    # dictlist2.append(e)
+    # dictlist2.append(f)
+    # dictlist2.append(g)
+    # dictlist2.append(h)
 
     database = [
 
@@ -648,11 +654,11 @@ if __name__ == "__main__":
     #actual_dict = [{5206: {'evaluate': 0.386864850604889, 'good_vocab': 0.5025906735751295, 'efficiency': 0.766497461928934, 'decriptiveness': 0.696969696969697, 'sentence_length': 1, 'word_length': 0.4}}, {5229: {'evaluate': 0.37310469710272165, 'good_vocab': 0.3805970149253731, 'efficiency': 0.6323529411764706, 'decriptiveness': 0.6375, 'sentence_length': 1, 'word_length': 0.7}}, {5210: {'evaluate': 0.35023670205895274, 'good_vocab': 0.33986928104575165, 'efficiency': 0.6521739130434783, 'decriptiveness': 0.6704545454545454, 'sentence_length': 1, 'word_length': 0.5}}, {5225: {'evaluate': 0.3042697172108937, 'good_vocab': 0.3247863247863248, 'efficiency': 0.5126050420168067, 'decriptiveness': 0.4805194805194805, 'sentence_length': 1, 'word_length': 0.4}}]
     #print(Final_Match(actual_dict))
     
-    #print(Pipeline(actual_dictionary))
-    abc = Scoredatabase(actual_dictionary)
+    print(Pipeline(actual_dictionary))
+    #abc = Scoredatabase(actual_dictionary)
     #print(std_dict(abc))
-    print(std_dict(dictlist2))
-    print(Final_Match(dictlist2))
+    #print(std_dict(dictlist2))
+    #print(Final_Match(dictlist2))
     #abc = Scoredatabase(actual_dictionary)
     #print(std_dict(abc))
     #print(dictlist2)
