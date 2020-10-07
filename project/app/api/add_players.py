@@ -40,7 +40,7 @@ async def add_players(params: AddPlayers):
     "successfully added"
     """
 
-    dynamodb = boto3.resource('dynamodb')
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
     table = dynamodb.Table('user_stories')
 
     for player_story in params.user_stories:

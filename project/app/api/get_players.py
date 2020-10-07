@@ -18,7 +18,7 @@ async def get_players():
     - `user_stories`: List[Dict{"user_id": str, "s3_dir": str}]
     """
 
-    dynamodb = boto3.resource('dynamodb')
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
     table = dynamodb.Table('user_stories')
 
     # for player_story in params.user_stories:
