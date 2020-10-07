@@ -294,6 +294,78 @@ def std_dict(listofdicts):
     new_dict2 = dict(zip(methodlist, std_lists))    
 
     return new_dict2 
+
+def divide_chunks(l, n): 
+      
+    # looping till length l 
+    for i in range(0, len(l), n):  
+        yield l[i:i + n] 
+def matchmaker(listofdicts):
+    '''
+    Takes in list of dictionaries, outputs users and their final score based on 
+    standard deviations from the mean of all of their scores, can be used in matching up teams, 
+    in multiplayer mode
+    '''
+    avgdict = avg_dict(listofdicts)
+    stddict = std_dict(listofdicts)
+    
+    usernames = []
+    differences = []
+    methodnames3 = []
+    
+    for entry in listofdicts:
+        for scores in entry.values():
+            for methodnames in scores.keys():
+                if methodnames not in methodnames3:
+                    methodnames3.append(methodnames)
+    for user in listofdicts:
+        for names in user.keys():
+            usernames.append(names)
+        for scores in user.values():
+            for method, score in scores.items():
+                for function, avg in avgdict.items():
+                    if method == function:
+                        x = (score-avg)
+                        differences.append(x)
+    
+    
+    
+    methodlength = len(methodnames3)
+    
+
+    dividedlists = list(divide_chunks(differences, methodlength)) 
+     
+    dictlist4 = []
+    
+    for small_list in dividedlists:
+        x = dict(zip(methodnames3, small_list))
+        dictlist4.append(x)
+    
+    #we have list of dictionaries with score - avg for each user
+    #now we just divide by std list
+    #print(len(dictlist4))
+    #print(usernames)
+    #print(stddict)
+    std_list3 = []
+    
+    for entry in dictlist4:
+        for method, score in entry.items():
+            for function, std in stddict.items():
+                if method == function:
+                    x = (score / std)
+                    std_list3.append(x)
+    #print(std_list3)
+    dividedlists2 = list(divide_chunks(std_list3, methodlength)) 
+    
+    totalz = []
+    for small_list2 in dividedlists2:
+        summy = sum(small_list2)
+        totalz.append(summy)
+        
+    
+    finalscorez = dict(zip(usernames, totalz))
+    return(finalscorez)      
+
 #With averages and Standard Deviations of scores, we can now go through individual dictionary entries, compare their individual
 # scores to the averages, using standard deviation and absolute value logic, we can give each user an individual +- score,
 # for each one of their methods, return eventually an array of users, and their particular overall scores.
@@ -385,6 +457,7 @@ if __name__ == "__main__":
 
 
     #print(avg_std_dict(dictlist2))
+    '''
     avgdict = avg_dict(dictlist2)
     stddict = std_dict(dictlist2)
     print(avgdict)
@@ -416,8 +489,85 @@ if __name__ == "__main__":
     print(methodnames3)
     print(len(methodnames3))
     print(len(differences))
-    userlength = len(usernames)
-    print(userlength)
+    methodlength = len(methodnames3)
+    
+
+    dividedlists = list(divide_chunks(differences, methodlength)) 
+    print (dividedlists) 
+    dictlist4 = []
+    for small_list in dividedlists:
+        x = dict(zip(methodnames3, small_list))
+        dictlist4.append(x)
+    print(dictlist4)
+    #we have list of dictionaries with score - avg for each user
+    #now we just divide by std list
+    #print(len(dictlist4))
+    #print(usernames)
+    #print(stddict)
+    std_list3 = []
+    for entry in dictlist4:
+        for method, score in entry.items():
+            for function, std in stddict.items():
+                if method == function:
+                    x = (score / std)
+                    std_list3.append(x)
+    #print(std_list3)
+    dividedlists2 = list(divide_chunks(std_list3, methodlength)) 
+    print(dividedlists2)
+    totalz = []
+    for small_list2 in dividedlists2:
+        summy = sum(small_list2)
+        totalz.append(summy)
+        
+    print(totalz)
+    finalscorez = dict(zip(usernames, totalz))
+    print(finalscorez)
+    #finalscorez is a dictionary object with user:final score, this is how matchmaking process can work
+    print("----------------------------")
+    '''
+    print(matchmaker(dictlist2))
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    #finaldict5 = dict(zip(usernames, dictlist4))
+    #finallist3= []
+    #finallist3.append(finaldict5)
+    #print(finallist3)
+    #print(dictlist2)
+
+    
+
+
+
+
+
     #need to make userlength many lists from differences and methodnames
     #need to divide differences by userlength increments, and create a dictionary object
     # using methodnames3: differences
@@ -427,50 +577,10 @@ if __name__ == "__main__":
     # finally, summing up each 6 values for each participant, to get a final value, 
     # used in matchmaking    
 
-'''
-    from itertools import islice 
-      
-  
-    # list of length in which we have to split 
-    length_to_split = [2, 1, 3, 1] 
-  
-    # Using islice 
-    Inputt = iter(Input) 
-    Output = [list(islice(Inputt, elem)) 
-          for elem in length_to_split] 
 
-
+    
     #print(usernames)
-  '''      
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    #namelist1 = []
-    #methodlist2 = []
-    #scorelist1 = []
-    #for entry in dictlist2:
-    #    for user in entry.keys():
-    #        namelist1.append(user)
-    #    for scores in entry.values():
-    #        for method in scores.keys():
-    #            if method not in methodlist2:
-    #                methodlist2.append(method)
-        
-
-
-    #print(namelist1)
-    #print(methodlist2)            
+         
     
 
 
