@@ -389,9 +389,73 @@ if __name__ == "__main__":
     stddict = std_dict(dictlist2)
     print(avgdict)
     print(stddict)
+    usernames = []
+    differences = []
+    methodnames3 = []
+    for entry in dictlist2:
+        for scores in entry.values():
+            for methodnames in scores.keys():
+                if methodnames not in methodnames3:
+                    methodnames3.append(methodnames)
     for user in dictlist2:
-        print(user)
+        for names in user.keys():
+            usernames.append(names)
+        for scores in user.values():
+            for method, score in scores.items():
+                for function, avg in avgdict.items():
+                    if method == function:
+                        x = (score-avg)
+                        differences.append(x)
+    
+    
+    #list of differences in values between user score and average score, (user score - avg score)
+    print(differences)
+    #list of usernames
+    print(usernames)
+    #list of methodnames in dictlist2
+    print(methodnames3)
+    print(len(methodnames3))
+    print(len(differences))
+    userlength = len(usernames)
+    print(userlength)
+    #need to make userlength many lists from differences and methodnames
+    #need to divide differences by userlength increments, and create a dictionary object
+    # using methodnames3: differences
+    # from there, since they will be ordered, take that dictionary object and attach it to 
+    # usernames, 
+    # then repeat this process by taking those numbers and dividing them by stddictlist,
+    # finally, summing up each 6 values for each participant, to get a final value, 
+    # used in matchmaking    
 
+'''
+    from itertools import islice 
+      
+  
+    # list of length in which we have to split 
+    length_to_split = [2, 1, 3, 1] 
+  
+    # Using islice 
+    Inputt = iter(Input) 
+    Output = [list(islice(Inputt, elem)) 
+          for elem in length_to_split] 
+
+
+    #print(usernames)
+  '''      
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     #namelist1 = []
     #methodlist2 = []
     #scorelist1 = []
