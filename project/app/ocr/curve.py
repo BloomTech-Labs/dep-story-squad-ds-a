@@ -386,7 +386,7 @@ def Final_Match(listofdicts):
     valuelist1 = []
     for value in y:
         valuelist1.append(value)
-    valuelist1.sort()
+    valuelist1.sort(reverse=True)
     
     dividedlists= list(divide_chunks(valuelist1, teamsize))
     
