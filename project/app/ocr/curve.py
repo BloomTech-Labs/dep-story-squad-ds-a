@@ -3,7 +3,7 @@ from app.ocr.text_complexity import evaluate, good_vocab, efficiency, descriptiv
 from app.ocr.google_handwriting_recognition import google_handwriting_recognizer_dir, google_handwriting_recognizer    
 import numpy as np         
 import statistics 
-#from google_handwriting_recognition.py import google_handwriting_recognizer_dir, google_handwriting_recognizer
+
 
 def store(input_str: str,  username: str) -> int:
     '''
@@ -19,12 +19,11 @@ def store(input_str: str,  username: str) -> int:
             "sentence_length": avg_sentence_length(input_str),
             "word_length": vocab_length(input_str)
             }
-        }           
-    return d    
+        }
+    return d
 
 
-       
-def compiler(listofdicts, function)-> []: 
+def compiler(listofdicts, function) -> []:
     '''
     takes in list of dictionaries, and function name, returns array of scores for that
     particular function
@@ -35,7 +34,7 @@ def compiler(listofdicts, function)-> []:
             for method, score in scores.items():
                 if method == function:
                     scorelist.append(score)
-    
+
     return(scorelist)
 
 
@@ -53,16 +52,15 @@ def bigcompile(listofdicts):
             for method, score in scores.items():
                 if method not in methodlist:
                     methodlist.append(method)
-    #for each method in the methodlist, compile, and append the lists to 
-    #bigscorelist array
+    # for each method in the methodlist, compile, and append the lists to 
+    # bigscorelist array
     for method in methodlist:
         x = compiler(listofdicts, method)
-        bigscorelist.append(x)            
-    #return a dictionary object with all methods and their corresponding arrays               
+        bigscorelist.append(x)
+    # return a dictionary object with all methods and their corresponding arrays               
     giantdictionary = dict(zip(methodlist, bigscorelist))
-    
+
     return(giantdictionary)
-    
 
 
 def maxscorelist(listofdicts):
@@ -70,17 +68,15 @@ def maxscorelist(listofdicts):
     Compiles all lists of scores and their methods, scrolls through all lists, returns one list of max scores for each
     list : [a, b, c, d, e, f]
     '''
-    #arrange dictionary into methods, and arrays of corresponding scores
+    # arrange dictionary into methods, and arrays of corresponding scores
     x = bigcompile(listofdicts)
     maxscorelist = []
     for method, scores in x.items():
         score = np.max(scores)
         maxscorelist.append(score)
-    #append high score from each corresponding array to maxscore array, return array
-        
+    # append high score from each corresponding array to maxscore array, return array
+
     return(maxscorelist)
-
-
 
 
 def finalscore(listofdicts, userid):
@@ -91,18 +87,18 @@ def finalscore(listofdicts, userid):
     are in star methods
     '''
     y = maxscorelist(listofdicts)
-    
+
     individ_scores = []
-    
+
     for entry in listofdicts:
         for user, scores in entry.items():
             if user == userid:
                 for method, score in scores.items():
                     individ_scores.append(score)
-    #take individual user scores and divide by maxscores to create finalscore array
+    # take individual user scores and divide by maxscores to create finalscore array
     finalscore = [i / j for i, j in zip(individ_scores, y)]
     finalscore1 = []
-    #divide finalscores by .2 and round to nearest half star
+    # divide finalscores by .2 and round to nearest half star
     for score in finalscore:
         a = score / .2
         b = round(a*2) /2
@@ -110,18 +106,17 @@ def finalscore(listofdicts, userid):
    
     methods = []
     added = "_stars"
-    #gets functions used in dictlist, adds star title to them
+    # gets functions used in dictlist, adds star title to them
     for entry in listofdicts:
         for user, scores in entry.items():
             for method, score in scores.items():
                 if method not in methods:
                     methods.append(method+added)
-    #appends new method names with star ratings to new dictionary        
-    newdict = dict(zip(methods, finalscore1))              
-    FinalDict = { userid: newdict}  
-    #returns new dictionary
+    # appends new method names with star ratings to new dictionary        
+    newdict = dict(zip(methods, finalscore1))
+    FinalDict = {userid: newdict}
+    # returns new dictionary
     return(FinalDict)
-
 
 
 def curveddatabase(listofdicts):
@@ -129,17 +124,16 @@ def curveddatabase(listofdicts):
     performs a compilation of the final score method by compiling all individual final scores into a list of dictionaries
     with all user's scores reflecting a curved star score value
     '''
-    
+
     curvedscoredict = []
-    #for each userid in dictionary list, we perform finalscore on it, and convert scores into curved star ratings
+    # for each userid in dictionary list, we perform finalscore on it, and convert scores into curved star ratings
     for entry in listofdicts:
         for user, scores in entry.items():
             x = finalscore(listofdicts, user)
-            #append each dictionary item to list
+            # append each dictionary item to list
             curvedscoredict.append(x)
-    #return dictionary in original dictionary list form, but with ratings curved and turned into star ratings
-    return curvedscoredict        
-
+    # return dictionary in original dictionary list form, but with ratings curved and turned into star ratings
+    return curvedscoredict
 
 
 def Star_Scores(Database_list):
@@ -147,13 +141,12 @@ def Star_Scores(Database_list):
     This function does it all. Takes in a Database list, parses it for s3 links, and user IDs, runs google image 
     recognizer on the strings, and implements the Store method on the string:UserId. 
     Compiles all Store dictionaries into one dictionary list, and then runs the curveddatabase function on this list,
-    returning a list of dictionaries with curved star scores. 
+    returning a list of dictionaries with curved star scores.
     '''
-    
+
     dictlist1 = []
     userlist = []
     dirlist = []
-    
 
     for x in Database_list:
         for key, value in x.items():
@@ -165,19 +158,18 @@ def Star_Scores(Database_list):
     for x in dirlist:
         y = google_handwriting_recognizer_dir(x)
         z = ",".join(y)
-       #appends joined text for each URL in the directory
+        # appends joined text for each URL in the directory
         stringlist.append(z)
-    #stringlist has list of strings, userlist has list of usernames corresponding to those strings,
-    #want to run store on those to make dictionary objects
+    # stringlist has list of strings, userlist has list of usernames corresponding to those strings,
+    # want to run store on those to make dictionary objects
     dict1 = dict(zip(stringlist, userlist))
 
     for string, username in dict1.items():
         x = store(string, username) 
         dictlist1.append(x)   
-  
+
     finaldictionary = curveddatabase(dictlist1)
     return finaldictionary
-
 
 
 def Scoredatabase(Database_list):
@@ -191,7 +183,6 @@ def Scoredatabase(Database_list):
     userlist = []
     dirlist = []
     
-
     for x in Database_list:
         for key, value in x.items():
             if key == "user_id":
@@ -202,32 +193,33 @@ def Scoredatabase(Database_list):
     for x in dirlist:
         y = google_handwriting_recognizer_dir(x)
         z = ",".join(y)
-       #appends joined text for each URL in the directory
+        # appends joined text for each URL in the directory
         stringlist.append(z)
-    #stringlist has list of strings, userlist has list of usernames corresponding to those strings,
-    #want to run store on those to make dictionary objects
+    # stringlist has list of strings, userlist has list of usernames corresponding to those strings,
+    # want to run store on those to make dictionary objects
     dict1 = dict(zip(stringlist, userlist))
 
     for string, username in dict1.items():
         x = store(string, username) 
         dictlist1.append(x)   
 
-    return dictlist1     
+    return dictlist1
+
 
 def FinalStoreDatabase(Database_list):
     '''
     Takes a stored database and adds the user Id as a key and user as a key value pair to the dictionary itself,
-    returns list of dictionaries 
+    returns list of dictionaries
     '''
     a = Scoredatabase(Database_list)
-    
+
     newdictlist = []
     for entry in a:
         for user, scores in entry.items():
             x = scores
             x['userid'] = user
             newdictlist.append(x)
-    
+
     return (newdictlist)
 def FinalStarDatabase(Database_list):
     '''
@@ -416,6 +408,7 @@ def Pipeline(Database_list):
 # for each one of their methods, return eventually an array of users, and their particular overall scores.
 # Use that array to match users up with other users, in a manual matchmaking dictionary process.     
 
+
 if __name__ == "__main__":
 
     string = "Great success. My name is Borat. I have come to America, to find Pamela Anderson, and \
@@ -442,135 +435,57 @@ if __name__ == "__main__":
                       squared difference between observed and expected value."
     string8 = "The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly\
      that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well. "
-    
-    a = store(string, "bill" )
-    b = store(string2, "Kate")
-    c = store(string3, "Edward")
-    d = store(string4, "Bobby")
-    e = store(string5, "Hadi")
-    f = store(string6, "Jesse")
-    g = store(string7, "Pierre")
-    h = store(string8, "Bruce")
 
-    #print(a)
-    #print(b)
-    #print(c)
+
+    a = store(string, "bill")
+    # b = store(string2, "Kate")
+    # c = store(string3, "Edward")
+    # d = store(string4, "Bobby")
+    # e = store(string5, "Hadi")
+    # f = store(string6, "Jesse")
+    # g = store(string7, "Pierre")
+    # h = store(string8, "Bruce")
+
+    # print(a)
+    # print(b)
+    # print(c)
 
     dictlist2 = []
     dictlist2.append(a)
-    dictlist2.append(b)
-    dictlist2.append(c)
-    dictlist2.append(d)
-    dictlist2.append(e)
-    dictlist2.append(f)
-    dictlist2.append(g)
-    dictlist2.append(h)
+    # dictlist2.append(b)
+    # dictlist2.append(c)
+    # dictlist2.append(d)
+    # dictlist2.append(e)
+    # dictlist2.append(f)
+    # dictlist2.append(g)
+    # dictlist2.append(h)
 
-    database =    [
+    database = [
+
         {
             "user_id": "12322187",
             "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322187/story_5"
         }
-        
     ]
-    #print("-----------------------")
-    #print(compiler(dictlist2, "evaluate")) 
-    #print("----------------")
-    #x = bigcompile(dictlist2)
-    #print(x)
-    #print("---------------------------")
-    #print(maxscorelist(dictlist2)) 
-    #print("-----------------------------")
-    #print("-------------------------")
-    #print(dictlist2)
-    #print("---------------------------------") 
-    #print(finalscore(dictlist2, "bill"))
-    #print(curveddatabase(dictlist2))
 
-    #print(Star_Scores(database))
-    #print(Scoredatabase(database))
-    
-        
-    
+    # print("-----------------------")
+    # print(compiler(dictlist2, "evaluate")) 
+    # print("----------------")
+    # x = bigcompile(dictlist2)
+    # print(x)
+    # print("---------------------------")
+    # print(maxscorelist(dictlist2)) 
+    # print("-----------------------------")
+    # print("-------------------------")
+    # print(dictlist2)
+    # print("---------------------------------") 
+    # print(finalscore(dictlist2, "bill"))
+    # print(curveddatabase(dictlist2))
 
-    #print(FinalStarDatabase(database))         
-#print(maxscorelist(abc))
-
-#print(bigcompile(create_dictlist(database)))     
-
-
-
-
-    #print(avg_std_dict(dictlist2))
-    '''
-    avgdict = avg_dict(dictlist2)
-    stddict = std_dict(dictlist2)
-    print(avgdict)
-    print(stddict)
-    usernames = []
-    differences = []
-    methodnames3 = []
-    for entry in dictlist2:
-        for scores in entry.values():
-            for methodnames in scores.keys():
-                if methodnames not in methodnames3:
-                    methodnames3.append(methodnames)
-    for user in dictlist2:
-        for names in user.keys():
-            usernames.append(names)
-        for scores in user.values():
-            for method, score in scores.items():
-                for function, avg in avgdict.items():
-                    if method == function:
-                        x = (score-avg)
-                        differences.append(x)
-    
-    
-    #list of differences in values between user score and average score, (user score - avg score)
-    print(differences)
-    #list of usernames
-    print(usernames)
-    #list of methodnames in dictlist2
-    print(methodnames3)
-    print(len(methodnames3))
-    print(len(differences))
-    methodlength = len(methodnames3)
-    
-
-    dividedlists = list(divide_chunks(differences, methodlength)) 
-    print (dividedlists) 
-    dictlist4 = []
-    for small_list in dividedlists:
-        x = dict(zip(methodnames3, small_list))
-        dictlist4.append(x)
-    print(dictlist4)
-    #we have list of dictionaries with score - avg for each user
-    #now we just divide by std list
-    #print(len(dictlist4))
-    #print(usernames)
-    #print(stddict)
-    std_list3 = []
-    for entry in dictlist4:
-        for method, score in entry.items():
-            for function, std in stddict.items():
-                if method == function:
-                    x = (score / std)
-                    std_list3.append(x)
-    #print(std_list3)
-    dividedlists2 = list(divide_chunks(std_list3, methodlength)) 
-    print(dividedlists2)
-    totalz = []
-    for small_list2 in dividedlists2:
-        summy = sum(small_list2)
-        totalz.append(summy)
-        
-    print(totalz)
-    finalscorez = dict(zip(usernames, totalz))
-    print(finalscorez)
-    #finalscorez is a dictionary object with user:final score, this is how matchmaking process can work
-    print("----------------------------")
-    
+    # print(Star_Scores(database))
+    # print(Scoredatabase(database))
     print(dictlist2)
+<<<<<<< HEAD
     print(matchmaker(dictlist2))
     
     
@@ -815,4 +730,12 @@ if __name__ == "__main__":
 
 
   
+=======
+    print(FinalStoreDatabase(database))         
+# print(maxscorelist(abc))
+>>>>>>> 9dffd0f60466617505f0153b94ebfd28982edd8a
 
+# print(bigcompile(create_dictlist(database)))     
+# print(a)
+# print(b)
+# Work with dictlist 2 to make a sample matchmaking model 
