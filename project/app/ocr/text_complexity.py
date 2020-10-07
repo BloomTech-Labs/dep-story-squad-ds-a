@@ -259,7 +259,15 @@ def descriptiveness_stars(input_str: str) -> int:
     y = round(x*2) / 2
     
     return min(y,5)                               
-
+def evaluate_stars(input_str: str) -> int:
+    '''
+    returns between 0 and 5 stars, rounded to the nearest half star, based on usage of 
+    descriptiveness
+    '''
+    x = evaluate(input_str) / .15
+    y = round(x*2) / 2
+    
+    return min(y,5)   
 
 def get_text_scores(input_str: str) -> str:
     return {
