@@ -221,8 +221,21 @@ def FinalStoreDatabase(Database_list):
             newdictlist.append(x)
 
     return (newdictlist)
-
-
+def FinalStarDatabase(Database_list):
+    '''
+    Takes a stored database and adds the user Id as a key and user as a key value pair to the dictionary itself,
+    returns list of dictionaries 
+    '''
+    a = Star_Scores(Database_list)
+    
+    newdictlist = []
+    for entry in a:
+        for user, scores in entry.items():
+            x = scores
+            x['userid'] = user
+            newdictlist.append(x)
+    
+    return (newdictlist)
 if __name__ == "__main__":
 
     string = "Great success. My name is Borat. I have come to America, to find Pamela Anderson, and \
@@ -298,6 +311,8 @@ if __name__ == "__main__":
     print(dictlist2)
     print(FinalStoreDatabase(database))         
 # print(maxscorelist(abc))
+    print(FinalStarDatabase(database))         
+#print(maxscorelist(abc))
 
 # print(bigcompile(create_dictlist(database)))     
 # print(a)
