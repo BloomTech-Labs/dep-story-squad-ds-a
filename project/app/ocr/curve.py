@@ -2,7 +2,7 @@ from app.ocr.text_complexity import evaluate, good_vocab, efficiency, descriptiv
         avg_sentence_length, vocab_length
 from app.ocr.google_handwriting_recognition import google_handwriting_recognizer_dir, google_handwriting_recognizer    
 import numpy as np         
-# from google_handwriting_recognition.py import google_handwriting_recognizer_dir, google_handwriting_recognizer
+import statistics 
 
 
 def store(input_str: str,  username: str) -> int:
@@ -221,6 +221,189 @@ def FinalStoreDatabase(Database_list):
             newdictlist.append(x)
 
     return (newdictlist)
+def FinalStarDatabase(Database_list):
+    '''
+    Takes a stored database and adds the user Id as a key and user as a key value pair to the dictionary itself,
+    returns list of dictionaries 
+    '''
+    a = Star_Scores(Database_list)
+    
+    newdictlist = []
+    for entry in a:
+        for user, scores in entry.items():
+            x = scores
+            x['userid'] = user
+            newdictlist.append(x)
+    
+    return (newdictlist)
+
+def avg_dict(listofdicts):
+    '''
+    Takes in a list of dictionaries of users and their complexity score ratings , their corresponding methods,
+    returns a dictionary list, 1st dictionary represents average of scores, 
+    2nd dictionary represents standard deviation of scores
+    '''
+
+    x = bigcompile(listofdicts)
+    methodlist = []
+    
+    for method, scores in x.items():
+        y = method
+        methodlist.append(y)
+    score_lists = []
+    
+    for scores in x.values():
+        score_lists.append(scores)
+    #list of averages
+    mean_lists = []
+    #list of standard deviations
+    
+    for x in score_lists:
+        b = sum(x)/len(x)
+        mean_lists.append(b)
+    
+    
+    new_dict = dict(zip(methodlist, mean_lists))
+      
+
+    return(new_dict)
+
+def std_dict(listofdicts):
+    x = bigcompile(listofdicts)
+    methodlist = []
+    
+    for method, scores in x.items():
+        y = method
+        methodlist.append(y)
+    score_lists = []
+    std_lists = []
+    for scores in x.values():
+        score_lists.append(scores)
+    for y in score_lists:
+        a = np.std(y)
+        std_lists.append(a)
+    
+    new_dict2 = dict(zip(methodlist, std_lists))    
+
+    return new_dict2 
+
+def divide_chunks(l, n): 
+      
+    # looping till length l 
+    for i in range(0, len(l), n):  
+        yield l[i:i + n] 
+def matchmaker(listofdicts):
+    '''
+    Takes in list of dictionaries, outputs users and their final score based on 
+    standard deviations from the mean of all of their scores, can be used in matching up teams, 
+    in multiplayer mode
+    '''
+    avgdict = avg_dict(listofdicts)
+    stddict = std_dict(listofdicts)
+    
+    usernames = []
+    differences = []
+    methodnames3 = []
+    
+    for entry in listofdicts:
+        for scores in entry.values():
+            for methodnames in scores.keys():
+                if methodnames not in methodnames3:
+                    methodnames3.append(methodnames)
+    for user in listofdicts:
+        for names in user.keys():
+            usernames.append(names)
+        for scores in user.values():
+            for method, score in scores.items():
+                for function, avg in avgdict.items():
+                    if method == function:
+                        x = (score-avg)
+                        differences.append(x)
+    
+    
+    
+    methodlength = len(methodnames3)
+    
+
+    dividedlists = list(divide_chunks(differences, methodlength)) 
+     
+    dictlist4 = []
+    
+    for small_list in dividedlists:
+        x = dict(zip(methodnames3, small_list))
+        dictlist4.append(x)
+    
+    #we have list of dictionaries with score - avg for each user
+    #now we just divide by std list
+    #print(len(dictlist4))
+    #print(usernames)
+    #print(stddict)
+    std_list3 = []
+    
+    for entry in dictlist4:
+        for method, score in entry.items():
+            for function, std in stddict.items():
+                if method == function:
+                    x = (score / std)
+                    std_list3.append(x)
+    #print(std_list3)
+    dividedlists2 = list(divide_chunks(std_list3, methodlength)) 
+    
+    totalz = []
+    for small_list2 in dividedlists2:
+        summy = sum(small_list2)
+        totalz.append(summy)
+        
+    
+    finalscorez = dict(zip(usernames, totalz))
+    return(finalscorez)      
+
+def Final_Match(listofdicts):
+    '''
+    Takes matchmaker dictionary, sorts values, matches players up into teams of 4
+    '''
+    teamsize = 4
+    
+    x = matchmaker(listofdicts)
+    y = x.values()
+    
+    valuelist3 = []
+    for value in y:
+        valuelist3.append(value)
+    valuelist3.sort()
+    
+    dividedlists3= list(divide_chunks(valuelist3, teamsize))
+    
+    finalmatch = []
+    valuelist6 = []
+    
+    for lists in dividedlists3:
+        for value in lists:
+            valuelist6.append(value)
+    
+    for num in valuelist6:
+        for key, value in x.items():
+            if num == value:
+                finalmatch.append(key)
+    
+    finalmatchedlist =  list(divide_chunks(finalmatch, teamsize))  
+    
+    return finalmatchedlist  
+
+def Pipeline(Database_list):
+    '''
+    Takes Database_list, runs through Scoredatabase function, returns dictionary list
+    Runs dictionary list through Final_Match function, returns list of userid's matched up for multiplayer
+    '''
+    Dictlist = Scoredatabase(Database_list)
+    Finalmatchups = Final_Match(Dictlist)
+
+    return Finalmatchups     
+
+#With averages and Standard Deviations of scores, we can now go through individual dictionary entries, compare their individual
+# scores to the averages, using standard deviation and absolute value logic, we can give each user an individual +- score,
+# for each one of their methods, return eventually an array of users, and their particular overall scores.
+# Use that array to match users up with other users, in a manual matchmaking dictionary process.     
 
 
 if __name__ == "__main__":
@@ -250,6 +433,7 @@ if __name__ == "__main__":
     string8 = "The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly\
      that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well. "
 
+
     a = store(string, "bill")
     # b = store(string2, "Kate")
     # c = store(string3, "Edward")
@@ -274,11 +458,13 @@ if __name__ == "__main__":
     # dictlist2.append(h)
 
     database = [
+
         {
             "user_id": "12322187",
             "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322187/story_5"
         }
     ]
+
     # print("-----------------------")
     # print(compiler(dictlist2, "evaluate")) 
     # print("----------------")
