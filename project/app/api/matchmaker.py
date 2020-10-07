@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from app.dependencies.security import verify_token
 # from remote_pdb import set_trace as st
 # from app.ocr.google_handwriting_recognition import google_pdf_handwriting_recognizer
 # from app.ocr.text_complexity import evaluate, good_vocab_stars, efficiency_stars, descriptiveness_stars, \
@@ -22,7 +23,7 @@ class Matchmaker(BaseModel):
     })
 
 
-@router.post('/multiplayer/matchmaker', tags=["Multiplayer"])
+@router.post('/multiplayer/matchmaker', tags=["Multiplayer"], dependencies=[Depends(verify_token)])
 async def ocr(params: Matchmaker):
     """
     Matchmakes
