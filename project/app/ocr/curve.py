@@ -189,8 +189,10 @@ def Scoredatabase(Database_list):
                 userlist.append(value)
             elif key == "s3_dir":
                 dirlist.append(value)
+    
     stringlist = []
     for x in dirlist:
+        
         y = google_handwriting_recognizer_dir(x)
         z = ",".join(y)
         # appends joined text for each URL in the directory
@@ -198,10 +200,12 @@ def Scoredatabase(Database_list):
     # stringlist has list of strings, userlist has list of usernames corresponding to those strings,
     # want to run store on those to make dictionary objects
     dict1 = dict(zip(stringlist, userlist))
+    
 
     for string, username in dict1.items():
         x = store(string, username) 
         dictlist1.append(x)   
+    
 
     return dictlist1
 
@@ -398,7 +402,9 @@ def Pipeline(Database_list):
     Takes Database_list, runs through Scoredatabase function, returns dictionary list
     Runs dictionary list through Final_Match function, returns list of userid's matched up for multiplayer
     '''
+    
     Dictlist = Scoredatabase(Database_list)
+    
     Finalmatchups = Final_Match(Dictlist)
 
     return Finalmatchups     
@@ -410,7 +416,7 @@ def Pipeline(Database_list):
 
 
 if __name__ == "__main__":
-
+    print("main_1")
     string = "Great success. My name is Borat. I have come to America, to find Pamela Anderson, and \
         make her my wife. Very nice!"
     string2 = "take in a database of URLs associated with particular usernames, store it in dictionary with scores,\
@@ -437,7 +443,7 @@ if __name__ == "__main__":
      that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well. "
 
 
-    a = store(string, "bill")
+    # a = store(string, "bill")
     # b = store(string2, "Kate")
     # c = store(string3, "Edward")
     # d = store(string4, "Bobby")
@@ -446,12 +452,12 @@ if __name__ == "__main__":
     # g = store(string7, "Pierre")
     # h = store(string8, "Bruce")
 
-    # print(a)
-    # print(b)
-    # print(c)
+    # # print(a)
+    # # print(b)
+    # # print(c)
 
-    dictlist2 = []
-    dictlist2.append(a)
+    # dictlist2 = []
+    # dictlist2.append(a)
     # dictlist2.append(b)
     # dictlist2.append(c)
     # dictlist2.append(d)
@@ -484,73 +490,72 @@ if __name__ == "__main__":
 
     # print(Star_Scores(database))
     # print(Scoredatabase(database))
-    print(dictlist2)
-<<<<<<< HEAD
-    print(matchmaker(dictlist2))
+    # print(dictlist2)
+    # print(matchmaker(dictlist2))
     
     
-    teamsize = 4
-    x = matchmaker(dictlist2)
-    y = x.values()
-    print(y)
-    valuelist3 = []
-    for value in y:
-        valuelist3.append(value)
-    valuelist3.sort()
-    print(valuelist3)
+    # teamsize = 4
+    # x = matchmaker(dictlist2)
+    # y = x.values()
+    # print(y)
+    # valuelist3 = []
+    # for value in y:
+    #     valuelist3.append(value)
+    # valuelist3.sort()
+    # print(valuelist3)
 
-    dividedlists3= list(divide_chunks(valuelist3, teamsize))
-    print(dividedlists3)
-    finalmatch = []
-    valuelist6 = []
-    for lists in dividedlists3:
-        for value in lists:
-            valuelist6.append(value)
-    for num in valuelist6:
-        for key, value in x.items():
-            if num == value:
-                finalmatch.append(key)
-    finalmatchedlist =  list(divide_chunks(finalmatch, teamsize))  
-    print(finalmatchedlist)                          
-    '''
+    # dividedlists3= list(divide_chunks(valuelist3, teamsize))
+    # print(dividedlists3)
+    # finalmatch = []
+    # valuelist6 = []
+    # for lists in dividedlists3:
+    #     for value in lists:
+    #         valuelist6.append(value)
+    # for num in valuelist6:
+    #     for key, value in x.items():
+    #         if num == value:
+    #             finalmatch.append(key)
+    # finalmatchedlist =  list(divide_chunks(finalmatch, teamsize))  
+    # print(finalmatchedlist)                          
+    
     #print(dictlist2)
     #print(matchmaker(dictlist2))
     #print(Final_Match(dictlist2))
     #print(avg_dict(dictlist2))
     #print(std_dict(dictlist2))
     actual_dictionary = [
-        {
-            "user_id": 5206,
-            "s3_dir": 'testing_jesse_pipeline/52--/5206',
-        },
-        {
-            "user_id": 5229,
-            "s3_dir": 'testing_jesse_pipeline/52--/5229',
-        },
-        {
-            "user_id": 5210,
-            "s3_dir": 'testing_jesse_pipeline/52--/5210',
-        },
-        {
-            "user_id": 5225,
-            "s3_dir": 'testing_jesse_pipeline/52--/5225',
-        },
-        #{
-        #    "user_id": 5219,
-        #    "s3_dir": 'testing_jesse_pipeline/52--/5219',
-        #},
-        {
-            "user_id": 5208,
-            "s3_dir": 'testing_jesse_pipeline/52--/5208',
-        },
-        {
-            "user_id": 5205,
-            "s3_dir": 'testing_jesse_pipeline/52--/5205',
-        },
-        {
-            "user_id": 5228,
-            "s3_dir": 'testing_jesse_pipeline/52--/5228',
-        },
+        # {
+        #     "user_id": 5206,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5206',
+        # },
+        # {
+        #     "user_id": 5229,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5229',
+        # },
+        # {
+        #     "user_id": 5210,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5210',
+        # },
+        # {
+        #     "user_id": 5225,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5225',
+        # },
+        # {
+        #     "user_id": 5219,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5219',
+        # },
+        # {
+        #     "user_id": 5208,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5208',
+        # },
+        # {
+        #     "user_id": 5205,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5205',
+        # },
+        # {
+        #     "user_id": 5228,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5228',
+        # },
         # {
         #     "user_id": 5232,
         #     "s3_dir": 'testing_jesse_pipeline/52--/5232',
@@ -563,89 +568,92 @@ if __name__ == "__main__":
         #     "user_id": 5202,
         #     "s3_dir": 'testing_jesse_pipeline/52--/5202',
         # },
-        # {
-        #     "user_id": 5230,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5230',
-        # },
-        # {
-        #     "user_id": 5218,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5218',
-        # },
-        # {
-        #     "user_id": 5234,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5234',
-        # },
-        # {
-        #     "user_id": 5214,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5214',
-        # },
-        # {
-        #     "user_id": 5207,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5207',
-        # },
-        # {
-        #     "user_id": 5221,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5221',
-        # },
-        # {
-        #     "user_id": 5204,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5204',
-        # },
-        # {
-        #     "user_id": 5213,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5213',
-        # },
-        # {
-        #     "user_id": 5222,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5222',
-        # },
-        # {
-        #     "user_id": 5209,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5209',
-        # },
-        # {
-        #     "user_id": 5217,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5217',
-        # },
-        # {
-        #     "user_id": 5224,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5224',
-        # },
-        # {
-        #     "user_id": 5227,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5227',
-        # },
-        # {
-        #     "user_id": 5235,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5235',
-        # },
-        # {
-        #     "user_id": 5216,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5216',
-        # },
-        # {
-        #     "user_id": 5223,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5223',
-        # },
-        # {
-        #     "user_id": 5203,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5203',
-        # },
-        # {
-        #     "user_id": 5215,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5215',
-        # },
-        # {
-        #     "user_id": 5233,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5233'
-        # }
+        {
+            "user_id": 5230,
+            "s3_dir": 'testing_jesse_pipeline/52--/5230',
+        },
+        {
+            "user_id": 5218,
+            "s3_dir": 'testing_jesse_pipeline/52--/5218',
+        },
+        {
+            "user_id": 5234,
+            "s3_dir": 'testing_jesse_pipeline/52--/5234',
+        },
+        {
+            "user_id": 5214,
+            "s3_dir": 'testing_jesse_pipeline/52--/5214',
+        },
+        {
+            "user_id": 5207,
+            "s3_dir": 'testing_jesse_pipeline/52--/5207',
+        },
+        {
+            "user_id": 5221,
+            "s3_dir": 'testing_jesse_pipeline/52--/5221',
+        },
+        {
+            "user_id": 5204,
+            "s3_dir": 'testing_jesse_pipeline/52--/5204',
+        },
+        {
+            "user_id": 5213,
+            "s3_dir": 'testing_jesse_pipeline/52--/5213',
+        },
+        {
+            "user_id": 5222,
+            "s3_dir": 'testing_jesse_pipeline/52--/5222',
+        },
+        {
+            "user_id": 5209,
+            "s3_dir": 'testing_jesse_pipeline/52--/5209',
+        },
+        {
+            "user_id": 5217,
+            "s3_dir": 'testing_jesse_pipeline/52--/5217',
+        },
+        {
+            "user_id": 5224,
+            "s3_dir": 'testing_jesse_pipeline/52--/5224',
+        },
+        {
+            "user_id": 5227,
+            "s3_dir": 'testing_jesse_pipeline/52--/5227',
+        },
+        {
+            "user_id": 5235,
+            "s3_dir": 'testing_jesse_pipeline/52--/5235',
+        },
+        {
+            "user_id": 5216,
+            "s3_dir": 'testing_jesse_pipeline/52--/5216',
+        },
+        {
+            "user_id": 5223,
+            "s3_dir": 'testing_jesse_pipeline/52--/5223',
+        },
+        {
+            "user_id": 5203,
+            "s3_dir": 'testing_jesse_pipeline/52--/5203',
+        },
+        {
+            "user_id": 5215,
+            "s3_dir": 'testing_jesse_pipeline/52--/5215',
+        },
+        {
+            "user_id": 5233,
+            "s3_dir": 'testing_jesse_pipeline/52--/5233'
+        }
     ]
     #actual_dict = [{5206: {'evaluate': 0.386864850604889, 'good_vocab': 0.5025906735751295, 'efficiency': 0.766497461928934, 'decriptiveness': 0.696969696969697, 'sentence_length': 1, 'word_length': 0.4}}, {5229: {'evaluate': 0.37310469710272165, 'good_vocab': 0.3805970149253731, 'efficiency': 0.6323529411764706, 'decriptiveness': 0.6375, 'sentence_length': 1, 'word_length': 0.7}}, {5210: {'evaluate': 0.35023670205895274, 'good_vocab': 0.33986928104575165, 'efficiency': 0.6521739130434783, 'decriptiveness': 0.6704545454545454, 'sentence_length': 1, 'word_length': 0.5}}, {5225: {'evaluate': 0.3042697172108937, 'good_vocab': 0.3247863247863248, 'efficiency': 0.5126050420168067, 'decriptiveness': 0.4805194805194805, 'sentence_length': 1, 'word_length': 0.4}}]
     #print(Final_Match(actual_dict))
-    #print(Pipeline(actual_dictionary))
+    print("before_pipeline")
+    print(Pipeline(actual_dictionary))
+    #abc = Scoredatabase(actual_dictionary)
+    #print(std_dict(abc))
     #print(dictlist2)
     #print(avg_dict(actual_dict))
-    
+    '''
     actual_dict2 =   [
         {
             "user_id": 5206,
@@ -677,9 +685,9 @@ if __name__ == "__main__":
             "s3_dir": 'testing_jesse_pipeline/52--/5228',
         },
     ]
-    
+    '''
     #abc = Scoredatabase(actual_dict2)
-    print(std_dict(dictlist2))
+    #print(std_dict(dictlist2))
     
     
     
@@ -730,10 +738,6 @@ if __name__ == "__main__":
 
 
   
-=======
-    print(FinalStoreDatabase(database))         
-# print(maxscorelist(abc))
->>>>>>> 9dffd0f60466617505f0153b94ebfd28982edd8a
 
 # print(bigcompile(create_dictlist(database)))     
 # print(a)
