@@ -221,10 +221,8 @@ def good_vocab_stars(input_str: str) -> int:
     '''
     x = good_vocab(input_str) / .12
     y = round(x*2)/2
-    if y >= 5:
-        return 5
-    else: 
-        return y
+    
+    return min(y,5) 
 def efficiency_stars(input_str: str) -> int:
     '''
     returns between 0 and 5 stars, rounded to the nearest half star, based on usage of 
@@ -232,10 +230,8 @@ def efficiency_stars(input_str: str) -> int:
     '''
     x = efficiency(input_str) / .15
     y = round(x*2) / 2
-    if y >= 5:
-        return 5
-    else: 
-        return y
+    
+    return min(y,5) 
 def word_length_stars(input_str: str) -> int:
     '''
     returns between 0 and 5 stars, rounded to the nearest half star, based on usage of 
@@ -243,10 +239,8 @@ def word_length_stars(input_str: str) -> int:
     '''
     x = vocab_length(input_str) / .15 
     y = round(x*2) / 2
-    if y>=5:
-        return 5
-    else:
-        return y  
+    
+    return min(y,5)  
 def sentence_length_stars(input_str: str) -> int:
     '''
     returns between 0 and 5 stars, rounded to the nearest half star, based on usage of 
@@ -254,10 +248,8 @@ def sentence_length_stars(input_str: str) -> int:
     '''
     x = avg_sentence_length(input_str) / .12
     y = round(x*2) / 2
-    if y >= 5:
-        return 5
-    else:
-        return y  
+    
+    return min(y,5) 
 def descriptiveness_stars(input_str: str) -> int:
     '''
     returns between 0 and 5 stars, rounded to the nearest half star, based on usage of 
@@ -265,10 +257,8 @@ def descriptiveness_stars(input_str: str) -> int:
     '''
     x = descriptiveness(input_str) / .15
     y = round(x*2) / 2
-    if y >=5:
-        return 5
-    else:
-        return y                                
+    
+    return min(y,5)                               
 
 
 def get_text_scores(input_str: str) -> str:
