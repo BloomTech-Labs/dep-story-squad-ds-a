@@ -312,13 +312,13 @@ def matchmaker(listofdicts):
     
     usernames = []
     differences = []
-    methodnames3 = []
+    methodnames1 = []
     
     for entry in listofdicts:
         for scores in entry.values():
             for methodnames in scores.keys():
-                if methodnames not in methodnames3:
-                    methodnames3.append(methodnames)
+                if methodnames not in methodnames1:
+                    methodnames1.append(methodnames)
     for user in listofdicts:
         for names in user.keys():
             usernames.append(names)
@@ -331,35 +331,35 @@ def matchmaker(listofdicts):
     
     
     
-    methodlength = len(methodnames3)
+    methodlength = len(methodnames1)
     
 
     dividedlists = list(divide_chunks(differences, methodlength)) 
      
-    dictlist4 = []
+    dictlist1 = []
     
     for small_list in dividedlists:
-        x = dict(zip(methodnames3, small_list))
-        dictlist4.append(x)
+        x = dict(zip(methodnames1, small_list))
+        dictlist1.append(x)
     
     #we have list of dictionaries with score - avg for each user
     #now we just divide by std list
     #print(len(dictlist4))
     #print(usernames)
     #print(stddict)
-    std_list3 = []
+    std_list1 = []
     
-    for entry in dictlist4:
+    for entry in dictlist1:
         for method, score in entry.items():
             for function, std in stddict.items():
                 if method == function:
                     if std != 0:
                         x = (score / std)
-                        std_list3.append(x)
+                        std_list1.append(x)
                     elif std == 0:
-                        std_list3.append(score)    
+                        std_list1.append(score)    
     #print(std_list3)
-    dividedlists2 = list(divide_chunks(std_list3, methodlength)) 
+    dividedlists2 = list(divide_chunks(std_list1, methodlength)) 
     
     totalz = []
     for small_list2 in dividedlists2:
@@ -380,24 +380,24 @@ def Final_Match(listofdicts):
     x = matchmaker(listofdicts)
     y = x.values()
     
-    valuelist3 = []
+    valuelist1 = []
     for value in y:
-        valuelist3.append(value)
-    valuelist3.sort()
+        valuelist1.append(value)
+    valuelist1.sort()
     
-    dividedlists3= list(divide_chunks(valuelist3, teamsize))
+    dividedlists= list(divide_chunks(valuelist1, teamsize))
     
     finalmatch = []
-    valuelist6 = []
+    valuelist2 = []
     botvar = "bot"
-    for lists in dividedlists3:
+    for lists in dividedlists:
         for value in lists:
-            valuelist6.append(value)
+            valuelist2.append(value)
     
-    for num in valuelist6:
-        for key, value in x.items():
+    for num in valuelist2:
+        for user, value in x.items():
             if num == value:
-                finalmatch.append(key)
+                finalmatch.append(user)
     
     while len(finalmatch) % teamsize != 0:
         finalmatch.append(botvar)
