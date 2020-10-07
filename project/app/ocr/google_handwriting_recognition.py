@@ -128,7 +128,7 @@ def google_handwriting_recognizer_dir(s3_dir: str = None) -> str:
             ocr_text_list.append(
                 google_handwriting_recognizer(s3_obj=s3_obj)
             )
-
+        print(f"Done with dir: {s3_dir}")
         return ocr_text_list
 
     else:
