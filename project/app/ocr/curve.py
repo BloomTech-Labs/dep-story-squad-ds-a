@@ -367,7 +367,9 @@ def matchmaker(listofdicts):
     return(finalscorez)      
 
 def Final_Match(listofdicts):
-
+    '''
+    Takes matchmaker dictionary, sorts values, matches players up into teams of 4
+    '''
     teamsize = 4
     
     x = matchmaker(listofdicts)
@@ -397,7 +399,10 @@ def Final_Match(listofdicts):
     return finalmatchedlist  
 
 def Pipeline(Database_list):
-    
+    '''
+    Takes Database_list, runs through Scoredatabase function, returns dictionary list
+    Runs dictionary list through Final_Match function, returns list of userid's matched up for multiplayer
+    '''
     Dictlist = Scoredatabase(Database_list)
     Finalmatchups = Final_Match(Dictlist)
 
