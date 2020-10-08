@@ -232,7 +232,7 @@ def FinalStarDatabase(Database_list):
     for entry in a:
         for user, scores in entry.items():
             x = scores
-            x['userid'] = user
+            x['user_id'] = user
             newdictlist.append(x)
     
     return (newdictlist)
@@ -458,13 +458,14 @@ if __name__ == "__main__":
     # dictlist2.append(h)
 
     database = [
-
         {
             "user_id": "12322187",
             "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322187/story_5"
         }
     ]
-
+    print("####################")
+    print(FinalStoreDatabase(database))
+    print("####################")
     # print("-----------------------")
     # print(compiler(dictlist2, "evaluate")) 
     # print("----------------")
@@ -481,10 +482,10 @@ if __name__ == "__main__":
 
     # print(Star_Scores(database))
     # print(Scoredatabase(database))
-    print(dictlist2)
-    print(FinalStoreDatabase(database))         
+    # print(dictlist2)
+    # print(FinalStoreDatabase(database))         
+    # print(FinalStarDatabase(database))         
 # print(maxscorelist(abc))
-    print(FinalStarDatabase(database))         
 #print(maxscorelist(abc))
 
 # print(bigcompile(create_dictlist(database)))     
