@@ -4,7 +4,8 @@ services:
     env_file: .env
     build: ./project
 
-    # command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+
+    #command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
     command: python -m app.ocr.curve
     # command: python -m app.ocr.matchmaker
     # command: python -m app.ocr.google_handwriting_recognition

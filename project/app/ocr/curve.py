@@ -16,7 +16,7 @@ def store(input_str: str,  username: str) -> int:
             "good_vocab": good_vocab(input_str),
             "efficiency": efficiency(input_str),
             "decriptiveness": descriptiveness(input_str),
-            "sentence_length": avg_sentence_length(input_str),
+           #"sentence_length": avg_sentence_length(input_str),
             "word_length": vocab_length(input_str)
             }
         }
@@ -30,7 +30,7 @@ def compiler(listofdicts, function) -> []:
     '''
     scorelist = []
     for username in listofdicts:
-        for name, scores in username.items():
+        for scores in username.values():
             for method, score in scores.items():
                 if method == function:
                     scorelist.append(score)
@@ -48,8 +48,8 @@ def bigcompile(listofdicts):
     methodlist = []
     #add different methods to methodlist
     for user in listofdicts:
-        for name, scores in user.items():
-            for method, score in scores.items():
+        for scores in user.values():
+            for method in scores.keys():
                 if method not in methodlist:
                     methodlist.append(method)
     # for each method in the methodlist, compile, and append the lists to 
@@ -71,7 +71,7 @@ def maxscorelist(listofdicts):
     # arrange dictionary into methods, and arrays of corresponding scores
     x = bigcompile(listofdicts)
     maxscorelist = []
-    for method, scores in x.items():
+    for scores in x.values():
         score = np.max(scores)
         maxscorelist.append(score)
     # append high score from each corresponding array to maxscore array, return array
@@ -86,7 +86,7 @@ def finalscore(listofdicts, userid):
     dictionary list in same form of original STORE method dictionary, only this time scores are in star values, and methods
     are in star methods
     '''
-    y = maxscorelist(listofdicts)
+    max_scores = maxscorelist(listofdicts)
 
     individ_scores = []
 
@@ -96,7 +96,7 @@ def finalscore(listofdicts, userid):
                 for method, score in scores.items():
                     individ_scores.append(score)
     # take individual user scores and divide by maxscores to create finalscore array
-    finalscore = [i / j for i, j in zip(individ_scores, y)]
+    finalscore = [i / j for i, j in zip(individ_scores, max_scores)]
     finalscore1 = []
     # divide finalscores by .2 and round to nearest half star
     for score in finalscore:
@@ -148,18 +148,18 @@ def Star_Scores(Database_list):
     userlist = []
     dirlist = []
 
-    for x in Database_list:
-        for key, value in x.items():
+    for entry in Database_list:
+        for key, value in entry.items():
             if key == "user_id":
                 userlist.append(value)
             elif key == "s3_dir":
                 dirlist.append(value)
     stringlist = []
-    for x in dirlist:
-        y = google_handwriting_recognizer_dir(x)
-        z = ",".join(y)
+    for url in dirlist:
+        output_text = google_handwriting_recognizer_dir(url)
+        joined_text = ",".join(output_text)
         # appends joined text for each URL in the directory
-        stringlist.append(z)
+        stringlist.append(joined_text)
     # stringlist has list of strings, userlist has list of usernames corresponding to those strings,
     # want to run store on those to make dictionary objects
     dict1 = dict(zip(stringlist, userlist))
@@ -189,19 +189,22 @@ def Scoredatabase(Database_list):
                 userlist.append(value)
             elif key == "s3_dir":
                 dirlist.append(value)
+    
     stringlist = []
-    for x in dirlist:
-        y = google_handwriting_recognizer_dir(x)
-        z = ",".join(y)
+    for url in dirlist:
+        output_text = google_handwriting_recognizer_dir(url)
+        joined_text = ",".join(output_text)
         # appends joined text for each URL in the directory
-        stringlist.append(z)
+        stringlist.append(joined_text)
     # stringlist has list of strings, userlist has list of usernames corresponding to those strings,
     # want to run store on those to make dictionary objects
     dict1 = dict(zip(stringlist, userlist))
+    
 
     for string, username in dict1.items():
         x = store(string, username) 
         dictlist1.append(x)   
+    
 
     return dictlist1
 
@@ -221,6 +224,7 @@ def FinalStoreDatabase(Database_list):
             newdictlist.append(x)
 
     return (newdictlist)
+
 def FinalStarDatabase(Database_list):
     '''
     Takes a stored database and adds the user Id as a key and user as a key value pair to the dictionary itself,
@@ -247,7 +251,7 @@ def avg_dict(listofdicts):
     x = bigcompile(listofdicts)
     methodlist = []
     
-    for method, scores in x.items():
+    for method in x.keys():
         y = method
         methodlist.append(y)
     score_lists = []
@@ -269,10 +273,14 @@ def avg_dict(listofdicts):
     return(new_dict)
 
 def std_dict(listofdicts):
+    '''
+    takes in a ist of dictionaries, compiles a list of scores for each method, 
+    returns a list of methods and their standard deviations
+    '''
     x = bigcompile(listofdicts)
     methodlist = []
     
-    for method, scores in x.items():
+    for method in x.keys():
         y = method
         methodlist.append(y)
     score_lists = []
@@ -288,28 +296,31 @@ def std_dict(listofdicts):
     return new_dict2 
 
 def divide_chunks(l, n): 
-      
+    '''
+    Divides a list l into separate lists of length n
+    '''  
     # looping till length l 
     for i in range(0, len(l), n):  
         yield l[i:i + n] 
+
 def matchmaker(listofdicts):
     '''
-    Takes in list of dictionaries, outputs users and their final score based on 
-    standard deviations from the mean of all of their scores, can be used in matching up teams, 
-    in multiplayer mode
+    Takes in list of dictionaries of users and their scores, matches users up to the average score,
+    and uses standard deviations of individual scores to return a dictionary with the {user: overall score}
+    score is then used in matchmaking process
     '''
     avgdict = avg_dict(listofdicts)
     stddict = std_dict(listofdicts)
     
     usernames = []
     differences = []
-    methodnames3 = []
+    methodnames1 = []
     
     for entry in listofdicts:
         for scores in entry.values():
             for methodnames in scores.keys():
-                if methodnames not in methodnames3:
-                    methodnames3.append(methodnames)
+                if methodnames not in methodnames1:
+                    methodnames1.append(methodnames)
     for user in listofdicts:
         for names in user.keys():
             usernames.append(names)
@@ -322,32 +333,35 @@ def matchmaker(listofdicts):
     
     
     
-    methodlength = len(methodnames3)
+    methodlength = len(methodnames1)
     
 
     dividedlists = list(divide_chunks(differences, methodlength)) 
      
-    dictlist4 = []
+    dictlist1 = []
     
     for small_list in dividedlists:
-        x = dict(zip(methodnames3, small_list))
-        dictlist4.append(x)
+        x = dict(zip(methodnames1, small_list))
+        dictlist1.append(x)
     
     #we have list of dictionaries with score - avg for each user
     #now we just divide by std list
     #print(len(dictlist4))
     #print(usernames)
     #print(stddict)
-    std_list3 = []
+    std_list1 = []
     
-    for entry in dictlist4:
+    for entry in dictlist1:
         for method, score in entry.items():
             for function, std in stddict.items():
                 if method == function:
-                    x = (score / std)
-                    std_list3.append(x)
+                    if std != 0:
+                        x = (score / std)
+                        std_list1.append(x)
+                    elif std == 0:
+                        std_list1.append(score)    
     #print(std_list3)
-    dividedlists2 = list(divide_chunks(std_list3, methodlength)) 
+    dividedlists2 = list(divide_chunks(std_list1, methodlength)) 
     
     totalz = []
     for small_list2 in dividedlists2:
@@ -360,42 +374,84 @@ def matchmaker(listofdicts):
 
 def Final_Match(listofdicts):
     '''
-    Takes matchmaker dictionary, sorts values, matches players up into teams of 4
+    Takes matchmaking dictionary, orders the values, matches users up with the ordered values,
+    and divides all users into teams of 4 based on their ordered value. Accounts for remainder 
+    by evenly placing bots in groups, while not disturbing the distribution of scores
     '''
     teamsize = 4
     
     x = matchmaker(listofdicts)
     y = x.values()
     
-    valuelist3 = []
+    valuelist1 = []
     for value in y:
-        valuelist3.append(value)
-    valuelist3.sort()
+        valuelist1.append(value)
+    valuelist1.sort(reverse=True)
     
-    dividedlists3= list(divide_chunks(valuelist3, teamsize))
+    dividedlists= list(divide_chunks(valuelist1, teamsize))
     
     finalmatch = []
-    valuelist6 = []
+    valuelist2 = []
+    botvar = "added_cpu_bot"
     
-    for lists in dividedlists3:
+    for lists in dividedlists:
         for value in lists:
-            valuelist6.append(value)
+            valuelist2.append(value)
     
-    for num in valuelist6:
-        for key, value in x.items():
+    for num in valuelist2:
+        for user, value in x.items():
             if num == value:
-                finalmatch.append(key)
+                finalmatch.append(user)
     
+    while len(finalmatch) % teamsize != 0:
+        if len(finalmatch) % teamsize == 3:
+            finalmatch.append(botvar)
+        
+        elif len(finalmatch) % teamsize == 2:
+            if len(finalmatch) < 5:
+                finalmatch.append(botvar)
+                finalmatch.append(botvar)
+            elif len(finalmatch) >5:
+                finalmatch.append(botvar)
+                finalmatch.append(botvar)
+                #now swap botvar with list position -5
+                finalmatch[-5], finalmatch[-2] = finalmatch[-2], finalmatch[-5]
+                       
+        elif len(finalmatch) % teamsize == 1:
+            if len(finalmatch) < 2:
+                finalmatch.append(botvar)
+                finalmatch.append(botvar)
+                finalmatch.append(botvar)
+            elif len(finalmatch) > 4 and len(finalmatch) < 9:
+                finalmatch.append(botvar)
+                finalmatch.append(botvar)
+                finalmatch.append(botvar)
+                finalmatch[-5], finalmatch[-3] = finalmatch[-3], finalmatch[-5]
+            elif len(finalmatch) > 8:
+                finalmatch.append(botvar)
+                finalmatch.append(botvar)
+                finalmatch.append(botvar)
+                finalmatch[-9], finalmatch[-8] = finalmatch[-8], finalmatch[-9]
+                finalmatch[-9], finalmatch[-7] = finalmatch[-7], finalmatch[-9]
+                finalmatch[-9], finalmatch[-6] = finalmatch[-6], finalmatch[-9]
+                finalmatch[-9], finalmatch[-3] = finalmatch[-3], finalmatch[-9]
+                finalmatch[-2], finalmatch[-5] = finalmatch[-5], finalmatch[-2]
+                finalmatch[-2], finalmatch[-4] = finalmatch[-4], finalmatch[-2]
+
+
     finalmatchedlist =  list(divide_chunks(finalmatch, teamsize))  
     
-    return finalmatchedlist  
+    return finalmatchedlist
+    #return finalmatch  
 
 def Pipeline(Database_list):
     '''
     Takes Database_list, runs through Scoredatabase function, returns dictionary list
     Runs dictionary list through Final_Match function, returns list of userid's matched up for multiplayer
     '''
+    
     Dictlist = Scoredatabase(Database_list)
+    
     Finalmatchups = Final_Match(Dictlist)
 
     return Finalmatchups     
@@ -407,7 +463,7 @@ def Pipeline(Database_list):
 
 
 if __name__ == "__main__":
-
+    
     string = "Great success. My name is Borat. I have come to America, to find Pamela Anderson, and \
         make her my wife. Very nice!"
     string2 = "take in a database of URLs associated with particular usernames, store it in dictionary with scores,\
@@ -432,31 +488,35 @@ if __name__ == "__main__":
                       squared difference between observed and expected value."
     string8 = "The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly\
      that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well. "
-
+    string9 = "Tell me that first, and then, if I like being that person,\
+         I’ll come up: if not, I’ll stay down here till I’m somebody else’—but, \
+             oh dear!” cried Alice, with a sudden burst of tears, “I do wish they\
+                  would put their heads down! I am so very tired of being all alone here"
 
     a = store(string, "bill")
-    # b = store(string2, "Kate")
-    # c = store(string3, "Edward")
-    # d = store(string4, "Bobby")
-    # e = store(string5, "Hadi")
-    # f = store(string6, "Jesse")
-    # g = store(string7, "Pierre")
-    # h = store(string8, "Bruce")
+    b = store(string2, "Kate")
+    c = store(string3, "Edward")
+    d = store(string4, "Bobby")
+    e = store(string5, "Hadi")
+    f = store(string6, "Jesse")
+    g = store(string7, "Pierre")
+    h = store(string8, "Bruce")
+    i = store(string9, "Franklin")
 
-    # print(a)
-    # print(b)
-    # print(c)
+    # # print(a)
+    # # print(b)
+    # # print(c)
 
     dictlist2 = []
     dictlist2.append(a)
-    # dictlist2.append(b)
-    # dictlist2.append(c)
-    # dictlist2.append(d)
-    # dictlist2.append(e)
-    # dictlist2.append(f)
-    # dictlist2.append(g)
-    # dictlist2.append(h)
-
+    dictlist2.append(b)
+    dictlist2.append(c)
+    dictlist2.append(d)
+    dictlist2.append(e)
+    dictlist2.append(f)
+    dictlist2.append(g)
+    dictlist2.append(h)
+    dictlist2.append(i)
     database = [
         {
             "user_id": "12322187",
@@ -483,10 +543,233 @@ if __name__ == "__main__":
     # print(Star_Scores(database))
     # print(Scoredatabase(database))
     # print(dictlist2)
-    # print(FinalStoreDatabase(database))         
-    # print(FinalStarDatabase(database))         
-# print(maxscorelist(abc))
-#print(maxscorelist(abc))
+    # print(matchmaker(dictlist2))
+    
+    
+    # teamsize = 4
+    # x = matchmaker(dictlist2)
+    # y = x.values()
+    # print(y)
+    # valuelist3 = []
+    # for value in y:
+    #     valuelist3.append(value)
+    # valuelist3.sort()
+    # print(valuelist3)
+
+    # dividedlists3= list(divide_chunks(valuelist3, teamsize))
+    # print(dividedlists3)
+    # finalmatch = []
+    # valuelist6 = []
+    # for lists in dividedlists3:
+    #     for value in lists:
+    #         valuelist6.append(value)
+    # for num in valuelist6:
+    #     for key, value in x.items():
+    #         if num == value:
+    #             finalmatch.append(key)
+    # finalmatchedlist =  list(divide_chunks(finalmatch, teamsize))  
+    # print(finalmatchedlist)                          
+    
+    #print(dictlist2)
+    print(maxscorelist(dictlist2))
+    print(matchmaker(dictlist2))
+    print(Final_Match(dictlist2))
+    #print(avg_dict(dictlist2))
+    #print(std_dict(dictlist2))
+    actual_dictionary = [
+        # {
+        #     "user_id": 5206,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5206',
+        # },
+        # {
+        #     "user_id": 5229,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5229',
+        # },
+        # {
+        #     "user_id": 5210,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5210',
+        # },
+        # {
+        #     "user_id": 5225,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5225',
+        # },
+        # {
+        #     "user_id": 5219,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5219',
+        # },
+        # {
+        #     "user_id": 5208,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5208',
+        # },
+        # {
+        #     "user_id": 5205,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5205',
+        # },
+        # {
+        #     "user_id": 5228,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5228',
+        # },
+        # {
+        #     "user_id": 5232,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5232',
+        # },
+        # {
+        #     "user_id": 5220,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5220',
+        # },
+        # {
+        #     "user_id": 5202,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5202',
+        # },
+        {
+            "user_id": 5230,
+            "s3_dir": 'testing_jesse_pipeline/52--/5230',
+        },
+        {
+            "user_id": 5218,
+            "s3_dir": 'testing_jesse_pipeline/52--/5218',
+        },
+        {
+            "user_id": 5234,
+            "s3_dir": 'testing_jesse_pipeline/52--/5234',
+        },
+        {
+            "user_id": 5214,
+            "s3_dir": 'testing_jesse_pipeline/52--/5214',
+        },
+        {
+            "user_id": 5207,
+            "s3_dir": 'testing_jesse_pipeline/52--/5207',
+        },
+        {
+            "user_id": 5221,
+            "s3_dir": 'testing_jesse_pipeline/52--/5221',
+        },
+        {
+            "user_id": 5204,
+            "s3_dir": 'testing_jesse_pipeline/52--/5204',
+        },
+        {
+            "user_id": 5213,
+            "s3_dir": 'testing_jesse_pipeline/52--/5213',
+        },
+        {
+            "user_id": 5222,
+            "s3_dir": 'testing_jesse_pipeline/52--/5222',
+        },
+        # {
+        #     "user_id": 5209,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5209',
+        # },
+        # {
+        #     "user_id": 5217,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5217',
+        # },
+        # {
+        #     "user_id": 5224,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5224',
+        # },
+        # {
+        #     "user_id": 5227,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5227',
+        # },
+        # {
+        #     "user_id": 5235,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5235',
+        # },
+        # {
+        #     "user_id": 5216,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5216',
+        # },
+        # {
+        #     "user_id": 5223,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5223',
+        # },
+        # {
+        #     "user_id": 5203,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5203',
+        # },
+        # {
+        #     "user_id": 5215,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5215',
+        # },
+        # {
+        #     "user_id": 5233,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5233'
+        # }
+    ]
+    #actual_dict = [{5206: {'evaluate': 0.386864850604889, 'good_vocab': 0.5025906735751295, 'efficiency': 0.766497461928934, 'decriptiveness': 0.696969696969697, 'sentence_length': 1, 'word_length': 0.4}}, {5229: {'evaluate': 0.37310469710272165, 'good_vocab': 0.3805970149253731, 'efficiency': 0.6323529411764706, 'decriptiveness': 0.6375, 'sentence_length': 1, 'word_length': 0.7}}, {5210: {'evaluate': 0.35023670205895274, 'good_vocab': 0.33986928104575165, 'efficiency': 0.6521739130434783, 'decriptiveness': 0.6704545454545454, 'sentence_length': 1, 'word_length': 0.5}}, {5225: {'evaluate': 0.3042697172108937, 'good_vocab': 0.3247863247863248, 'efficiency': 0.5126050420168067, 'decriptiveness': 0.4805194805194805, 'sentence_length': 1, 'word_length': 0.4}}]
+    #print(Final_Match(actual_dict))
+    
+    #print(Pipeline(actual_dictionary))
+    #abc = Scoredatabase(actual_dictionary)
+    #print(std_dict(abc))
+    #print(std_dict(dictlist2))
+    #a = Scoredatabase(actual_dictionary)
+    #print(matchmaker(a))
+    #print(Pipeline(actual_dictionary))
+    
+
+
+            
+    #abc = Scoredatabase(actual_dictionary)
+    #print(std_dict(abc))
+    #print(dictlist2)
+    #print(avg_dict(actual_dict))
+
+    #abc = Scoredatabase(actual_dict2)
+    #print(std_dict(dictlist2))
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    #finaldict5 = dict(zip(usernames, dictlist4))
+    #finallist3= []
+    #finallist3.append(finaldict5)
+    #print(finallist3)
+    #print(dictlist2)
+
+    
+
+
+
+
+
+    #need to make userlength many lists from differences and methodnames
+    #need to divide differences by userlength increments, and create a dictionary object
+    # using methodnames3: differences
+    # from there, since they will be ordered, take that dictionary object and attach it to 
+    # usernames, 
+    # then repeat this process by taking those numbers and dividing them by stddictlist,
+    # finally, summing up each 6 values for each participant, to get a final value, 
+    # used in matchmaking    
+
+
+    
+    #print(usernames)
+         
+    
+
+
+  
+
 
 # print(bigcompile(create_dictlist(database)))     
 # print(a)
