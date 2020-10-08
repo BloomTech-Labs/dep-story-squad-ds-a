@@ -475,7 +475,21 @@ def Pipeline(Database_list):
     '''
     Takes Database_list, runs through Scoredatabase function, returns dictionary list
     Runs dictionary list through Final_Match function, returns list of userid's matched up for multiplayer
+
+    Args: 
+        Database_list in this format:
+        
+        database = [
+        {
+            "user_id": "12322187",
+            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322187/story_5"
+        }, {next user_id: 239103913, next s3_dir: next URL}, etc...
+    ]
+
+    Ouput: [['User1', 'User8', 'User3', '_'], ['User4', 'User5', 'User6', '_'], ['User7', 'User2', 'User9', '_']]
+    Users matched up by their scores into teams of 4, bots added as '_'
     '''
+    
     #Create a list of dictionaries by running a list of dictionaries of UserIDs and their URL's through
     #Google image recognizer. Taking those strings and running text complexity on them. Taking those values and their
     #users, and creating a list of dictionaries.
