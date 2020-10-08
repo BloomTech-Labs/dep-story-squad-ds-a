@@ -214,6 +214,8 @@ def evaluate(input_str: str) -> int:
         )
 
     return score
+
+
 def good_vocab_stars(input_str: str) -> int:
     '''
     returns between 0 and 5 stars, rounded to the nearest half star, based on usage of 
@@ -277,6 +279,17 @@ def get_text_scores(input_str: str) -> str:
         "descriptiveness": descriptiveness(input_str),
         "good_vocab": good_vocab(input_str),
         "evaluate": evaluate(input_str)
+    }
+
+
+def get_text_scores_stars(input_str: str) -> str:
+    return {
+        "vocab_length": vocab_length_stars(input_str),
+        "avg_sentence_length": avg_sentence_length_stars(input_str),
+        "efficiency": efficiency_stars(input_str),
+        "descriptiveness": descriptiveness_stars(input_str),
+        "good_vocab": good_vocab_stars(input_str),
+        "evaluate": evaluate_stars(input_str)
     }
 
 

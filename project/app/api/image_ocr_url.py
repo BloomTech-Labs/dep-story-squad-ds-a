@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from app.dependencies.security import verify_token
 # from remote_pdb import set_trace as st
 from app.ocr.google_handwriting_recognition import google_handwriting_recognizer
 from app.ocr.text_complexity import get_text_scores
@@ -12,7 +13,7 @@ class ImageOcrURL(BaseModel):
     get_complexity_score: int = Field(..., example=1)
 
 
-@router.post('/HTR/image/url', tags=["Handwritten Text Recognition"])
+@router.post('/HTR/image/url', tags=["Handwritten Text Recognition"], dependencies=[Depends(verify_token)])
 async def image_handwritten_text_recognition_url(params: ImageOcrURL):
     """
     Handwriting recognizer with google's vision API for images
@@ -36,7 +37,7 @@ async def image_handwritten_text_recognition_url(params: ImageOcrURL):
 
         return {
             "ocr_text": ocr_text,
-            "scores": scores 
+            "scores": scores
         }
 
     else:

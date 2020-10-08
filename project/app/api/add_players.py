@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from app.dependencies.security import verify_token
 
 from typing import Dict, List
 from pydantic import BaseModel, Field
@@ -25,7 +26,7 @@ class AddPlayers(BaseModel):
 
 
 # TODO make it actually it is available for Mon ~ Wed
-@router.post('/multiplayer/add_players', tags=["Multiplayer"])
+@router.post('/multiplayer/add_players', tags=["Multiplayer"], dependencies=[Depends(verify_token)])
 async def add_players(params: AddPlayers):
     """
     It's available to use from Monday till Wednesday.
