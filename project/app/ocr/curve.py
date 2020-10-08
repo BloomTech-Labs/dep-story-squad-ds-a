@@ -30,7 +30,7 @@ def compiler(listofdicts, function) -> []:
     '''
     scorelist = []
     for username in listofdicts:
-        for name, scores in username.items():
+        for scores in username.values():
             for method, score in scores.items():
                 if method == function:
                     scorelist.append(score)
@@ -71,7 +71,7 @@ def maxscorelist(listofdicts):
     # arrange dictionary into methods, and arrays of corresponding scores
     x = bigcompile(listofdicts)
     maxscorelist = []
-    for method, scores in x.items():
+    for scores in x.values():
         score = np.max(scores)
         maxscorelist.append(score)
     # append high score from each corresponding array to maxscore array, return array
@@ -251,7 +251,7 @@ def avg_dict(listofdicts):
     x = bigcompile(listofdicts)
     methodlist = []
     
-    for method, scores in x.items():
+    for method in x.keys():
         y = method
         methodlist.append(y)
     score_lists = []
@@ -280,7 +280,7 @@ def std_dict(listofdicts):
     x = bigcompile(listofdicts)
     methodlist = []
     
-    for method, scores in x.items():
+    for method in x.keys():
         y = method
         methodlist.append(y)
     score_lists = []
@@ -436,6 +436,7 @@ def Final_Match(listofdicts):
                 finalmatch[-9], finalmatch[-6] = finalmatch[-6], finalmatch[-9]
                 finalmatch[-9], finalmatch[-3] = finalmatch[-3], finalmatch[-9]
                 finalmatch[-2], finalmatch[-5] = finalmatch[-5], finalmatch[-2]
+                finalmatch[-2], finalmatch[-4] = finalmatch[-4], finalmatch[-2]
 
 
     finalmatchedlist =  list(divide_chunks(finalmatch, teamsize))  
@@ -569,8 +570,9 @@ if __name__ == "__main__":
     # print(finalmatchedlist)                          
     
     #print(dictlist2)
-    #print(matchmaker(dictlist2))
-    #print(Final_Match(dictlist2))
+    print(maxscorelist(dictlist2))
+    print(matchmaker(dictlist2))
+    print(Final_Match(dictlist2))
     #print(avg_dict(dictlist2))
     #print(std_dict(dictlist2))
     actual_dictionary = [
@@ -634,26 +636,26 @@ if __name__ == "__main__":
             "user_id": 5214,
             "s3_dir": 'testing_jesse_pipeline/52--/5214',
         },
-        # {
-        #     "user_id": 5207,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5207',
-        # },
-        # {
-        #     "user_id": 5221,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5221',
-        # },
-        # {
-        #     "user_id": 5204,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5204',
-        # },
-        # {
-        #     "user_id": 5213,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5213',
-        # },
-        # {
-        #     "user_id": 5222,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5222',
-        # },
+        {
+            "user_id": 5207,
+            "s3_dir": 'testing_jesse_pipeline/52--/5207',
+        },
+        {
+            "user_id": 5221,
+            "s3_dir": 'testing_jesse_pipeline/52--/5221',
+        },
+        {
+            "user_id": 5204,
+            "s3_dir": 'testing_jesse_pipeline/52--/5204',
+        },
+        {
+            "user_id": 5213,
+            "s3_dir": 'testing_jesse_pipeline/52--/5213',
+        },
+        {
+            "user_id": 5222,
+            "s3_dir": 'testing_jesse_pipeline/52--/5222',
+        },
         # {
         #     "user_id": 5209,
         #     "s3_dir": 'testing_jesse_pipeline/52--/5209',
@@ -702,7 +704,9 @@ if __name__ == "__main__":
     #abc = Scoredatabase(actual_dictionary)
     #print(std_dict(abc))
     #print(std_dict(dictlist2))
-    print(Final_Match(dictlist2))
+    #a = Scoredatabase(actual_dictionary)
+    #print(matchmaker(a))
+    #print(Pipeline(actual_dictionary))
     
 
 
@@ -711,39 +715,7 @@ if __name__ == "__main__":
     #print(std_dict(abc))
     #print(dictlist2)
     #print(avg_dict(actual_dict))
-    '''
-    actual_dict2 =   [
-        {
-            "user_id": 5206,
-            "s3_dir": 'testing_jesse_pipeline/52--/5206',
-        },
-        {
-            "user_id": 5229,
-            "s3_dir": 'testing_jesse_pipeline/52--/5229',
-        },
-        {
-            "user_id": 5210,
-            "s3_dir": 'testing_jesse_pipeline/52--/5210',
-        },
-        {
-            "user_id": 5225,
-            "s3_dir": 'testing_jesse_pipeline/52--/5225',
-        },
-        
-        {
-            "user_id": 5208,
-            "s3_dir": 'testing_jesse_pipeline/52--/5208',
-        },
-        {
-            "user_id": 5205,
-            "s3_dir": 'testing_jesse_pipeline/52--/5205',
-        },
-        {
-            "user_id": 5228,
-            "s3_dir": 'testing_jesse_pipeline/52--/5228',
-        },
-    ]
-    '''
+
     #abc = Scoredatabase(actual_dict2)
     #print(std_dict(dictlist2))
     
