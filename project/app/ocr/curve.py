@@ -380,69 +380,70 @@ def Final_Match(listofdicts):
     '''
     teamsize = 4
     
-    x = matchmaker(listofdicts)
-    y = x.values()
-    
-    valuelist1 = []
-    for value in y:
-        valuelist1.append(value)
-    valuelist1.sort(reverse=True)
-    
-    dividedlists= list(divide_chunks(valuelist1, teamsize))
+    userscore_dict = matchmaker(listofdicts)
+    userscores = userscore_dict.values()
+    #Got all values from list of scores, put in valuelist, sort in descending order
+    valuelist = []
+    for value in userscores:
+        valuelist.append(value)
+    valuelist.sort(reverse=True)
     
     finalmatch = []
-    valuelist2 = []
-    botvar = "added_cpu_bot"
-    
-    for lists in dividedlists:
-        for value in lists:
-            valuelist2.append(value)
-    
-    for num in valuelist2:
-        for user, value in x.items():
+    botvar = "_"
+    #scroll through the numbers in valuelist, if the number == a value in the userscore dictionary,
+    #append the corresponding key to the finalmatch list       
+    for num in valuelist:
+        for user, value in userscore_dict.items():
             if num == value:
                 finalmatch.append(user)
     
-    while len(finalmatch) % teamsize != 0:
-        if len(finalmatch) % teamsize == 3:
+    if len(finalmatch) % teamsize == 3:
+        finalmatch.append(botvar)
+    
+    elif len(finalmatch) % teamsize == 2:
+        if len(finalmatch) < 5:
             finalmatch.append(botvar)
-        
-        elif len(finalmatch) % teamsize == 2:
-            if len(finalmatch) < 5:
-                finalmatch.append(botvar)
-                finalmatch.append(botvar)
-            elif len(finalmatch) >5:
-                finalmatch.append(botvar)
-                finalmatch.append(botvar)
-                #now swap botvar with list position -5
-                finalmatch[-5], finalmatch[-2] = finalmatch[-2], finalmatch[-5]
-                       
-        elif len(finalmatch) % teamsize == 1:
-            if len(finalmatch) < 2:
-                finalmatch.append(botvar)
-                finalmatch.append(botvar)
-                finalmatch.append(botvar)
-            elif len(finalmatch) > 4 and len(finalmatch) < 9:
-                finalmatch.append(botvar)
-                finalmatch.append(botvar)
-                finalmatch.append(botvar)
-                finalmatch[-5], finalmatch[-3] = finalmatch[-3], finalmatch[-5]
-            elif len(finalmatch) > 8:
-                finalmatch.append(botvar)
-                finalmatch.append(botvar)
-                finalmatch.append(botvar)
-                finalmatch[-9], finalmatch[-8] = finalmatch[-8], finalmatch[-9]
-                finalmatch[-9], finalmatch[-7] = finalmatch[-7], finalmatch[-9]
-                finalmatch[-9], finalmatch[-6] = finalmatch[-6], finalmatch[-9]
-                finalmatch[-9], finalmatch[-3] = finalmatch[-3], finalmatch[-9]
-                finalmatch[-2], finalmatch[-5] = finalmatch[-5], finalmatch[-2]
-                finalmatch[-2], finalmatch[-4] = finalmatch[-4], finalmatch[-2]
+            finalmatch.append(botvar)
+        elif len(finalmatch) >5:
+            finalmatch.append(botvar)
+            finalmatch.append(botvar)
+            #now swap botvar with list position -5 to insert robot into the last spot in the 
+            #2nd list from the end
+            finalmatch[-5], finalmatch[-2] = finalmatch[-2], finalmatch[-5]
+                    
+    elif len(finalmatch) % teamsize == 1:
+        if len(finalmatch) < 2:
+            finalmatch.append(botvar)
+            finalmatch.append(botvar)
+            finalmatch.append(botvar)
+        elif len(finalmatch) > 4 and len(finalmatch) < 9:
+            finalmatch.append(botvar)
+            finalmatch.append(botvar)
+            finalmatch.append(botvar)
+            #now swap botvar with list position -5 to insert robot into the last spot in the 
+            #2nd list from the end
+            finalmatch[-5], finalmatch[-3] = finalmatch[-3], finalmatch[-5]
+        elif len(finalmatch) > 8:
+            finalmatch.append(botvar)
+            finalmatch.append(botvar)
+            finalmatch.append(botvar)
+            #We are manipulating the 3rd and 2nd lists from the end, so that the order of players
+            #does not change when we swap robots in from the first list from the end, into the 2nd and 
+            #3rd lists from the end
+            finalmatch[-9], finalmatch[-8] = finalmatch[-8], finalmatch[-9]
+            finalmatch[-9], finalmatch[-7] = finalmatch[-7], finalmatch[-9]
+            finalmatch[-9], finalmatch[-6] = finalmatch[-6], finalmatch[-9]
+            finalmatch[-9], finalmatch[-3] = finalmatch[-3], finalmatch[-9]
+            finalmatch[-2], finalmatch[-5] = finalmatch[-5], finalmatch[-2]
+            finalmatch[-2], finalmatch[-4] = finalmatch[-4], finalmatch[-2]
 
-
+    #Now that the finalmatch list has the correct order of players, with robots included,
+    #We divide the list into teams of 4
     finalmatchedlist =  list(divide_chunks(finalmatch, teamsize))  
     
+    #Return the final matched up list of lists, with robots included
     return finalmatchedlist
-    #return finalmatch  
+      
 
 def Pipeline(Database_list):
     '''
@@ -570,7 +571,7 @@ if __name__ == "__main__":
     # print(finalmatchedlist)                          
     
     #print(dictlist2)
-    print(maxscorelist(dictlist2))
+    #print(maxscorelist(dictlist2))
     print(matchmaker(dictlist2))
     print(Final_Match(dictlist2))
     #print(avg_dict(dictlist2))
