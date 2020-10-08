@@ -66,7 +66,7 @@ def bigcompile(listofdicts):
 def maxscorelist(listofdicts):
     '''
     Compiles all lists of scores and their methods, scrolls through all lists, returns one list of max scores for each
-    list : [a, b, c, d, e, f]
+    list : [a, b, c, d, e]
     '''
     # arrange dictionary into methods, and arrays of corresponding scores
     x = bigcompile(listofdicts)
@@ -310,6 +310,24 @@ def matchmaker(listofdicts):
     Takes in list of dictionaries of users and their scores, matches users up to the average score,
     and uses standard deviations of individual scores to return a dictionary with the {user: overall score}
     score is then used in matchmaking process
+
+    Args:
+        listofdicts:
+        [
+            {
+                'user_id1': {
+                    'evaluate': 0.3747619047619048,
+                    'good_vocab': 0.7,
+                    'efficiency': 0.8,
+                    'decriptiveness':0.7142857142857143,
+                    'word_length': 0.5
+                }
+                'user_id2: {...},
+            },
+        ]
+
+    Output:
+        {'bill': -7.063469408392901, 'Kate': -0.33216749504309295 }    
     '''
     avgdict = avg_dict(listofdicts)
     stddict = std_dict(listofdicts)
@@ -382,6 +400,9 @@ def Final_Match(listofdicts):
     Takes matchmaking dictionary, orders the values, matches users up with the ordered values,
     and divides all users into teams of 4 based on their ordered value. Accounts for remainder 
     by evenly placing bots in groups, while not disturbing the distribution of scores
+    
+    Output: [['Bruce', 'Bobby', 'Hadi', '_'], ['Jesse', 'Pierre', 'Kate', '_'], ['Franklin', 'Edward', 'bill', '_']]
+    
     '''
     teamsize = 4
     
@@ -515,13 +536,13 @@ if __name__ == "__main__":
     dictlist2 = []
     dictlist2.append(a)
     dictlist2.append(b)
-    dictlist2.append(c)
-    dictlist2.append(d)
-    dictlist2.append(e)
-    dictlist2.append(f)
-    dictlist2.append(g)
-    dictlist2.append(h)
-    dictlist2.append(i)
+    # dictlist2.append(c)
+    # dictlist2.append(d)
+    # dictlist2.append(e)
+    # dictlist2.append(f)
+    # dictlist2.append(g)
+    # dictlist2.append(h)
+    # dictlist2.append(i)
     database = [
         {
             "user_id": "12322187",
@@ -536,9 +557,9 @@ if __name__ == "__main__":
     
     #print(dictlist2)
     #print(maxscorelist(dictlist2))
-    print(matchmaker(dictlist2))
-    print(Final_Match(dictlist2))
-    print(avg_dict(dictlist2))
+    #print(matchmaker(dictlist2))
+    #print(Final_Match(dictlist2))
+    #print(avg_dict(dictlist2))
     #print(std_dict(dictlist2))
     actual_dictionary = [
         # {
@@ -585,30 +606,30 @@ if __name__ == "__main__":
         #     "user_id": 5202,
         #     "s3_dir": 'testing_jesse_pipeline/52--/5202',
         # },
-        {
-            "user_id": 5230,
-            "s3_dir": 'testing_jesse_pipeline/52--/5230',
-        },
-        {
-            "user_id": 5218,
-            "s3_dir": 'testing_jesse_pipeline/52--/5218',
-        },
-        {
-            "user_id": 5234,
-            "s3_dir": 'testing_jesse_pipeline/52--/5234',
-        },
-        {
-            "user_id": 5214,
-            "s3_dir": 'testing_jesse_pipeline/52--/5214',
-        },
-        {
-            "user_id": 5207,
-            "s3_dir": 'testing_jesse_pipeline/52--/5207',
-        },
-        {
-            "user_id": 5221,
-            "s3_dir": 'testing_jesse_pipeline/52--/5221',
-        },
+        # {
+        #     "user_id": 5230,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5230',
+        # },
+        # {
+        #     "user_id": 5218,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5218',
+        # },
+        # {
+        #     "user_id": 5234,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5234',
+        # },
+        # {
+        #     "user_id": 5214,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5214',
+        # },
+        # {
+        #     "user_id": 5207,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5207',
+        # },
+        # {
+        #     "user_id": 5221,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5221',
+        # },
         {
             "user_id": 5204,
             "s3_dir": 'testing_jesse_pipeline/52--/5204',
@@ -672,7 +693,7 @@ if __name__ == "__main__":
     #a = Scoredatabase(actual_dictionary)
     #print(matchmaker(a))
     #print(Pipeline(actual_dictionary))
-    
+    print(dictlist2)
 
 
             
