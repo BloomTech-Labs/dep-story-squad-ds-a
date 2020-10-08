@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from app.dependencies.security import verify_token
 
 from typing import Dict, List
 from pydantic import BaseModel, Field
@@ -7,7 +8,7 @@ import boto3
 router = APIRouter()
 
 
-@router.get('/multiplayer/get_players', tags=["Multiplayer"])
+@router.get('/multiplayer/get_players', tags=["Multiplayer"], dependencies=[Depends(verify_token)])
 async def get_players():
     """
     Gets all the players for that week's competition
