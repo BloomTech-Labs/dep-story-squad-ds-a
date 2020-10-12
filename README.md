@@ -31,7 +31,7 @@ Database = [
             "next user_id": "239103913",
             "next s3_dir": "next URL"
         },
-        etc...
+        "etc..."
     ]
 ```
 
@@ -48,7 +48,7 @@ List_of_dicts:
                     "sentence_length": "score",
                     "word_length": "score"
                 }
-                "user_id2": {...},
+                "next dictionary, etc...",
             },
         ]
 ```
