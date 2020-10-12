@@ -138,7 +138,8 @@ def avg_sentence_length(input_str: str) -> int:
     
     final_score = (words_per_sentence / 10 ) 
     
-    return (final_score) 
+    
+    return min(final_score,1)  
 
 def avg_len_words(input_str: str) -> int:
     """
@@ -155,10 +156,8 @@ def avg_len_words(input_str: str) -> int:
 
         if len(arr) == 0:
             return 0
-        elif y > 1:
-            return 1    
-        else:
-            return y    
+        
+    return min(y,1)   
 
     
 def vocab_length(input_str: str) -> int:

@@ -691,7 +691,7 @@ if __name__ == "__main__":
     #actual_dict = [{5206: {'evaluate': 0.386864850604889, 'good_vocab': 0.5025906735751295, 'efficiency': 0.766497461928934, 'decriptiveness': 0.696969696969697, 'sentence_length': 1, 'word_length': 0.4}}, {5229: {'evaluate': 0.37310469710272165, 'good_vocab': 0.3805970149253731, 'efficiency': 0.6323529411764706, 'decriptiveness': 0.6375, 'sentence_length': 1, 'word_length': 0.7}}, {5210: {'evaluate': 0.35023670205895274, 'good_vocab': 0.33986928104575165, 'efficiency': 0.6521739130434783, 'decriptiveness': 0.6704545454545454, 'sentence_length': 1, 'word_length': 0.5}}, {5225: {'evaluate': 0.3042697172108937, 'good_vocab': 0.3247863247863248, 'efficiency': 0.5126050420168067, 'decriptiveness': 0.4805194805194805, 'sentence_length': 1, 'word_length': 0.4}}]
     #print(Final_Match(actual_dict))
     
-    print(Pipeline(actual_dictionary))
+    #print(Pipeline(actual_dictionary))
     #abc = Scoredatabase(actual_dictionary)
     #print(std_dict(abc))
     #print(std_dict(dictlist2))
@@ -699,7 +699,7 @@ if __name__ == "__main__":
     #print(matchmaker(a))
     #print(Pipeline(actual_dictionary))
     #print(dictlist2)
-    #print(Scoredatabase(database))
+    print(Scoredatabase(database))
    
     
     
