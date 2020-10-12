@@ -28,8 +28,8 @@ Database = [
             "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322187/story_5"
         },
         {
-            next user_id: 239103913,
-            next s3_dir: next URL
+            "next user_id": "239103913",
+            "next s3_dir": "next URL"
         },
         etc...
     ]
@@ -41,14 +41,14 @@ A list of dictionaries should be given using this exact format and the exact key
 List_of_dicts:
         [
             {
-                'user_id1': {
-                    "good_vocab": good_vocab score,
-                    "efficiency": efficiency score,
-                    "decriptiveness": descriptiveness score,
-                    "sentence_length": avg_sentence_length score,
-                    "word_length": vocab_length score
+                "user_id1": {
+                    "good_vocab": "score",
+                    "efficiency": "score",
+                    "decriptiveness": "score",
+                    "sentence_length": "score",
+                    "word_length": "score"
                 }
-                'user_id2: {...},
+                "user_id2": {...},
             },
         ]
 ```
@@ -60,9 +60,9 @@ The output for this final list of lists is as follows:
 
 Ouput: 
 ```json
-[['User1', 'User8', 'User4', '_'], 
-['User 3', 'User 6', 'User 5', '_'],
-['User7', 'User2', 'User9', '_'], etc...]
+[["User1", "User8", "User4", "_"], 
+["User 3", "User 6", "User 5", "_"],
+["User7", "User2", "User9", "_"], "etc..."]
 ```
 
 In the case where the amount of users is not divisible by 4, bots will be evenly added to the last few groups to ensure that the teams are even in number. It is important to note that for multiplayer, scores will be stored in the database over several days. Once the submission deadline has ended, the model will run one time, returning the multiplayer output all at once. 
@@ -75,12 +75,12 @@ If they wish to receive their scores in decimal format, the output will be as fo
 Decimal scores range from 0 to 1.
 ```json    
     {
-        "vocab_length": score,
-        "avg_sentence_length": score,
-        "efficiency": score,
-        "descriptiveness": score,
-        "good_vocab": score,
-        "evaluate": score
+        "vocab_length": "score",
+        "avg_sentence_length": "score",
+        "efficiency": "score",
+        "descriptiveness": "score",
+        "good_vocab": "score",
+        "evaluate": "score"
     }
 ```
 
@@ -88,12 +88,12 @@ If they wish to receive their scores in star format, the output will be as follo
 Star scores range from 0 to 5 stars, rounded to the nearest half star.
 ```json
     {
-        "vocab_length": star score,
-        "avg_sentence_length": star score,
-        "efficiency": star score,
-        "descriptiveness": star score,
-        "good_vocab": star score,
-        "evaluate": star score
+        "vocab_length": "star score",
+        "avg_sentence_length": "star score",
+        "efficiency": "star score",
+        "descriptiveness": "star score",
+        "good_vocab": "star score",
+        "evaluate": "star score"
     }
 ```
 
