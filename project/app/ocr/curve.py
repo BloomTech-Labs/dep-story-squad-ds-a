@@ -1,5 +1,5 @@
 from app.ocr.text_complexity import evaluate, good_vocab, efficiency, descriptiveness, \
-        avg_sentence_length, vocab_length
+        avg_sentence_length, vocab_length, tokenize
 from app.ocr.google_handwriting_recognition import google_handwriting_recognizer_dir, google_handwriting_recognizer    
 import numpy as np         
 import statistics 
@@ -12,11 +12,11 @@ def store(input_str: str,  username: str) -> int:
     '''
     d = {
         username: {
-            "evaluate": evaluate(input_str),
+            #"evaluate": evaluate(input_str),
             "good_vocab": good_vocab(input_str),
             "efficiency": efficiency(input_str),
             "decriptiveness": descriptiveness(input_str),
-           #"sentence_length": avg_sentence_length(input_str),
+           "sentence_length": avg_sentence_length(input_str),
             "word_length": vocab_length(input_str)
             }
         }
@@ -66,7 +66,7 @@ def bigcompile(listofdicts):
 def maxscorelist(listofdicts):
     '''
     Compiles all lists of scores and their methods, scrolls through all lists, returns one list of max scores for each
-    list : [a, b, c, d, e, f]
+    list : [a, b, c, d, e]
     '''
     # arrange dictionary into methods, and arrays of corresponding scores
     x = bigcompile(listofdicts)
@@ -243,9 +243,8 @@ def FinalStarDatabase(Database_list):
 
 def avg_dict(listofdicts):
     '''
-    Takes in a list of dictionaries of users and their complexity score ratings , their corresponding methods,
-    returns a dictionary list, 1st dictionary represents average of scores, 
-    2nd dictionary represents standard deviation of scores
+    Takes in a list of dictionaries of users and their complexity score ratings,
+    returns a dictionary list of methods and the average score of all users for the particular method
     '''
 
     x = bigcompile(listofdicts)
@@ -274,9 +273,10 @@ def avg_dict(listofdicts):
 
 def std_dict(listofdicts):
     '''
-    takes in a ist of dictionaries, compiles a list of scores for each method, 
-    returns a list of methods and their standard deviations
+    Takes in a list of dictionaries, compiles a list of scores for each method, 
+    returns a list of methods and the average standard deviation of all user scores for that particular method
     '''
+    #Get arrays for all different methods
     x = bigcompile(listofdicts)
     methodlist = []
     
@@ -285,8 +285,10 @@ def std_dict(listofdicts):
         methodlist.append(y)
     score_lists = []
     std_lists = []
+    
     for scores in x.values():
         score_lists.append(scores)
+    
     for y in score_lists:
         a = np.std(y)
         std_lists.append(a)
@@ -308,6 +310,24 @@ def matchmaker(listofdicts):
     Takes in list of dictionaries of users and their scores, matches users up to the average score,
     and uses standard deviations of individual scores to return a dictionary with the {user: overall score}
     score is then used in matchmaking process
+
+    Args:
+        listofdicts:
+        [
+            {
+                'user_id1': {
+                    "good_vocab": good_vocab(input_str),
+                    "efficiency": efficiency(input_str),
+                    "decriptiveness": descriptiveness(input_str),
+                    "sentence_length": avg_sentence_length(input_str),
+                    "word_length": vocab_length(input_str)
+                }
+                'user_id2: {...},
+            },
+        ]
+
+    Output:
+        {'bill': -7.063469408392901, 'Kate': -0.33216749504309295 }    
     '''
     avgdict = avg_dict(listofdicts)
     stddict = std_dict(listofdicts)
@@ -315,12 +335,13 @@ def matchmaker(listofdicts):
     usernames = []
     differences = []
     methodnames1 = []
-    
+    #Create list of functions used in evaluate method
     for entry in listofdicts:
         for scores in entry.values():
             for methodnames in scores.keys():
                 if methodnames not in methodnames1:
                     methodnames1.append(methodnames)
+    #Create a list of usernames, create list of user's score minus avg score
     for user in listofdicts:
         for names in user.keys():
             usernames.append(names)
@@ -334,23 +355,21 @@ def matchmaker(listofdicts):
     
     
     methodlength = len(methodnames1)
-    
-
+    #create new list of lists that divides all scores by number of different scores
     dividedlists = list(divide_chunks(differences, methodlength)) 
      
     dictlist1 = []
-    
+    #Since length of each list inside divided list is length of methods,
+    #Scroll through giant list of lists, and link up the method names to scores
+    # This now represents each individual user's list of scores,
+    # representing the difference in their score from the average score for each method 
     for small_list in dividedlists:
         x = dict(zip(methodnames1, small_list))
         dictlist1.append(x)
     
-    #we have list of dictionaries with score - avg for each user
-    #now we just divide by std list
-    #print(len(dictlist4))
-    #print(usernames)
-    #print(stddict)
     std_list1 = []
-    
+    #Scroll through each list and divide the difference in scores by the corresponding 
+    #standard deviation value for each method
     for entry in dictlist1:
         for method, score in entry.items():
             for function, std in stddict.items():
@@ -360,15 +379,19 @@ def matchmaker(listofdicts):
                         std_list1.append(x)
                     elif std == 0:
                         std_list1.append(score)    
-    #print(std_list3)
+    #Append these scores to std_list1, divide the list by the length of methods,
+    #And now you have individual standard deviation scores for each method for each player
+    #when you divide the big list into small segments based on number of methods
     dividedlists2 = list(divide_chunks(std_list1, methodlength)) 
     
     totalz = []
+    #scroll through each individual list, sum all the values, append them to a total list
     for small_list2 in dividedlists2:
         summy = sum(small_list2)
         totalz.append(summy)
         
-    
+    #now make final dictionary with total values of standard deviations from means, for all methods,
+    # and user names, and return the dictionary
     finalscorez = dict(zip(usernames, totalz))
     return(finalscorez)      
 
@@ -377,205 +400,172 @@ def Final_Match(listofdicts):
     Takes matchmaking dictionary, orders the values, matches users up with the ordered values,
     and divides all users into teams of 4 based on their ordered value. Accounts for remainder 
     by evenly placing bots in groups, while not disturbing the distribution of scores
+    
+    Output: [['Bruce', 'Bobby', 'Hadi', '_'], ['Jesse', 'Pierre', 'Kate', '_'], ['Franklin', 'Edward', 'bill', '_']]
+    
     '''
     teamsize = 4
     
-    x = matchmaker(listofdicts)
-    y = x.values()
-    
-    valuelist1 = []
-    for value in y:
-        valuelist1.append(value)
-    valuelist1.sort(reverse=True)
-    
-    dividedlists= list(divide_chunks(valuelist1, teamsize))
+    userscore_dict = matchmaker(listofdicts)
+    userscores = userscore_dict.values()
+    #Got all values from list of scores, put in valuelist, sort in descending order
+    valuelist = []
+    for value in userscores:
+        valuelist.append(value)
+    valuelist.sort(reverse=True)
     
     finalmatch = []
-    valuelist2 = []
-    botvar = "added_cpu_bot"
-    
-    for lists in dividedlists:
-        for value in lists:
-            valuelist2.append(value)
-    
-    for num in valuelist2:
-        for user, value in x.items():
+    botvar = "_"
+    #scroll through the numbers in valuelist, if the number == a value in the userscore dictionary,
+    #append the corresponding key to the finalmatch list       
+    for num in valuelist:
+        for user, value in userscore_dict.items():
             if num == value:
                 finalmatch.append(user)
     
-    while len(finalmatch) % teamsize != 0:
-        if len(finalmatch) % teamsize == 3:
+    if len(finalmatch) % teamsize == 3:
+        finalmatch.append(botvar)
+    
+    elif len(finalmatch) % teamsize == 2:
+        if len(finalmatch) < 5:
             finalmatch.append(botvar)
-        
-        elif len(finalmatch) % teamsize == 2:
-            if len(finalmatch) < 5:
-                finalmatch.append(botvar)
-                finalmatch.append(botvar)
-            elif len(finalmatch) >5:
-                finalmatch.append(botvar)
-                finalmatch.append(botvar)
-                #now swap botvar with list position -5
-                finalmatch[-5], finalmatch[-2] = finalmatch[-2], finalmatch[-5]
-                       
-        elif len(finalmatch) % teamsize == 1:
-            if len(finalmatch) < 2:
-                finalmatch.append(botvar)
-                finalmatch.append(botvar)
-                finalmatch.append(botvar)
-            elif len(finalmatch) > 4 and len(finalmatch) < 9:
-                finalmatch.append(botvar)
-                finalmatch.append(botvar)
-                finalmatch.append(botvar)
-                finalmatch[-5], finalmatch[-3] = finalmatch[-3], finalmatch[-5]
-            elif len(finalmatch) > 8:
-                finalmatch.append(botvar)
-                finalmatch.append(botvar)
-                finalmatch.append(botvar)
-                finalmatch[-9], finalmatch[-8] = finalmatch[-8], finalmatch[-9]
-                finalmatch[-9], finalmatch[-7] = finalmatch[-7], finalmatch[-9]
-                finalmatch[-9], finalmatch[-6] = finalmatch[-6], finalmatch[-9]
-                finalmatch[-9], finalmatch[-3] = finalmatch[-3], finalmatch[-9]
-                finalmatch[-2], finalmatch[-5] = finalmatch[-5], finalmatch[-2]
-                finalmatch[-2], finalmatch[-4] = finalmatch[-4], finalmatch[-2]
+            finalmatch.append(botvar)
+        elif len(finalmatch) >5:
+            finalmatch.append(botvar)
+            finalmatch.append(botvar)
+            #now swap botvar with list position -5 to insert robot into the last spot in the 
+            #2nd list from the end
+            finalmatch[-5], finalmatch[-2] = finalmatch[-2], finalmatch[-5]
+                    
+    elif len(finalmatch) % teamsize == 1:
+        if len(finalmatch) < 2:
+            finalmatch.append(botvar)
+            finalmatch.append(botvar)
+            finalmatch.append(botvar)
+        elif len(finalmatch) > 4 and len(finalmatch) < 9:
+            finalmatch.append(botvar)
+            finalmatch.append(botvar)
+            finalmatch.append(botvar)
+            #now swap botvar with list position -5 to insert robot into the last spot in the 
+            #2nd list from the end
+            finalmatch[-5], finalmatch[-3] = finalmatch[-3], finalmatch[-5]
+        elif len(finalmatch) > 8:
+            finalmatch.append(botvar)
+            finalmatch.append(botvar)
+            finalmatch.append(botvar)
+            #We are manipulating the 3rd and 2nd lists from the end, so that the order of players
+            #does not change when we swap robots in from the first list from the end, into the 2nd and 
+            #3rd lists from the end
+            finalmatch[-9], finalmatch[-8] = finalmatch[-8], finalmatch[-9]
+            finalmatch[-9], finalmatch[-7] = finalmatch[-7], finalmatch[-9]
+            finalmatch[-9], finalmatch[-6] = finalmatch[-6], finalmatch[-9]
+            finalmatch[-9], finalmatch[-3] = finalmatch[-3], finalmatch[-9]
+            finalmatch[-2], finalmatch[-5] = finalmatch[-5], finalmatch[-2]
+            finalmatch[-2], finalmatch[-4] = finalmatch[-4], finalmatch[-2]
 
-
+    #Now that the finalmatch list has the correct order of players, with robots included,
+    #We divide the list into teams of 4
     finalmatchedlist =  list(divide_chunks(finalmatch, teamsize))  
     
+    #Return the final matched up list of lists, with robots included
     return finalmatchedlist
-    #return finalmatch  
+      
 
 def Pipeline(Database_list):
     '''
     Takes Database_list, runs through Scoredatabase function, returns dictionary list
     Runs dictionary list through Final_Match function, returns list of userid's matched up for multiplayer
+
+    Args: 
+        Database_list in this format:
+        
+        database = [
+        {
+            "user_id": "12322187",
+            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322187/story_5"
+        }, {next user_id: 239103913, next s3_dir: next URL}, etc...
+    ]
+
+    Ouput: [['User1', 'User8', 'User3', '_'], ['User4', 'User5', 'User6', '_'], ['User7', 'User2', 'User9', '_']]
+    Users matched up by their scores into teams of 4, bots added as '_'
     '''
     
+    #Create a list of dictionaries by running a list of dictionaries of UserIDs and their URL's through
+    #Google image recognizer. Taking those strings and running text complexity on them. Taking those values and their
+    #users, and creating a list of dictionaries.
+    
     Dictlist = Scoredatabase(Database_list)
+    #Compiling all values from this list of dictionaries, finding avg scores, standard deviation of scores,
+    #matching up users with their corresponding scores. Ordering the users into a list, and dividing the list into 
+    #teams of 4, adding bots if necessary to even out team list.
     
     Finalmatchups = Final_Match(Dictlist)
-
+    #Returning final list of teams, ready for multiplayer
+    
     return Finalmatchups     
-
-#With averages and Standard Deviations of scores, we can now go through individual dictionary entries, compare their individual
-# scores to the averages, using standard deviation and absolute value logic, we can give each user an individual +- score,
-# for each one of their methods, return eventually an array of users, and their particular overall scores.
-# Use that array to match users up with other users, in a manual matchmaking dictionary process.     
-
 
 if __name__ == "__main__":
     
-    string = "Great success. My name is Borat. I have come to America, to find Pamela Anderson, and \
-        make her my wife. Very nice!"
-    string2 = "take in a database of URLs associated with particular usernames, store it in dictionary with scores,\
-    append it to dict_list2, now should have list of dictionaries to scroll through"
-    string3 = " Once you have a list of dictionaries, you can scroll through each score related to each function, \
-    one by one,  and get the data needed to start implementing the curve function, to then ultimately, \
-        return star values for each player"
-    string4 = "Remember that the Learning Rate is a hyperparameter that is specific to your gradient-descent based optimizer \
-    selection. A learning rate that is too high will cause divergent behavior, but a Learning Rate that is\
-         too low will fail to converge, again, you're looking for the sweet spot."
-    string5 = "Momentum is a hyperparameter that is more commonly associated with Stochastic Gradient Descent. \
-    SGD is a common optimizer because it's what people understand and know, but I doubt it will get you the \
-        best results, you can try hyperparameter tuning its attributes and see if you can beat the performance from adam."         
-    string6 = "Using dropout on hidden layers might not have any effect while using dropout on hidden layers might\
-     have a substantial effect. You don't necessarily need to turn use dropout unless you see that your model\
-          has overfitting and generalizability problems."
-    string7 = "In the case of a binomial outcome (flipping a coin), the binomial distribution may be \
-    approximated by a normal distribution (for sufficiently large n {\displaystyle n} n). Because \
-        the square of a standard normal distribution is the chi-square distribution with one degree of freedom,\
-             the probability of a result such as 1 heads in 10 trials can be approximated either by using \
-                 the normal distribution directly, or the chi-square distribution for the normalised,\
-                      squared difference between observed and expected value."
-    string8 = "The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly\
-     that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well. "
-    string9 = "Tell me that first, and then, if I like being that person,\
-         I’ll come up: if not, I’ll stay down here till I’m somebody else’—but, \
-             oh dear!” cried Alice, with a sudden burst of tears, “I do wish they\
-                  would put their heads down! I am so very tired of being all alone here"
+    # string = "Great success. My name is Borat. I have come to America, to find Pamela Anderson, and \
+    #     make her my wife. Very nice!"
+    # string2 = "take in a database of URLs associated with particular usernames, store it in dictionary with scores,\
+    # append it to dict_list2, now should have list of dictionaries to scroll through"
+    # string3 = " Once you have a list of dictionaries, you can scroll through each score related to each function, \
+    # one by one,  and get the data needed to start implementing the curve function, to then ultimately, \
+    #     return star values for each player"
+    # string4 = "Remember that the Learning Rate is a hyperparameter that is specific to your gradient-descent based optimizer \
+    # selection. A learning rate that is too high will cause divergent behavior, but a Learning Rate that is\
+    #      too low will fail to converge, again, you're looking for the sweet spot."
+    # string5 = "Momentum is a hyperparameter that is more commonly associated with Stochastic Gradient Descent. \
+    # SGD is a common optimizer because it's what people understand and know, but I doubt it will get you the \
+    #     best results, you can try hyperparameter tuning its attributes and see if you can beat the performance from adam."         
+    # string6 = "Using dropout on hidden layers might not have any effect while using dropout on hidden layers might\
+    #  have a substantial effect. You don't necessarily need to turn use dropout unless you see that your model\
+    #       has overfitting and generalizability problems."
+    # string7 = "In the case of a binomial outcome (flipping a coin), the binomial distribution may be \
+    # approximated by a normal distribution (for sufficiently large n {\displaystyle n} n). Because \
+    #     the square of a standard normal distribution is the chi-square distribution with one degree of freedom,\
+    #          the probability of a result such as 1 heads in 10 trials can be approximated either by using \
+    #              the normal distribution directly, or the chi-square distribution for the normalised,\
+    #                   squared difference between observed and expected value."
+    # string8 = "The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly\
+    #  that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well. "
+    # string9 = "Tell me that first, and then, if I like being that person,\
+    #      I’ll come up: if not, I’ll stay down here till I’m somebody else’—but, \
+    #          oh dear!” cried Alice, with a sudden burst of tears, “I do wish they\
+    #               would put their heads down! I am so very tired of being all alone here"
 
-    a = store(string, "bill")
-    b = store(string2, "Kate")
-    c = store(string3, "Edward")
-    d = store(string4, "Bobby")
-    e = store(string5, "Hadi")
-    f = store(string6, "Jesse")
-    g = store(string7, "Pierre")
-    h = store(string8, "Bruce")
-    i = store(string9, "Franklin")
+    # a = store(string, "bill")
+    # b = store(string2, "Kate")
+    # c = store(string3, "Edward")
+    # d = store(string4, "Bobby")
+    # e = store(string5, "Hadi")
+    # f = store(string6, "Jesse")
+    # g = store(string7, "Pierre")
+    # h = store(string8, "Bruce")
+    # i = store(string9, "Franklin")
 
-    # # print(a)
-    # # print(b)
-    # # print(c)
+    
 
-    dictlist2 = []
-    dictlist2.append(a)
-    dictlist2.append(b)
-    dictlist2.append(c)
-    dictlist2.append(d)
-    dictlist2.append(e)
-    dictlist2.append(f)
-    dictlist2.append(g)
-    dictlist2.append(h)
-    dictlist2.append(i)
+    # dictlist2 = []
+    # dictlist2.append(a)
+    # dictlist2.append(b)
+    # dictlist2.append(c)
+    # dictlist2.append(d)
+    # dictlist2.append(e)
+    # dictlist2.append(f)
+    # dictlist2.append(g)
+    # dictlist2.append(h)
+    # dictlist2.append(i)
     database = [
         {
             "user_id": "12322187",
             "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322187/story_5"
         }
     ]
-    print("####################")
-    print(FinalStoreDatabase(database))
-    print("####################")
-    # print("-----------------------")
-    # print(compiler(dictlist2, "evaluate")) 
-    # print("----------------")
-    # x = bigcompile(dictlist2)
-    # print(x)
-    # print("---------------------------")
-    # print(maxscorelist(dictlist2)) 
-    # print("-----------------------------")
-    # print("-------------------------")
-    # print(dictlist2)
-    # print("---------------------------------") 
-    # print(finalscore(dictlist2, "bill"))
-    # print(curveddatabase(dictlist2))
-
-    # print(Star_Scores(database))
-    # print(Scoredatabase(database))
-    # print(dictlist2)
-    # print(matchmaker(dictlist2))
+   
     
-    
-    # teamsize = 4
-    # x = matchmaker(dictlist2)
-    # y = x.values()
-    # print(y)
-    # valuelist3 = []
-    # for value in y:
-    #     valuelist3.append(value)
-    # valuelist3.sort()
-    # print(valuelist3)
-
-    # dividedlists3= list(divide_chunks(valuelist3, teamsize))
-    # print(dividedlists3)
-    # finalmatch = []
-    # valuelist6 = []
-    # for lists in dividedlists3:
-    #     for value in lists:
-    #         valuelist6.append(value)
-    # for num in valuelist6:
-    #     for key, value in x.items():
-    #         if num == value:
-    #             finalmatch.append(key)
-    # finalmatchedlist =  list(divide_chunks(finalmatch, teamsize))  
-    # print(finalmatchedlist)                          
-    
-    #print(dictlist2)
-    print(maxscorelist(dictlist2))
-    print(matchmaker(dictlist2))
-    print(Final_Match(dictlist2))
-    #print(avg_dict(dictlist2))
-    #print(std_dict(dictlist2))
+                    
     actual_dictionary = [
         # {
         #     "user_id": 5206,
@@ -621,30 +611,30 @@ if __name__ == "__main__":
         #     "user_id": 5202,
         #     "s3_dir": 'testing_jesse_pipeline/52--/5202',
         # },
-        {
-            "user_id": 5230,
-            "s3_dir": 'testing_jesse_pipeline/52--/5230',
-        },
-        {
-            "user_id": 5218,
-            "s3_dir": 'testing_jesse_pipeline/52--/5218',
-        },
-        {
-            "user_id": 5234,
-            "s3_dir": 'testing_jesse_pipeline/52--/5234',
-        },
-        {
-            "user_id": 5214,
-            "s3_dir": 'testing_jesse_pipeline/52--/5214',
-        },
-        {
-            "user_id": 5207,
-            "s3_dir": 'testing_jesse_pipeline/52--/5207',
-        },
-        {
-            "user_id": 5221,
-            "s3_dir": 'testing_jesse_pipeline/52--/5221',
-        },
+        # {
+        #     "user_id": 5230,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5230',
+        # },
+        # {
+        #     "user_id": 5218,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5218',
+        # },
+        # {
+        #     "user_id": 5234,
+        #     "s3_dir": 'testing_jesse_pipeline/52--/5234',
+        # },
+         {
+             "user_id": 5214,
+             "s3_dir": 'testing_jesse_pipeline/52--/5214',
+         },
+         {
+             "user_id": 5207,
+             "s3_dir": 'testing_jesse_pipeline/52--/5207',
+         },
+         {
+             "user_id": 5221,
+             "s3_dir": 'testing_jesse_pipeline/52--/5221',
+         },
         {
             "user_id": 5204,
             "s3_dir": 'testing_jesse_pipeline/52--/5204',
@@ -708,17 +698,9 @@ if __name__ == "__main__":
     #a = Scoredatabase(actual_dictionary)
     #print(matchmaker(a))
     #print(Pipeline(actual_dictionary))
-    
-
-
-            
-    #abc = Scoredatabase(actual_dictionary)
-    #print(std_dict(abc))
     #print(dictlist2)
-    #print(avg_dict(actual_dict))
-
-    #abc = Scoredatabase(actual_dict2)
-    #print(std_dict(dictlist2))
+    print(Scoredatabase(database))
+   
     
     
     
@@ -729,49 +711,11 @@ if __name__ == "__main__":
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    #finaldict5 = dict(zip(usernames, dictlist4))
-    #finallist3= []
-    #finallist3.append(finaldict5)
-    #print(finallist3)
-    #print(dictlist2)
-
-    
-
-
-
-
-
-    #need to make userlength many lists from differences and methodnames
-    #need to divide differences by userlength increments, and create a dictionary object
-    # using methodnames3: differences
-    # from there, since they will be ordered, take that dictionary object and attach it to 
-    # usernames, 
-    # then repeat this process by taking those numbers and dividing them by stddictlist,
-    # finally, summing up each 6 values for each participant, to get a final value, 
-    # used in matchmaking    
-
-
-    
-    #print(usernames)
-         
-    
-
-
   
+    
 
 
-# print(bigcompile(create_dictlist(database)))     
-# print(a)
-# print(b)
-# Work with dictlist 2 to make a sample matchmaking model 
+
+
+
+ 
