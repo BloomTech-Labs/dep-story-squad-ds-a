@@ -123,25 +123,6 @@ def avg_sentence_length(input_str: str) -> int:
     by taking total tokens / tokens containing .
     returns value between 0 and 1
     """
-
-    # arr = []
-    # words = tokenize(input_str)
-    # count = 0
-    # for word in words:
-    #     if '.' in word:
-    #         count += 1
-
-    # for word in words:
-    #     arr.append(word)
-    #     x = len(arr) 
-    #     y = (x / 25)
-    # if count == 0:
-    #     return 0 
-    # elif y > 1:
-    #     return 1    
-    # else:
-    #     return y / count
-    
     array = []
     tokens = tokenize(input_str)
     count = 0
@@ -151,9 +132,12 @@ def avg_sentence_length(input_str: str) -> int:
     
     for word in tokens:
         array.append(word)
+    
     array_length = len(array)
     words_per_sentence = array_length / count
+    
     final_score = (words_per_sentence / 10 ) 
+    
     return (final_score) 
 
 def avg_len_words(input_str: str) -> int:
