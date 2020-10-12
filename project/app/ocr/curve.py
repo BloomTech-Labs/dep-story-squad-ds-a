@@ -1,5 +1,5 @@
 from app.ocr.text_complexity import evaluate, good_vocab, efficiency, descriptiveness, \
-        avg_sentence_length, vocab_length
+        avg_sentence_length, vocab_length, tokenize
 from app.ocr.google_handwriting_recognition import google_handwriting_recognizer_dir, google_handwriting_recognizer    
 import numpy as np         
 import statistics 
@@ -12,11 +12,11 @@ def store(input_str: str,  username: str) -> int:
     '''
     d = {
         username: {
-            "evaluate": evaluate(input_str),
+            #"evaluate": evaluate(input_str),
             "good_vocab": good_vocab(input_str),
             "efficiency": efficiency(input_str),
             "decriptiveness": descriptiveness(input_str),
-           #"sentence_length": avg_sentence_length(input_str),
+           "sentence_length": avg_sentence_length(input_str),
             "word_length": vocab_length(input_str)
             }
         }
@@ -316,11 +316,11 @@ def matchmaker(listofdicts):
         [
             {
                 'user_id1': {
-                    'evaluate': 0.3747619047619048,
-                    'good_vocab': 0.7,
-                    'efficiency': 0.8,
-                    'decriptiveness':0.7142857142857143,
-                    'word_length': 0.5
+                    "good_vocab": good_vocab(input_str),
+                    "efficiency": efficiency(input_str),
+                    "decriptiveness": descriptiveness(input_str),
+                    "sentence_length": avg_sentence_length(input_str),
+                    "word_length": vocab_length(input_str)
                 }
                 'user_id2: {...},
             },
@@ -506,50 +506,50 @@ def Pipeline(Database_list):
 
 if __name__ == "__main__":
     
-    string = "Great success. My name is Borat. I have come to America, to find Pamela Anderson, and \
-        make her my wife. Very nice!"
-    string2 = "take in a database of URLs associated with particular usernames, store it in dictionary with scores,\
-    append it to dict_list2, now should have list of dictionaries to scroll through"
-    string3 = " Once you have a list of dictionaries, you can scroll through each score related to each function, \
-    one by one,  and get the data needed to start implementing the curve function, to then ultimately, \
-        return star values for each player"
-    string4 = "Remember that the Learning Rate is a hyperparameter that is specific to your gradient-descent based optimizer \
-    selection. A learning rate that is too high will cause divergent behavior, but a Learning Rate that is\
-         too low will fail to converge, again, you're looking for the sweet spot."
-    string5 = "Momentum is a hyperparameter that is more commonly associated with Stochastic Gradient Descent. \
-    SGD is a common optimizer because it's what people understand and know, but I doubt it will get you the \
-        best results, you can try hyperparameter tuning its attributes and see if you can beat the performance from adam."         
-    string6 = "Using dropout on hidden layers might not have any effect while using dropout on hidden layers might\
-     have a substantial effect. You don't necessarily need to turn use dropout unless you see that your model\
-          has overfitting and generalizability problems."
-    string7 = "In the case of a binomial outcome (flipping a coin), the binomial distribution may be \
-    approximated by a normal distribution (for sufficiently large n {\displaystyle n} n). Because \
-        the square of a standard normal distribution is the chi-square distribution with one degree of freedom,\
-             the probability of a result such as 1 heads in 10 trials can be approximated either by using \
-                 the normal distribution directly, or the chi-square distribution for the normalised,\
-                      squared difference between observed and expected value."
-    string8 = "The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly\
-     that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well. "
-    string9 = "Tell me that first, and then, if I like being that person,\
-         I’ll come up: if not, I’ll stay down here till I’m somebody else’—but, \
-             oh dear!” cried Alice, with a sudden burst of tears, “I do wish they\
-                  would put their heads down! I am so very tired of being all alone here"
+    # string = "Great success. My name is Borat. I have come to America, to find Pamela Anderson, and \
+    #     make her my wife. Very nice!"
+    # string2 = "take in a database of URLs associated with particular usernames, store it in dictionary with scores,\
+    # append it to dict_list2, now should have list of dictionaries to scroll through"
+    # string3 = " Once you have a list of dictionaries, you can scroll through each score related to each function, \
+    # one by one,  and get the data needed to start implementing the curve function, to then ultimately, \
+    #     return star values for each player"
+    # string4 = "Remember that the Learning Rate is a hyperparameter that is specific to your gradient-descent based optimizer \
+    # selection. A learning rate that is too high will cause divergent behavior, but a Learning Rate that is\
+    #      too low will fail to converge, again, you're looking for the sweet spot."
+    # string5 = "Momentum is a hyperparameter that is more commonly associated with Stochastic Gradient Descent. \
+    # SGD is a common optimizer because it's what people understand and know, but I doubt it will get you the \
+    #     best results, you can try hyperparameter tuning its attributes and see if you can beat the performance from adam."         
+    # string6 = "Using dropout on hidden layers might not have any effect while using dropout on hidden layers might\
+    #  have a substantial effect. You don't necessarily need to turn use dropout unless you see that your model\
+    #       has overfitting and generalizability problems."
+    # string7 = "In the case of a binomial outcome (flipping a coin), the binomial distribution may be \
+    # approximated by a normal distribution (for sufficiently large n {\displaystyle n} n). Because \
+    #     the square of a standard normal distribution is the chi-square distribution with one degree of freedom,\
+    #          the probability of a result such as 1 heads in 10 trials can be approximated either by using \
+    #              the normal distribution directly, or the chi-square distribution for the normalised,\
+    #                   squared difference between observed and expected value."
+    # string8 = "The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly\
+    #  that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well. "
+    # string9 = "Tell me that first, and then, if I like being that person,\
+    #      I’ll come up: if not, I’ll stay down here till I’m somebody else’—but, \
+    #          oh dear!” cried Alice, with a sudden burst of tears, “I do wish they\
+    #               would put their heads down! I am so very tired of being all alone here"
 
-    a = store(string, "bill")
-    b = store(string2, "Kate")
-    c = store(string3, "Edward")
-    d = store(string4, "Bobby")
-    e = store(string5, "Hadi")
-    f = store(string6, "Jesse")
-    g = store(string7, "Pierre")
-    h = store(string8, "Bruce")
-    i = store(string9, "Franklin")
+    # a = store(string, "bill")
+    # b = store(string2, "Kate")
+    # c = store(string3, "Edward")
+    # d = store(string4, "Bobby")
+    # e = store(string5, "Hadi")
+    # f = store(string6, "Jesse")
+    # g = store(string7, "Pierre")
+    # h = store(string8, "Bruce")
+    # i = store(string9, "Franklin")
 
     
 
-    dictlist2 = []
-    dictlist2.append(a)
-    dictlist2.append(b)
+    # dictlist2 = []
+    # dictlist2.append(a)
+    # dictlist2.append(b)
     # dictlist2.append(c)
     # dictlist2.append(d)
     # dictlist2.append(e)
@@ -563,18 +563,9 @@ if __name__ == "__main__":
             "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322187/story_5"
         }
     ]
+   
     
-    
-    
-    
-                            
-    
-    #print(dictlist2)
-    #print(maxscorelist(dictlist2))
-    #print(matchmaker(dictlist2))
-    #print(Final_Match(dictlist2))
-    #print(avg_dict(dictlist2))
-    #print(std_dict(dictlist2))
+                    
     actual_dictionary = [
         # {
         #     "user_id": 5206,
@@ -632,18 +623,18 @@ if __name__ == "__main__":
         #     "user_id": 5234,
         #     "s3_dir": 'testing_jesse_pipeline/52--/5234',
         # },
-        # {
-        #     "user_id": 5214,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5214',
-        # },
-        # {
-        #     "user_id": 5207,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5207',
-        # },
-        # {
-        #     "user_id": 5221,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5221',
-        # },
+         {
+             "user_id": 5214,
+             "s3_dir": 'testing_jesse_pipeline/52--/5214',
+         },
+         {
+             "user_id": 5207,
+             "s3_dir": 'testing_jesse_pipeline/52--/5207',
+         },
+         {
+             "user_id": 5221,
+             "s3_dir": 'testing_jesse_pipeline/52--/5221',
+         },
         {
             "user_id": 5204,
             "s3_dir": 'testing_jesse_pipeline/52--/5204',
@@ -700,71 +691,31 @@ if __name__ == "__main__":
     #actual_dict = [{5206: {'evaluate': 0.386864850604889, 'good_vocab': 0.5025906735751295, 'efficiency': 0.766497461928934, 'decriptiveness': 0.696969696969697, 'sentence_length': 1, 'word_length': 0.4}}, {5229: {'evaluate': 0.37310469710272165, 'good_vocab': 0.3805970149253731, 'efficiency': 0.6323529411764706, 'decriptiveness': 0.6375, 'sentence_length': 1, 'word_length': 0.7}}, {5210: {'evaluate': 0.35023670205895274, 'good_vocab': 0.33986928104575165, 'efficiency': 0.6521739130434783, 'decriptiveness': 0.6704545454545454, 'sentence_length': 1, 'word_length': 0.5}}, {5225: {'evaluate': 0.3042697172108937, 'good_vocab': 0.3247863247863248, 'efficiency': 0.5126050420168067, 'decriptiveness': 0.4805194805194805, 'sentence_length': 1, 'word_length': 0.4}}]
     #print(Final_Match(actual_dict))
     
-    #print(Pipeline(actual_dictionary))
+    print(Pipeline(actual_dictionary))
     #abc = Scoredatabase(actual_dictionary)
     #print(std_dict(abc))
     #print(std_dict(dictlist2))
     #a = Scoredatabase(actual_dictionary)
     #print(matchmaker(a))
     #print(Pipeline(actual_dictionary))
-    print(dictlist2)
-
-
-            
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    #finaldict5 = dict(zip(usernames, dictlist4))
-    #finallist3= []
-    #finallist3.append(finaldict5)
-    #print(finallist3)
     #print(dictlist2)
-
+    #print(Scoredatabase(database))
+   
     
-
-
-
-
-
-    #need to make userlength many lists from differences and methodnames
-    #need to divide differences by userlength increments, and create a dictionary object
-    # using methodnames3: differences
-    # from there, since they will be ordered, take that dictionary object and attach it to 
-    # usernames, 
-    # then repeat this process by taking those numbers and dividing them by stddictlist,
-    # finally, summing up each 6 values for each participant, to get a final value, 
-    # used in matchmaking    
-
-
     
-    #print(usernames)
-         
     
-
-
+    
+    
+    
+    
+    
+    
+    
   
+    
 
 
-# print(bigcompile(create_dictlist(database)))     
-# print(a)
-# print(b)
-# Work with dictlist 2 to make a sample matchmaking model 
+
+
+
+ 
