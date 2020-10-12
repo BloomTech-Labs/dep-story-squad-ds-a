@@ -75,15 +75,18 @@ def google_handwriting_recognizer(
         # image is stored in an S3 bucket
 
         s3 = boto3.resource('s3')
-        bucket = s3.Bucket('training-images-team-a')
+        # bucket = s3.Bucket('training-images-team-a')
 
-        output_file_name = s3_obj.split("/")[-1]
-        bucket.download_file(s3_obj, output_file_name)
-        with io.open(output_file_name, 'rb') as image_file:
-            content = image_file.read()
-        image = vision.types.Image(content=content)
+        # output_file = io.BytesIO()
+        # bucket.download_fileobj(s3_obj, output_file)
+        # with io.open(output_file_name, 'rb') as image_file:
+        #     content = image_file.read()
+        # output_file.seek(0)
+        # s3_response_object = s3.get_object(Bucket='training-images-team-a', Key=s3_obj)
+        s3_response_object = s3.Object('training-images-team-a', s3_obj).get()
+        object_content = s3_response_object['Body'].read()
 
-        os.remove(output_file_name)
+        image = vision.types.Image(content=object_content)
 
     else:
         return "No parameters were set!"
