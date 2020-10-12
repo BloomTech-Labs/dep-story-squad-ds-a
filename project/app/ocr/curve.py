@@ -623,18 +623,18 @@ if __name__ == "__main__":
         #     "user_id": 5234,
         #     "s3_dir": 'testing_jesse_pipeline/52--/5234',
         # },
-         {
-             "user_id": 5214,
-             "s3_dir": 'testing_jesse_pipeline/52--/5214',
-         },
-         {
-             "user_id": 5207,
-             "s3_dir": 'testing_jesse_pipeline/52--/5207',
-         },
-         {
-             "user_id": 5221,
-             "s3_dir": 'testing_jesse_pipeline/52--/5221',
-         },
+        #  {
+        #      "user_id": 5214,
+        #      "s3_dir": 'testing_jesse_pipeline/52--/5214',
+        #  },
+        #  {
+        #      "user_id": 5207,
+        #      "s3_dir": 'testing_jesse_pipeline/52--/5207',
+        #  },
+        #  {
+        #      "user_id": 5221,
+        #      "s3_dir": 'testing_jesse_pipeline/52--/5221',
+        #  },
         {
             "user_id": 5204,
             "s3_dir": 'testing_jesse_pipeline/52--/5204',
@@ -697,9 +697,9 @@ if __name__ == "__main__":
     #print(std_dict(dictlist2))
     #a = Scoredatabase(actual_dictionary)
     #print(matchmaker(a))
-    #print(Pipeline(actual_dictionary))
+    print(Pipeline(actual_dictionary))
     #print(dictlist2)
-    print(Scoredatabase(database))
+    #print(Scoredatabase(database))
    
     
     
