@@ -504,7 +504,7 @@ def Pipeline(Database_list):
     
     return Finalmatchups     
 
-def Elo(listofdicts):
+def Elo_Started(listofdicts):
      
     Matchups = matchmaker(listofdicts)
     Player_List = []
@@ -515,6 +515,24 @@ def Elo(listofdicts):
     Ratings_Dict =  dict(zip(Player_List, ELO_Score)) 
 
     return Ratings_Dict
+
+def Elo_Adjustments(dict):
+
+    #Take in previous rating dictionary
+    #Adjust based on score
+    # From backend, need to receive list of players, who they played against, if they won or lost, and the scores
+    #{Userid: xxxxxx, Opponents: [x, y, z, etc], win: (yes/no), points: xxxxx}
+    # We then take our stored Ratings_Dict, and make adjustments to userid's scores, and resave the Ratings_Dict
+
+    #Scoring:
+    # 
+    #
+    #
+    #
+    #
+
+
+
 
 if __name__ == "__main__":
     
