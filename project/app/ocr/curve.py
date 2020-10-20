@@ -7,12 +7,17 @@ import statistics
 
 def store(input_str: str,  username: str) -> int:
     '''
-    Stores dictionary object after running the string through complexity model..output is dictionary with
+    Stores dictionary object after running the string through complexity model...output is dictionary with
     {userID: {score_names: scores}}
+
+    Input:
+    string = "Great success. My name is Borat. I have come to America, to find Pamela Anderson, and \
+        make her my wife. Very nice!"
+
+    A = store(string, "bill")
     '''
     d = {
         username: {
-            #"evaluate": evaluate(input_str),
             "good_vocab": good_vocab(input_str),
             "efficiency": efficiency(input_str),
             "decriptiveness": descriptiveness(input_str),
@@ -25,7 +30,7 @@ def store(input_str: str,  username: str) -> int:
 
 def compiler(listofdicts, function) -> []:
     '''
-    takes in list of dictionaries, and function name, returns array of scores for that
+    Takes in list of dictionaries, and function name, returns array of scores for that
     particular function
     '''
     scorelist = []
@@ -40,8 +45,8 @@ def compiler(listofdicts, function) -> []:
 
 def bigcompile(listofdicts):
     '''
-    Scrolls through entire list of dictionaries, returns dictionary object with {method_name: [list of scores]}
-    for all method names used in text complexity process
+    Scrolls through list of dictionaries using compiler method, returns dictionary object 
+    with {method_name: [list of scores]} for all method names used in text complexity process
     '''
 
     bigscorelist = []
@@ -177,6 +182,24 @@ def Scoredatabase(Database_list):
     Takes in list of dictionaries with s3 URLs and user IDs, 
     Returns List of dictionaries [{user1}:{evaluate:score, good_vocab:score, efficiency:score, \
                             descriptiveness:score, sentence_length:score, word_length:score}}, {user2}:{etc}}]
+    Input:
+        database = [
+        {
+            "user_id": "12322187",
+            "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322187/story_5"
+        }, {next user_id: 239103913, next s3_dir: next URL}, etc...
+    ]
+
+    Output:
+    d = {
+        username: {
+            "good_vocab": good_vocab score,
+            "efficiency": efficiency score,
+            "decriptiveness": descriptiveness score,
+           "sentence_length": avg_sentence_length score,
+            "word_length": vocab_length score
+            }
+        }
     '''
 
     dictlist1 = []
@@ -245,6 +268,22 @@ def avg_dict(listofdicts):
     '''
     Takes in a list of dictionaries of users and their complexity score ratings,
     returns a dictionary list of methods and the average score of all users for the particular method
+    
+    Input: 
+    d = {
+        username: {
+            "good_vocab": good_vocab score,
+            "efficiency": efficiency score,
+            "decriptiveness": descriptiveness score,
+           "sentence_length": avg_sentence_length score,
+            "word_length": vocab_length score
+            }
+        }
+    Output:
+    {'good_vocab': 0.8159067936109293, 'efficiency': 0.9537209802656028, 'decriptiveness': 0.8992303992303994,\
+         'sentence_length': 0.587037037037037, 'word_length': 0.6444444444444445}
+    
+    
     '''
 
     x = bigcompile(listofdicts)
@@ -274,8 +313,24 @@ def avg_dict(listofdicts):
 def std_dict(listofdicts):
     '''
     Takes in a list of dictionaries, compiles a list of scores for each method, 
-    returns a list of methods and the average standard deviation of all user scores for that particular method
+    returns a list of methods and the standard deviation based on user scores    
+
+    Input: 
+    d = {
+        username: {
+            "good_vocab": good_vocab score,
+            "efficiency": efficiency score,
+            "decriptiveness": descriptiveness score,
+           "sentence_length": avg_sentence_length score,
+            "word_length": vocab_length score
+            }
+        }
+    Output:
+    {'good_vocab': 0.08048809118628969, 'efficiency': 0.06409450533789401, 'decriptiveness': 0.15798431326261958,\
+         'sentence_length': 0.4609288647734532, 'word_length': 0.21140330656044942}
+        
     '''
+    
     #Get arrays for all different methods
     x = bigcompile(listofdicts)
     methodlist = []
@@ -316,11 +371,11 @@ def matchmaker(listofdicts):
         [
             {
                 'user_id1': {
-                    "good_vocab": good_vocab(input_str),
-                    "efficiency": efficiency(input_str),
-                    "decriptiveness": descriptiveness(input_str),
-                    "sentence_length": avg_sentence_length(input_str),
-                    "word_length": vocab_length(input_str)
+                    "good_vocab": good_vocab score,
+                    "efficiency": efficiency score,
+                    "decriptiveness": descriptiveness score,
+                    "sentence_length": avg_sentence_length score,
+                    "word_length": vocab_length score
                 }
                 'user_id2: {...},
             },
@@ -401,8 +456,21 @@ def Final_Match(listofdicts):
     and divides all users into teams of 4 based on their ordered value. Accounts for remainder 
     by evenly placing bots in groups, while not disturbing the distribution of scores
     
+    Input: 
+    d = {
+        username: {
+            "good_vocab": good_vocab(input_str),
+            "efficiency": efficiency(input_str),
+            "decriptiveness": descriptiveness(input_str),
+           "sentence_length": avg_sentence_length(input_str),
+            "word_length": vocab_length(input_str)
+            }
+        }
+        
     Output: [['Bruce', 'Bobby', 'Hadi', '_'], ['Jesse', 'Pierre', 'Kate', '_'], ['Franklin', 'Edward', 'bill', '_']]
     
+
+
     '''
     teamsize = 4
     
@@ -488,6 +556,7 @@ def Pipeline(Database_list):
 
     Ouput: [['User1', 'User8', 'User3', '_'], ['User4', 'User5', 'User6', '_'], ['User7', 'User2', 'User9', '_']]
     Users matched up by their scores into teams of 4, bots added as '_'
+    
     '''
     
     #Create a list of dictionaries by running a list of dictionaries of UserIDs and their URL's through
@@ -516,7 +585,7 @@ def Elo_Started(listofdicts):
 
     return Ratings_Dict
 
-def Elo_Adjustments(dict):
+#def Elo_Adjustments(dict):
 
     #Take in previous rating dictionary
     #Adjust based on score
@@ -525,68 +594,13 @@ def Elo_Adjustments(dict):
     # We then take our stored Ratings_Dict, and make adjustments to userid's scores, and resave the Ratings_Dict
 
     #Scoring:
-    # 
-    #
-    #
-    #
-    #
+
 
 
 
 
 if __name__ == "__main__":
     
-    string = "Great success. My name is Borat. I have come to America, to find Pamela Anderson, and \
-        make her my wife. Very nice!"
-    string2 = "take in a database of URLs associated with particular usernames, store it in dictionary with scores,\
-    append it to dict_list2, now should have list of dictionaries to scroll through"
-    string3 = " Once you have a list of dictionaries, you can scroll through each score related to each function, \
-    one by one,  and get the data needed to start implementing the curve function, to then ultimately, \
-        return star values for each player"
-    string4 = "Remember that the Learning Rate is a hyperparameter that is specific to your gradient-descent based optimizer \
-    selection. A learning rate that is too high will cause divergent behavior, but a Learning Rate that is\
-         too low will fail to converge, again, you're looking for the sweet spot."
-    string5 = "Momentum is a hyperparameter that is more commonly associated with Stochastic Gradient Descent. \
-    SGD is a common optimizer because it's what people understand and know, but I doubt it will get you the \
-        best results, you can try hyperparameter tuning its attributes and see if you can beat the performance from adam."         
-    string6 = "Using dropout on hidden layers might not have any effect while using dropout on hidden layers might\
-     have a substantial effect. You don't necessarily need to turn use dropout unless you see that your model\
-          has overfitting and generalizability problems."
-    string7 = "In the case of a binomial outcome (flipping a coin), the binomial distribution may be \
-    approximated by a normal distribution (for sufficiently large n {\displaystyle n} n). Because \
-        the square of a standard normal distribution is the chi-square distribution with one degree of freedom,\
-             the probability of a result such as 1 heads in 10 trials can be approximated either by using \
-                 the normal distribution directly, or the chi-square distribution for the normalised,\
-                      squared difference between observed and expected value."
-    string8 = "The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly\
-     that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well. "
-    string9 = "Tell me that first, and then, if I like being that person,\
-         I’ll come up: if not, I’ll stay down here till I’m somebody else’—but, \
-             oh dear!” cried Alice, with a sudden burst of tears, “I do wish they\
-                  would put their heads down! I am so very tired of being all alone here"
-
-    a = store(string, "bill")
-    b = store(string2, "Kate")
-    c = store(string3, "Edward")
-    d = store(string4, "Bobby")
-    e = store(string5, "Hadi")
-    f = store(string6, "Jesse")
-    g = store(string7, "Pierre")
-    h = store(string8, "Bruce")
-    i = store(string9, "Franklin")
-
-    
-
-    dictlist2 = []
-    dictlist2.append(a)
-    dictlist2.append(b)
-    dictlist2.append(c)
-    dictlist2.append(d)
-    dictlist2.append(e)
-    dictlist2.append(f)
-    dictlist2.append(g)
-    dictlist2.append(h)
-    dictlist2.append(i)
     database = [
         {
             "user_id": "12322187",
@@ -597,76 +611,8 @@ if __name__ == "__main__":
     
                     
     actual_dictionary = [
-        # {
-        #     "user_id": 5206,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5206',
-        # },
-        # {
-        #     "user_id": 5229,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5229',
-        # },
-        # {
-        #     "user_id": 5210,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5210',
-        # },
-        # {
-        #     "user_id": 5225,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5225',
-        # },
-        # {
-        #     "user_id": 5219,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5219',
-        # },
-        # {
-        #     "user_id": 5208,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5208',
-        # },
-        # {
-        #     "user_id": 5205,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5205',
-        # },
-        # {
-        #     "user_id": 5228,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5228',
-        # },
-        # {
-        #     "user_id": 5232,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5232',
-        # },
-        # {
-        #     "user_id": 5220,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5220',
-        # },
-        # {
-        #     "user_id": 5202,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5202',
-        # },
-        # {
-        #     "user_id": 5230,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5230',
-        # },
-        # {
-        #     "user_id": 5218,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5218',
-        # },
-        # {
-        #     "user_id": 5234,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5234',
-        # },
-        #  {
-        #      "user_id": 5214,
-        #      "s3_dir": 'testing_jesse_pipeline/52--/5214',
-        #  },
-        #  {
-        #      "user_id": 5207,
-        #      "s3_dir": 'testing_jesse_pipeline/52--/5207',
-        #  },
-        #  {
-        #      "user_id": 5221,
-        #      "s3_dir": 'testing_jesse_pipeline/52--/5221',
-        #  },
-        {
-            "user_id": 5204,
+        
+            {"user_id": 5204,
             "s3_dir": 'testing_jesse_pipeline/52--/5204',
         },
         {
@@ -701,45 +647,14 @@ if __name__ == "__main__":
         #     "user_id": 5216,
         #     "s3_dir": 'testing_jesse_pipeline/52--/5216',
         # },
-        # {
-        #     "user_id": 5223,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5223',
-        # },
-        # {
-        #     "user_id": 5203,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5203',
-        # },
-        # {
-        #     "user_id": 5215,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5215',
-        # },
-        # {
-        #     "user_id": 5233,
-        #     "s3_dir": 'testing_jesse_pipeline/52--/5233'
-        # }
+        
     ]
-    #actual_dict = [{5206: {'evaluate': 0.386864850604889, 'good_vocab': 0.5025906735751295, 'efficiency': 0.766497461928934, 'decriptiveness': 0.696969696969697, 'sentence_length': 1, 'word_length': 0.4}}, {5229: {'evaluate': 0.37310469710272165, 'good_vocab': 0.3805970149253731, 'efficiency': 0.6323529411764706, 'decriptiveness': 0.6375, 'sentence_length': 1, 'word_length': 0.7}}, {5210: {'evaluate': 0.35023670205895274, 'good_vocab': 0.33986928104575165, 'efficiency': 0.6521739130434783, 'decriptiveness': 0.6704545454545454, 'sentence_length': 1, 'word_length': 0.5}}, {5225: {'evaluate': 0.3042697172108937, 'good_vocab': 0.3247863247863248, 'efficiency': 0.5126050420168067, 'decriptiveness': 0.4805194805194805, 'sentence_length': 1, 'word_length': 0.4}}]
-    #print(Final_Match(dictlist2))
-    
+        
     #print(Pipeline(actual_dictionary))
     #abc = Scoredatabase(actual_dictionary)
-    #print(std_dict(abc))
-    #print(std_dict(dictlist2))
-    #a = Scoredatabase(actual_dictionary)
-    #print(matchmaker(a))
-    #print(Pipeline(actual_dictionary))
-    #print(dictlist2)
-    #print(Scoredatabase(database))
-   
-    Matchups = matchmaker(dictlist2)
-    Player_List = []
-    for player in Matchups.keys():
-        Player_List.append(player)
-
-    ELO_Score = [1000] *len(Player_List)
-    Ratings_Dict =  dict(zip(Player_List, ELO_Score)) 
-    print(Ratings_Dict)   
     
+    
+   
     
     
     
