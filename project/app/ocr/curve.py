@@ -20,7 +20,7 @@ def store(input_str: str,  username: str) -> int:
         username: {
             "good_vocab": good_vocab(input_str),
             "efficiency": efficiency(input_str),
-            "decriptiveness": descriptiveness(input_str),
+            "descriptiveness": descriptiveness(input_str),
            "sentence_length": avg_sentence_length(input_str),
             "word_length": vocab_length(input_str)
             }
@@ -195,7 +195,7 @@ def Scoredatabase(Database_list):
         username: {
             "good_vocab": good_vocab score,
             "efficiency": efficiency score,
-            "decriptiveness": descriptiveness score,
+            "descriptiveness": descriptiveness score,
            "sentence_length": avg_sentence_length score,
             "word_length": vocab_length score
             }
@@ -274,7 +274,7 @@ def avg_dict(listofdicts):
         username: {
             "good_vocab": good_vocab score,
             "efficiency": efficiency score,
-            "decriptiveness": descriptiveness score,
+            "descriptiveness": descriptiveness score,
            "sentence_length": avg_sentence_length score,
             "word_length": vocab_length score
             }
@@ -320,7 +320,7 @@ def std_dict(listofdicts):
         username: {
             "good_vocab": good_vocab score,
             "efficiency": efficiency score,
-            "decriptiveness": descriptiveness score,
+            "descriptiveness": descriptiveness score,
            "sentence_length": avg_sentence_length score,
             "word_length": vocab_length score
             }
@@ -373,7 +373,7 @@ def matchmaker(listofdicts):
                 'user_id1': {
                     "good_vocab": good_vocab score,
                     "efficiency": efficiency score,
-                    "decriptiveness": descriptiveness score,
+                    "descriptiveness": descriptiveness score,
                     "sentence_length": avg_sentence_length score,
                     "word_length": vocab_length score
                 }
@@ -461,7 +461,7 @@ def Final_Match(listofdicts):
         username: {
             "good_vocab": good_vocab score,
             "efficiency": efficiency score,
-            "decriptiveness": descriptiveness score,
+            "descriptiveness": descriptiveness score,
            "sentence_length": avg_sentence_length score,
             "word_length": vocab_length score
             }
