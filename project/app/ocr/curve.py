@@ -459,11 +459,11 @@ def Final_Match(listofdicts):
     Input: 
     d = {
         username: {
-            "good_vocab": good_vocab(input_str),
-            "efficiency": efficiency(input_str),
-            "decriptiveness": descriptiveness(input_str),
-           "sentence_length": avg_sentence_length(input_str),
-            "word_length": vocab_length(input_str)
+            "good_vocab": good_vocab score,
+            "efficiency": efficiency score,
+            "decriptiveness": descriptiveness score,
+           "sentence_length": avg_sentence_length score,
+            "word_length": vocab_length score
             }
         }
         
