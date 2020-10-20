@@ -6,25 +6,28 @@ from app.dependencies.security import verify_token
 #         sentence_length_stars, word_length_stars
 from typing import Dict, List
 from pydantic import BaseModel, Field
+from app.ocr.curve import Pipeline
+import boto3
+
 
 router = APIRouter()
 
 
-class Matchmaker(BaseModel):
-    user_stories: Dict[str, List] = Field(..., example={
-        "uuids": [
-            "12322187"
-            "12322188"
-            "12322189"
-            "12322190"
-            "12322191"
-            "12322192"
-        ]
-    })
+# class Matchmaker(BaseModel):
+#     user_stories: Dict[str, List] = Field(..., example={
+#         "uuids": [
+#             "12322187"
+#             "12322188"
+#             "12322189"
+#             "12322190"
+#             "12322191"
+#             "12322192"
+#         ]
+#     })
 
 
 @router.post('/multiplayer/matchmaker', tags=["Multiplayer"], dependencies=[Depends(verify_token)])
-async def ocr(params: Matchmaker):
+async def ocr():
     """
     Matchmakes
 
@@ -55,7 +58,10 @@ async def ocr(params: Matchmaker):
         ]
     """
 
-    for player in params.user_stories:
-        pass
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+    table = dynamodb.Table('user_stories')
 
-    return {}
+    database = table.scan()["Items"]
+
+    return Pipeline(database)
+
