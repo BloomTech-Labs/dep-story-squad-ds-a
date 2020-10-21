@@ -9,19 +9,29 @@ router = APIRouter()
 
 
 class AddPlayers(BaseModel):
-
-    # user_stories: List[Dict["user_id": str, "s3_dir": str]] =\
     user_stories: List[Dict[str, str]] =\
         Field(..., example=[
-                {
-                    "user_id": "12322187",
-                    "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322187/story_5"
-                },
-                {
-                    "user_id": "12322188",
-                    "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322188/story_5"
-                },
-            ]
+            {
+                "user_id": "12322186",
+                "s3_dir": "new_stories_dataset/singleplayer/username_12322186/story_1"
+            },
+            {
+                "user_id": "12322185",
+                "s3_dir": "new_stories_dataset/singleplayer/username_12322186/story_2"
+            },
+            {
+                "user_id": "12322187",
+                "s3_dir": "new_stories_dataset/singleplayer/username_12322185/story_3"
+            },
+            {
+                "user_id": "12322188",
+                "s3_dir": "new_stories_dataset/singleplayer/username_12322185/story_4"
+            },
+            {
+                "user_id": "12322189",
+                "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322187/story_5"
+            }
+        ]
         )
 
 

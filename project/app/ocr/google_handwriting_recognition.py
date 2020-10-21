@@ -127,12 +127,11 @@ def google_handwriting_recognizer_dir(s3_dir: str = None) -> str:
         ocr_text_list = []
         for s3_obj_dict in response.get('Contents'):
             s3_obj = s3_obj_dict["Key"]
-            ocr_text_list.append(
-                google_handwriting_recognizer(s3_obj=s3_obj)
-            )
-        
+            # ocr_text_list.append(
+            #     google_handwriting_recognizer(s3_obj=s3_obj)
+            # )
+
             if s3_obj.endswith(".jpg"):
-                # st(term_size=(200, 50), host="0.0.0.0", port=4444)
                 ocr_text_list.append(
                     google_handwriting_recognizer(s3_obj=s3_obj)
                 )

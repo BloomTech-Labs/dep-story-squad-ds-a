@@ -13,49 +13,28 @@ import boto3
 router = APIRouter()
 
 
-# class Matchmaker(BaseModel):
-#     user_stories: Dict[str, List] = Field(..., example={
-#         "uuids": [
-#             "12322187"
-#             "12322188"
-#             "12322189"
-#             "12322190"
-#             "12322191"
-#             "12322192"
-#         ]
-#     })
+class MatchmakeResponse(BaseModel):
+    user_stories: Dict[str, List] = Field(..., example=[
+        [
+            "12322187",
+            "12322185",
+            "12322188",
+            "_"
+        ],
+        [
+            "12322189",
+            "12322186",
+            "_",
+            "_"
+        ]
+    ])
 
 
-@router.post('/multiplayer/matchmaker', tags=["Multiplayer"], dependencies=[Depends(verify_token)])
+@router.post('/multiplayer/matchmaker', tags=["Multiplayer"], dependencies=[Depends(verify_token)], response_model=MatchmakeResponse)
 async def ocr():
     """
-    Matchmakes
-
-    ### Request Body
-
-    - `uuids`: List
-        - example:
-
-    ### Response
-    - `teams`: list in list
-        - example:
-        [
-            [
-                "12322187",
-                "12322188",
-                "12322189",
-                "12322190"
-            ]
-            [
-                "12322191",
-                "12322192",
-                "12322193",
-                "12322194"
-            ]
-            [
-                "12322195"
-            ]
-        ]
+    Creates teams of 4, for the multiplayer mode.
+    If the number of players is not divisable by 4, it will add at most 3 bots ( "_" ) to some of the teams.
     """
 
     dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
