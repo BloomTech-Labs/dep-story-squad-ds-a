@@ -270,6 +270,7 @@ def evaluate_stars(input_str: str) -> int:
     
     return min(y,5)   
 
+
 def get_text_scores(input_str: str) -> str:
     return {
         "vocab_length": vocab_length(input_str),

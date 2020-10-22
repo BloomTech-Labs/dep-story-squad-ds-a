@@ -7,8 +7,22 @@ import boto3
 
 router = APIRouter()
 
+class GetPlayersResponse(BaseModel):
+    user_stories: List[Dict[str, str]] =\
+        Field(..., example=[
+                {
+                    "user_id": "12322187",
+                    "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12322187/story_5"
+                },
+                {
+                    "user_id": "12323312",
+                    "s3_dir": "new_stories_dataset/multiplayer/competitions/competition_43/username_12323312/story_2"
+                },
+            ]
+        )
 
-@router.get('/multiplayer/get_players', tags=["Multiplayer"], dependencies=[Depends(verify_token)])
+
+@router.get('/multiplayer/get_players', tags=["Multiplayer"], dependencies=[Depends(verify_token)], response_model=GetPlayersResponse)
 async def get_players():
     """
     Gets all the players for that week's competition
