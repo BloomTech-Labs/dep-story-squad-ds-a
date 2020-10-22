@@ -2,6 +2,10 @@
 
 Story Squad is an interactive game where children create stories and illustrations, and compete with other children. There are two main game types: Multiplayer, and Single Player. 
 
+## Demo Videos
+
+[GoogleDrive](https://drive.google.com/drive/folders/1CRnotKkZo9K-7AGBgfniRfJlwwfySO4F?usp=sharing)
+
 ## Data Sources
 
 Due to COPPA compliance, all data scources are private. Contact the project stakeholder for access.
