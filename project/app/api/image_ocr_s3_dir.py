@@ -1,19 +1,21 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from app.dependencies.security import verify_token
 # from remote_pdb import set_trace as st
 from app.ocr.google_handwriting_recognition import google_handwriting_recognizer_dir
-from app.ocr.text_complexity import evaluate
-from pydantic import BaseModel
+from app.ocr.text_complexity import get_text_scores
+from pydantic import BaseModel, Field, validator
+
 
 router = APIRouter()
 
 
 class ImageOcrS3Dir(BaseModel):
-    s3_dir: str
-    get_complexity_score: int = 0
+    s3_dir: str = Field(..., example="new_stories_dataset/singleplayer/username_12322186/story_2")
+    get_complexity_score: int = Field(..., example=1)
 
 
-@router.post('/img_ocr_s3_dir')
-async def ocr(params: ImageOcrS3Dir):
+@router.post('/HTR/image/s3_dir', tags=["Handwritten Text Recognition"], dependencies=[Depends(verify_token)])
+async def image_handwritten_text_recognition_S3_directory(params: ImageOcrS3Dir):
     """
     Handwriting recognizer with google's vision API for
     all .jpg files in a dir
@@ -21,8 +23,7 @@ async def ocr(params: ImageOcrS3Dir):
     ### Request Body
 
     - `s3_dir`: string
-        - example:
-        "Stories Dataset/Transcribed Stories/31--/3101/"
+        #### The s3 directory of the images that text and complexity scores are needed.
 
     - `get_text_complexity`: int
         #### A number that is only 0 or 1, to specify whether to get the text complexity score or no
@@ -32,12 +33,18 @@ async def ocr(params: ImageOcrS3Dir):
     - `complexity_score` float: -1 if 'get_text_complexity' is 0, else 0.0 < < 1.0
     """
 
-    if params.s3_obj is not None:
-        ocr_text = google_handwriting_recognizer_dir(s3_dir=params.s3_dir)
+    if params.s3_dir is not None:
+        ocr_text_list = google_handwriting_recognizer_dir(s3_dir=params.s3_dir)
+        scores = -1
+
+        if params.get_complexity_score == 1:
+            joined_text = " ".join(ocr_text_list)
+            scores = get_text_scores(joined_text)
+
         return {
-            "ocr_text": ocr_text,
-            "complexity_score": evaluate(" ".join(ocr_text))
+            "ocr_text_list": ocr_text_list,
+            "scores": scores
         }
 
     else:
-        return "s3_obj was not set"
+        return "s3_dir was not set"
