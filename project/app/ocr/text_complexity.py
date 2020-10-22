@@ -134,7 +134,10 @@ def avg_sentence_length(input_str: str) -> int:
         array.append(word)
     
     array_length = len(array)
-    words_per_sentence = array_length / count
+    if count == 0:
+        return 0
+    else:
+        words_per_sentence = array_length / count
     
     final_score = (words_per_sentence / 10 ) 
     
